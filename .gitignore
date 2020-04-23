@@ -3,3 +3,23 @@ node_modules/
 resource/
 dist/
 npm-debug.log
+
+# Cordova
+/cordova/platforms
+/cordova/plugins
+/public/cordova.js
+
+# Cordova
+/cordova/platforms
+/cordova/plugins
+/public/cordova.js
+
+# Cordova
+/cordova/platforms
+/cordova/plugins
+/public/cordova.js
+
+# Cordova
+/cordova/platforms
+/cordova/plugins
+/public/cordova.js

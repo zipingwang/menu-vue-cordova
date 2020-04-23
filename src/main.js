@@ -7,10 +7,12 @@ import seller from 'components/seller/seller'
 import vueTap from 'v-tap'
 import fastclick from 'fastclick'
 import Vuex from 'vuex'
+import VueLazyload from 'vue-lazyload'
 
 Vue.use(vueTap)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(VueLazyload);
 
 const store = new Vuex.Store({
   state: {
