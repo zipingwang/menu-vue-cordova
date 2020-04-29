@@ -1,4 +1,9 @@
 <template lang="html">
+  <div>
+  <transition name="fade">
+    <div v-show="showDetail" class="detail" @click="showToggle()">
+    </div>
+  </transition>
   <transition name="move">
     <div class="detailWrapper" ref="detailWrapper" v-show="showDetail">
       <div class="foodDetail">
@@ -63,6 +68,7 @@
       </div>
     </div>
   </transition>
+  </div>
 </template>
 
 <script>
@@ -80,17 +86,21 @@ export default {
   data() {
     return {
       showDetail: false,
+      currentCommmentCatetory: 0,
       classifyArr: [{
         name: '全部',
         count: this.food.ratings.length,
+        commmentCatetory: 0,
         active: true
       }, {
         name: '推荐',
         count: this.food.ratings.filter((data) => data.rateType === 0).length,
+        commmentCatetory: 1,
         active: false
       }, {
         name: '吐槽',
         count: this.food.ratings.filter((data) => data.rateType).length,
+        commmentCatetory: 2,
         active: false
       }],
       evelflag: true
@@ -98,18 +108,12 @@ export default {
   },
   computed: {
     evelArr() {
-      let selectIndex = 0
-      this.classifyArr.forEach((data, index) => {
-        if (data.active) {
-          selectIndex = index
-        }
-      })
       if (this.detailWrapper) {
         this.$nextTick(() => {
           this.detailWrapper.refresh()
         })
       }
-      return selectIndex ? this.food.ratings.filter((data) => this.evelflag ? data.rateType === selectIndex - 1 && data.text : data.rateType === selectIndex - 1) : this.food.ratings.filter((data) => this.evelflag ? data.text : true)
+      return this.food.ratings.filter((data) => this.evelflag ? this.currentCommmentCatetory && data.text : this.currentCommmentCatetory)
     }
   },
   methods: {
@@ -138,6 +142,7 @@ export default {
       this.$root.eventHub.$emit('cart.add', event.target)
     },
     filterEvel(item) {
+      this.currentCommmentCatetory = item.commmentCatetory
       this.classifyArr.forEach((data) => {
         data.active = false
       })
@@ -149,20 +154,49 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@media screen and (min-width: 800px)
+  .detail
+      position fixed    
+      left 0
+      top 0
+      bottom 48px
+      width 100%
+      z-index 30
+      background rgba(7,17,27,0.8)
+      backdrop-filter blur(10px)
+      transition all 0.4s ease      
 .detailWrapper
   position fixed
   left 0
   top 0
   bottom 48px
   width 100%
+  z-index 30
   background white
   transition all 0.4s ease
-  &.move-enter-avtive,&.move-leave-active{
+  &.move-enter-avtive,&.move-leave{
     transform translate3d(0,0,0)
   }
   &.move-enter,&.move-leave-active{
     transform translate3d(100%,0,0)
   }
+@media screen and (min-width: 800px)
+  .detailWrapper
+    position fixed  
+    top 0
+    left 20%
+    margin-right -20%
+    bottom 48px
+    width 100%
+    max-width: 800px
+    background white
+    transition all 0.4s ease  
+    &.move-enter-avtive,&.move-leave{
+      transform translate3d(0,0,0)      
+    }
+    &.move-enter,&.move-leave-active{
+      transform translate3d(10%,0,0)     
+    }
 .foodDetail
   .back
     position absolute

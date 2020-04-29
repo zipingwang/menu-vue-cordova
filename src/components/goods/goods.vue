@@ -28,7 +28,7 @@
                   <span class="rating">好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="newPrice"><span class="unit">￥</span>{{food.price}}</span>
+                  <span class="newPrice"><span class="unit">€ </span>{{food.price}}</span>
                   <span v-show="food.oldPrice" class="oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
