@@ -3,6 +3,8 @@ import App from './App'
 import VueRouter from 'vue-router'
 import goods from 'components/goods/goods'
 import ratings from 'components/ratings/ratings'
+import promotion from 'components/promotion/promotion'
+import info from 'components/info/info'
 import seller from 'components/seller/seller'
 import vueTap from 'v-tap'
 import fastclick from 'fastclick'
@@ -33,6 +35,12 @@ const router = new VueRouter({
   }, {
     path: '/ratings',
     component: ratings
+  }, {
+    path: '/promotion',
+    component: promotion
+  }, {
+    path: '/info',
+    component: info
   }, {
     path: '/seller',
     component: seller

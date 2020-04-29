@@ -29,11 +29,17 @@
       <router-link to="/ratings">评论</router-link>
     </div>
     <div class="tab-item">
+      <router-link to="/promotion">Promotion</router-link>
+    </div>
+    <div class="tab-item">
+      <router-link to="/info">Info</router-link>
+    </div>
+    <div class="tab-item">
       <router-link to="/seller">商家</router-link>
     </div>
   </div>
   <keep-alive>
-    <router-view :seller="seller"></router-view>
+    <router-view :seller="seller" :data="data"></router-view>
   </keep-alive>
 </div>
 
@@ -48,12 +54,16 @@ const ERR_OK = 0
 export default {
   data() {
     return {
-      seller: {}
+      seller: {},
+      data: {}
     }
   },
   created() {
     axios.get('static/data.json').then((res) => {
       this.seller = res.data.seller
+      this.data = res.data
+      console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
+      console.log(`get promotion in appvue ${res.data.promotion.title},`)
     })
   },
   components: {
