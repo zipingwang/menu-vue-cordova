@@ -12,10 +12,10 @@
           </div>
         </div>
         <div class="price" :class="{'active':totalPrice}">
-          ￥{{totalPrice}}
+          €{{totalPrice}}
         </div>
         <div class="desc">
-          另需要配送费￥{{deliveryPrice}}元
+          另需要配送费€{{deliveryPrice}}元
         </div>
       </div>
       <div class="content-right" :class="{'enough':totalPrice>=minPrice}">
@@ -42,7 +42,7 @@
             <li class="food" v-for="food in selectFoods">
               <span class="name">{{food.name}}</span>
               <div class="price">
-                <span>￥{{food.price * food.count}}</span>
+                <span>€{{food.price * food.count}}</span>
               </div>
               <div class="cartcontrol-wrapper">
                 <cartcontrol :food="food"></cartcontrol>
@@ -132,9 +132,9 @@ export default {
     payDesc() {
       let diff = this.minPrice - this.totalPrice
       if (!this.totalPrice) {
-        return `￥${this.totalPrice}起送`
+        return `€${this.totalPrice}起送`
       } else if (diff > 0) {
-        return `还差￥${diff}元`
+        return `还差€${diff}元`
       } else {
         return '去结算'
       }

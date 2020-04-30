@@ -22,24 +22,27 @@
 <div>
   <v-header :seller="seller"></v-header>
   <div class="tab">
-    <div class="tab-item">
-      <router-link to="/goods">商品</router-link>
+    <div class="tab-item" v-if="visibletabs.includes('product')">
+      <router-link to="/goods">{{ml.product}}</router-link>
     </div>
-    <div class="tab-item">
-      <router-link to="/ratings">评论</router-link>
+    <div class="tab-item"  v-if="visibletabs.includes('rating')">
+      <router-link to="/ratings">{{ml.rating}}</router-link>
     </div>
-    <div class="tab-item">
-      <router-link to="/promotion">Promotion</router-link>
+    <div class="tab-item" v-if="visibletabs.includes('promotion')" >
+      <router-link to="/promotion">{{ml.promotion}}</router-link>
     </div>
-    <div class="tab-item">
-      <router-link to="/info">Info</router-link>
+    <div class="tab-item"  v-if="visibletabs.includes('ricetable')">
+      <router-link to="/ricetable">{{ml.ricetable}}</router-link>
     </div>
-    <div class="tab-item">
+    <div class="tab-item"  v-if="visibletabs.includes('info')">
+      <router-link to="/info">{{ml.info}}</router-link>
+    </div>
+    <div class="tab-item" v-if="visibletabs.includes('info')">
       <router-link to="/seller">商家</router-link>
     </div>
   </div>
   <keep-alive>
-    <router-view :seller="seller" :data="data"></router-view>
+    <router-view :seller="seller" :data="data" :ml="ml"></router-view>
   </keep-alive>
 </div>
 
@@ -55,7 +58,9 @@ export default {
   data() {
     return {
       seller: {},
-      data: {}
+      data: {},
+      ml: {},
+      visibletabs: []
     }
   },
   created() {
@@ -64,7 +69,16 @@ export default {
       this.data = res.data
       console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
       console.log(`get promotion in appvue ${res.data.promotion.title},`)
-    })
+    });
+    axios.get('static/ml.json').then((res) => {
+      this.ml = res.data[res.data.ln]
+      this.visibletabs = res.data.visibletabs
+      console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
+      console.log(`get promotion in appvue ${res.data.ln},`)
+      console.log(`this.visibletabs ${JSON.stringify(this.visibletabs)},`)
+      console.log(`get ml in appvue ${JSON.stringify(this.ml)},`)
+      console.log(`get promotion in appvue ${res.data[res.data.ln].address},`)
+    });
   },
   components: {
     'v-header': header

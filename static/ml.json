@@ -1,5 +1,6 @@
 {
-"ln":"zh",
+"visibletabs":["product", "promotion", "ricetable", "info"],
+"ln":"nl",
 "zh":{
 	"product":"商品",
 	"info":"商家",
@@ -12,6 +13,26 @@
 	"bulletin":"公告",
 	"deliveryfrom":"起送",
 	"deliverycost":"另需要配送费元",
-	"checkout":"去结算"
+	"checkout":"去结算",
+	"addtoshoppingcart":"加入购物车",
+	"description":"商品介绍",
+	"ricetable":"套餐"
+	},
+"nl":{
+	"product":"Menu",
+	"info":"Info",
+	"promotion":"Maandmenu",
+	"address":"Adres",
+	"contact":"Contact",
+	"telephone":"Telefoon",
+	"openinghour":"Openingsuren",
+	"rating":"Review",
+	"bulletin":"Bulletin",
+	"deliveryfrom":"Leveren vanaf",
+	"deliverycost":"Leveringscost",
+	"checkout":"Afrekenen",
+	"addtoshoppingcart":"Toevoegen",
+	"description":"Beschrijving",
+	"ricetable":"Rijsttafel"
 	}
 }

@@ -57,6 +57,7 @@
   .map
     text-align center
     margin-top 20px
+    margin-bottom 100px
     
 </style>
 
@@ -115,9 +116,11 @@ export default {
   },
   data() {
     return {
-      address: this.seller.address,
-      telefoon: this.seller.telefoon,
-      openinghour: this.seller.openinghour
+      ricetables: this.data.ricetables,
+      title: this.data.ricetables.title, // 'Menu van de maand',
+      pricelines: this.data.promotion.pricelines, // ['Geldig tot 31/05/2021', '20 euro p.p. mini 2 personnen'],
+      foodlines: this.data.promotion.foodlines, // ['kipsoep', 'mini loempia', 'peking eend'],
+      endlines: this.data.promotion.endlines // ['Bedankt voor uw bezoek']
     }
   },
   mounted() {

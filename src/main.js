@@ -5,6 +5,7 @@ import goods from 'components/goods/goods'
 import ratings from 'components/ratings/ratings'
 import promotion from 'components/promotion/promotion'
 import info from 'components/info/info'
+import ricetable from 'components/ricetable/ricetable'
 import seller from 'components/seller/seller'
 import vueTap from 'v-tap'
 import fastclick from 'fastclick'
@@ -41,6 +42,9 @@ const router = new VueRouter({
   }, {
     path: '/info',
     component: info
+  }, {
+    path: '/ricetable',
+    component: ricetable
   }, {
     path: '/seller',
     component: seller

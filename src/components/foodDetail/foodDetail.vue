@@ -18,8 +18,8 @@
             <span>好评率{{food.rating}}%</span>
           </div>
           <div class="price">
-            <span class="unit">￥</span>{{food.price}}
-            <span class="oldPrice" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+            <span class="unit">€</span>{{food.price}}
+            <span class="oldPrice" v-show="food.oldPrice">€{{food.oldPrice}}</span>
           </div>
           <div class="shopCart">
             <transition name="fade">

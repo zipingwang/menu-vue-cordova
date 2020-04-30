@@ -44,31 +44,33 @@
 <template lang="html">
   <div class="ratingsWrapper" ref="ratingsWrapper">
     <div class="ratings-content">
-       <div class="title">
-           {{title}}
-        </div>
-        <div class="pricelineblock">
-            <ul>
-                <li class="priceline" v-for="priceline in pricelines">
-                    <div class="priceline">{{priceline}}</div>                   
-                </li>
-            </ul>
-        </div>
-        <div class="foodblock">
-            <ul>
-                <li class="foodlineblock" v-for="(food, index) in foodlines">
-                    <div class="foodline">{{food}}</div>
-                    <div class="seperator" v-if="index != foodlines.length - 1">***</div>
-                </li>
-            </ul>
-        </div>
-        <div class="endlineblock">
-            <ul>
-                <li class="endline" v-for="endline in endlines">
-                    <div class="endline">{{endline}}</div>                   
-                </li>
-            </ul>
-        </div>      
+      <div>
+        <div class="title">
+            {{title}}
+          </div>
+          <div class="pricelineblock">
+              <ul>
+                  <li class="priceline" v-for="priceline in pricelines">
+                      <div class="priceline">{{priceline}}</div>                   
+                  </li>
+              </ul>
+          </div>
+          <div class="foodblock">
+              <ul>
+                  <li class="foodlineblock" v-for="(food, index) in foodlines">
+                      <div class="foodline">{{food}}</div>
+                      <div class="seperator" v-if="index != foodlines.length - 1">***</div>
+                  </li>
+              </ul>
+          </div>
+          <div class="endlineblock">
+              <ul>
+                  <li class="endline" v-for="endline in endlines">
+                      <div class="endline">{{endline}}</div>                   
+                  </li>
+              </ul>
+          </div> 
+        </div>     
     </div>
   </div>
 </template>
