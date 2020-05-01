@@ -62,6 +62,11 @@ export default {
     seller: Object
   },
   created() {
+    console.log(`before seller.vue get datajson from server in appvue`)
+    console.log(`seller.vue get datajson from server in appvue ${JSON.stringify(this.data.goods)},`)
+    // this.goods = this.data.goods;
+    // this._initScroll(); // 初始化scroll
+    // this._calculateHeight(); // 初始化列表高度列表
     axios.get('static/data.json').then((res) => {
       this.goods = res.data.goods;
       this.$nextTick(() => {
@@ -72,6 +77,7 @@ export default {
   },
   data() {
     return {
+      data: {},
       goods: [],
       listHeight: [],
       foodsScrollY: 0,

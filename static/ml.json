@@ -1,5 +1,6 @@
 {
-"visibletabs":["product", "promotion", "ricetable", "info"],
+"visibletabs":["goods", "ricetable", "info"],
+"activetab": ["goods"],
 "ln":"nl",
 "zh":{
 	"product":"商品",

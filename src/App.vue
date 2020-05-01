@@ -22,7 +22,7 @@
 <div>
   <v-header :seller="seller"></v-header>
   <div class="tab">
-    <div class="tab-item" v-if="visibletabs.includes('product')">
+    <div class="tab-item" v-if="visibletabs.includes('goods')">
       <router-link to="/goods">{{ml.product}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('rating')">
@@ -37,7 +37,7 @@
     <div class="tab-item"  v-if="visibletabs.includes('info')">
       <router-link to="/info">{{ml.info}}</router-link>
     </div>
-    <div class="tab-item" v-if="visibletabs.includes('info')">
+    <div class="tab-item" v-if="visibletabs.includes('shop')">
       <router-link to="/seller">商家</router-link>
     </div>
   </div>
@@ -60,24 +60,27 @@ export default {
       seller: {},
       data: {},
       ml: {},
-      visibletabs: []
+      visibletabs: [],
+      activetab: ''
     }
   },
   created() {
     axios.get('static/data.json').then((res) => {
       this.seller = res.data.seller
       this.data = res.data
-      console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
-      console.log(`get promotion in appvue ${res.data.promotion.title},`)
+      // console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
+      // console.log(`get promotion in appvue ${res.data.promotion.title},`)
     });
     axios.get('static/ml.json').then((res) => {
       this.ml = res.data[res.data.ln]
       this.visibletabs = res.data.visibletabs
+      this.activetab = res.data.activetab
+      this.$router.push(`${this.activetab}`)
       console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
-      console.log(`get promotion in appvue ${res.data.ln},`)
-      console.log(`this.visibletabs ${JSON.stringify(this.visibletabs)},`)
-      console.log(`get ml in appvue ${JSON.stringify(this.ml)},`)
-      console.log(`get promotion in appvue ${res.data[res.data.ln].address},`)
+      // console.log(`get promotion in appvue ${res.data.ln},`)
+      // console.log(`this.visibletabs ${JSON.stringify(this.visibletabs)},`)
+      // console.log(`get ml in appvue ${JSON.stringify(this.ml)},`)
+      // console.log(`get promotion in appvue ${res.data[res.data.ln].address},`)
     });
   },
   components: {

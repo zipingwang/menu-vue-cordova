@@ -38,22 +38,44 @@
   overflow: hidden
 .ratings-content
   .row
-    .column 
-      .block
-        h1
-          // margin 0 18px
-          padding 0px 0 12px 0
-          border-bottom 1px solid rgba(7,17,27,0.1)
-        .list
-          .item
-            font-size 12px
-            // font-weight 200
-            color rgb(7,17,27)
-            line-height 10px
-            padding 10px 10px
-            border-bottom 1px solid rgba(7,17,27,0.1)
-            &:last-child
-              border none
+    .column
+      text-align center
+      color rgb(77,85,93)     
+      .ricetableblock
+        border 1px solid #f3f5f7
+        border-radius: 10px;
+        height: 100%
+        box-sizing border-box
+        .title
+          font-size 24px
+          line-height 24px   
+          margin-top 20px
+        .pricelineblock      
+          .priceline
+            font-size 16px
+            line-height 16px   
+            margin-top 20px
+        .foodblock
+          margin-top 50px
+          .foodlineblock        
+            .foodline
+              font-size 16px
+              height 16px        
+            .seperator
+              margin-top 5px
+              height 30px
+              font-size 16px
+              line-height 30px       
+        .endlineblock
+          .endline
+            margin-top 50px
+            font-size 16px
+            height 30px
+            line-height 30px
+            margin-bottom 20px
+            padding-bottom 20px
+        .endfilling
+            height 20px           
   .map
     text-align center
     margin-top 20px
@@ -67,7 +89,7 @@
       <div class="divider"></div>
       <div class="row">
         <div class="column" v-for="ricetable in ricetables">
-           <div>
+           <div class="ricetableblock">
                 <div class="title">
                     {{ricetable.title}}
                 </div>
@@ -92,7 +114,8 @@
                             <div class="endline">{{endline}}</div>                   
                         </li>
                     </ul>
-                </div> 
+                </div>    
+                <div class="endfilling"></div>                           
             </div>     
         </div>  
       </div>      
@@ -116,22 +139,18 @@ export default {
   },
   data() {
     return {
-      ricetables: this.data.ricetables,
-      title: this.data.ricetables.title, // 'Menu van de maand',
-      pricelines: this.data.promotion.pricelines, // ['Geldig tot 31/05/2021', '20 euro p.p. mini 2 personnen'],
-      foodlines: this.data.promotion.foodlines, // ['kipsoep', 'mini loempia', 'peking eend'],
-      endlines: this.data.promotion.endlines // ['Bedankt voor uw bezoek']
+      ricetables: this.data.ricetables
     }
   },
-  mounted() {
-    setTimeout(() => {
-      this._initScroll()
-    }, 3000);
+  created() {
+    this.$nextTick(() => {
+      this._initScroll(); // 初始化scroll
+    })
   },
   methods: {
     _initScroll() {
       // alert('ok')
-      console.log(`_initScrollseller ${this.data.promotion.title},`)
+      // console.log(`_initScrollseller ${this.data.promotion.title},`)
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
       this.foodsScroll = new BScroll(this.$refs.ratingsWrapper, {
