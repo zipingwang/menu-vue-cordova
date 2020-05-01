@@ -42,7 +42,7 @@
     </div>
   </div>
   <keep-alive>
-    <router-view :seller="seller" :data="data" :ml="ml"></router-view>
+      <router-view :seller="seller" :data="data" :ml="ml"></router-view>    
   </keep-alive>
 </div>
 
@@ -50,38 +50,23 @@
 
 <script>
 import header from 'components/header/header'
-import axios from 'axios'
 
 const ERR_OK = 0
 
 export default {
   data() {
     return {
-      seller: {},
-      data: {},
-      ml: {},
-      visibletabs: [],
-      activetab: ''
+      seller: data.seller,
+      data: data,
+      ml: ml[`${ml.ln}`],
+      visibletabs: ml.visibletabs,
+      activetab: ml.activetab
     }
   },
-  created() {
-    axios.get('static/data.json').then((res) => {
-      this.seller = res.data.seller
-      this.data = res.data
-      // console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
-      // console.log(`get promotion in appvue ${res.data.promotion.title},`)
-    });
-    axios.get('static/ml.json').then((res) => {
-      this.ml = res.data[res.data.ln]
-      this.visibletabs = res.data.visibletabs
-      this.activetab = res.data.activetab
-      this.$router.push(`${this.activetab}`)
-      console.log(`get datajson from server in appvue ${JSON.stringify(res.data)},`)
-      // console.log(`get promotion in appvue ${res.data.ln},`)
-      // console.log(`this.visibletabs ${JSON.stringify(this.visibletabs)},`)
-      // console.log(`get ml in appvue ${JSON.stringify(this.ml)},`)
-      // console.log(`get promotion in appvue ${res.data[res.data.ln].address},`)
-    });
+  computed: {
+    showgoodstab() {
+      return ml.visibletabs.includes('goods');
+    }
   },
   components: {
     'v-header': header

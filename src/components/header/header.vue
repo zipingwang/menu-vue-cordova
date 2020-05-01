@@ -73,11 +73,9 @@
 import star from 'components/star/star'
 
 export default {
-  props: {
-    seller: {
-      type: Object
-    }
-  },
+  // props: {
+  //   //seller: data.seller
+  // },
   created() {
     this.iconClassMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   },
@@ -86,7 +84,8 @@ export default {
   },
   data() {
     return {
-      detailShow: false
+      detailShow: false,
+      seller: data.seller
     }
   },
   methods: {

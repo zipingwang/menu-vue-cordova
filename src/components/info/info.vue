@@ -91,7 +91,7 @@
         </div>    
       </div>
       <div class="divider"></div>
-      <div class="map">
+      <div class="map" :height="mapheight + 10">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8453.942022942727!2d3.1168769230366475!3d50.95382607037244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xbccbcc65bdf9d37e!2sShanghai%20meeneemchinees!5e0!3m2!1sen!2sbe!4v1588327587894!5m2!1sen!2sbe" :width="mapwidth" :height="mapheight" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>       
       </div>
       <div height="10px"></div>
@@ -140,9 +140,12 @@ export default {
     }
   },
   created() {
-    setTimeout(() => {
-      this._initScroll()
-    }, 2000);
+    this.$nextTick(() => {
+      this._initScroll(); // 初始化scroll
+    })
+    // setTimeout(() => {
+    //   this._initScroll()
+    // }, 2000);
   },
   methods: {
     _initScroll() {
