@@ -66,36 +66,36 @@
     <div class="ratings-content">
       <div class="divider"></div>
       <div class="row">
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.openinghour}}</h1>
-            <ul class="list">
-              <li class="item" v-for="line in seller.openinghour">{{line}}</li>
-            </ul>
-          </div>
-        </div>      
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.telephone}}</h1>
-            <ul class="list">
-              <li class="item" v-for="tel in seller.telefoon">{{tel}}</li>
-            </ul>
-          </div>
-        </div>       
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.address}}</h1>
-            <ul class="list">
-              <li class="item" v-for="line in seller.address">{{line}}</li>
-            </ul>
-          </div>
-        </div>        
-         
-      </div>
-      <div class="divider"></div>
-      <div class="map">
-        <iframe @load="alert('load')" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d264.1796438045355!2d3.1150691671144806!3d50.95488935338752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c335ebf3ff4443%3A0xbccbcc65bdf9d37e!2sShanghai%20meeneemchinees!5e0!3m2!1snl!2sbe!4v1588192361967!5m2!1snl!2sbe" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-      </div>
+        <div class="column" v-for="ricetable in ricetables">
+           <div>
+                <div class="title">
+                    {{ricetable.title}}
+                </div>
+                <div class="pricelineblock">
+                    <ul>
+                        <li class="priceline" v-for="priceline in ricetable.pricelines">
+                            <div class="priceline">{{priceline}}</div>                   
+                        </li>
+                    </ul>
+                </div>
+                <div class="foodblock">
+                    <ul>
+                        <li class="foodlineblock" v-for="(food, index) in ricetable.foodlines">
+                            <div class="foodline">{{food}}</div>
+                            <div class="seperator" v-if="index != ricetable.foodlines.length - 1">***</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="endlineblock">
+                    <ul>
+                        <li class="endline" v-for="endline in ricetable.endlines">
+                            <div class="endline">{{endline}}</div>                   
+                        </li>
+                    </ul>
+                </div> 
+            </div>     
+        </div>  
+      </div>      
     </div>        
   </div>
 </template>
