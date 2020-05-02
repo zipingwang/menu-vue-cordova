@@ -150,7 +150,7 @@ export default {
   methods: {
     _initScroll() {
       // alert('ok')
-      // console.log(`_initScrollseller ${this.data.promotion.title},`)
+      // console.log(`_initScrollseller ${this.data.monthmenu.title},`)
       // let smallScreen = screen.width <= 800;
       // console.log(`screen width ${screen.width}, smallScreen ${this.smallScreen}`)
       this.foodsScroll = new BScroll(this.$refs.ratingsWrapper, {

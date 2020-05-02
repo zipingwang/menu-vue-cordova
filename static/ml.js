@@ -5,7 +5,7 @@ var ml = {
 "zh":{
 	"product":"商品",
 	"info":"商家",
-	"promotion":"月餐",
+	"monthmenu":"月餐",
 	"address":"地址",
 	"contact":"联系",
 	"telephone":"电话",
@@ -19,12 +19,13 @@ var ml = {
 	"description":"商品介绍",
 	"ricetable":"套餐",
 	"shoppingcart":"购物车",
-	"clearshoppingcart":"清空"	
+	"clearshoppingcart":"清空",
+	"promoite":"优惠信息"
 	},
 "nl":{
 	"product":"Menu",
 	"info":"Info",
-	"promotion":"Maandmenu",
+	"monthmenu":"Maandmenu",
 	"address":"Adres",
 	"contact":"Contact",
 	"telephone":"Telefoon",
@@ -38,6 +39,7 @@ var ml = {
 	"description":"Beschrijving",
 	"ricetable":"Rijsttafel",
 	"shoppingcart":"Shopping cart",
-	"clearshoppingcart":"Wissen"	
+	"clearshoppingcart":"Wissen",
+	"promoite":"promotie"
 	}
 }

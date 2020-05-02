@@ -28,8 +28,8 @@
     <div class="tab-item"  v-if="visibletabs.includes('rating')">
       <router-link to="/ratings">{{ml.rating}}</router-link>
     </div>
-    <div class="tab-item" v-if="visibletabs.includes('promotion')" >
-      <router-link to="/promotion">{{ml.promotion}}</router-link>
+    <div class="tab-item" v-if="visibletabs.includes('monthmenu')" >
+      <router-link to="/monthmenu">{{ml.monthmenu}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('ricetable')">
       <router-link to="/ricetable">{{ml.ricetable}}</router-link>

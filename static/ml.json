@@ -5,7 +5,7 @@
 "zh":{
 	"product":"商品",
 	"info":"商家",
-	"promotion":"月餐",
+	"monthmenu":"月餐",
 	"address":"地址",
 	"contact":"联系",
 	"telephone":"电话",
@@ -22,7 +22,7 @@
 "nl":{
 	"product":"Menu",
 	"info":"Info",
-	"promotion":"Maandmenu",
+	"monthmenu":"Maandmenu",
 	"address":"Adres",
 	"contact":"Contact",
 	"telephone":"Telefoon",

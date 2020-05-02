@@ -89,10 +89,10 @@ export default {
   },
   data() {
     return {
-      title: this.data.promotion.title, // 'Menu van de maand',
-      pricelines: this.data.promotion.pricelines, // ['Geldig tot 31/05/2021', '20 euro p.p. mini 2 personnen'],
-      foodlines: this.data.promotion.foodlines, // ['kipsoep', 'mini loempia', 'peking eend'],
-      endlines: this.data.promotion.endlines // ['Bedankt voor uw bezoek']
+      title: this.data.monthmenu.title, // 'Menu van de maand',
+      pricelines: this.data.monthmenu.pricelines, // ['Geldig tot 31/05/2021', '20 euro p.p. mini 2 personnen'],
+      foodlines: this.data.monthmenu.foodlines, // ['kipsoep', 'mini loempia', 'peking eend'],
+      endlines: this.data.monthmenu.endlines // ['Bedankt voor uw bezoek']
     }
   },
   created() {
@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     _initScroll() {
-      console.log(`seller ${this.data.promotion.title},`)
+      console.log(`seller ${this.data.monthmenu.title},`)
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
       this.foodsScroll = new BScroll(this.$refs.ratingsWrapper, {
