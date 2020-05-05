@@ -61,6 +61,9 @@ new Vue({
   },
   data: {
     eventHub: new Vue()
+  },
+  created() {
+    ml.trans = ml[`${ml.ln}`]
   }
 }).$mount('#app')
 

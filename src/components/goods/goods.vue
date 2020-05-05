@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div class="goods">   
+  <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li v-for="(item,index) in goods" @click="menuClick(index,$event)" :class="index==menuCurrentIndex?'menu-item-selected':'menu-item'">
@@ -18,14 +18,19 @@
           <ul>
             <li v-for="food in item.foods" class="food-item" @click="goDetail(food)">
               <div class="icon">
-                <img width="57" height="57" v-lazy="food.icon"/>            
+                <img width="57" height="57" v-lazy="food.icon"/>
               </div>
               <div class="content">
+                <!-- <span class="food">{{food.name}}</span> <span class="nr">nr. {{food.menunr}}</span>  -->
                 <h2>{{food.name}}</h2>
-                <p class="description" v-show="food.description">{{food.description}}</p>
+                <!-- <p class="description" v-show="food.description">{{food.description}}</p>                  -->
+                <p class="description" v-show="food.menunr">Nr. {{food.menunr}}</p>
                 <div class="sell-info">
-                  <span class="sellCount">月售{{food.sellCount}}份</span>
-                  <span class="rating">好评率{{food.rating}}%</span>
+                  <div class="star-wrapper" v-if="food.rating">
+                    <star :size="24" :score="food.rating"></star>
+                  </div>
+                  <!-- <span class="sellCount">月售{{food.sellCount}}份</span> -->
+                  <!-- <span class="rating">好评率{{food.rating}}%</span> -->
                 </div>
                 <div class="price">
                   <span class="newPrice"><span class="unit">€ </span>{{food.price}}</span>
@@ -54,6 +59,7 @@ import cartcontrol from 'components/cartcontrol/cartcontrol'
 import foodDetail from 'components/foodDetail/foodDetail'
 import axios from 'axios'
 import Vue from 'vue'
+import star from 'components/star/star'
 
 const ERR_OK = 0
 const eventHub = new Vue()
@@ -66,18 +72,6 @@ export default {
       this._initScroll(); // 初始化scroll
       this._calculateHeight(); // 初始化列表高度列表
     })
-    // console.log(`before seller.vue get datajson from server in appvue`)
-    // console.log(`seller.vue get datajson from server in appvue ${JSON.stringify(this.data.goods)},`)
-    // // this.goods = this.data.goods;
-    // // this._initScroll(); // 初始化scroll
-    // // this._calculateHeight(); // 初始化列表高度列表
-    // axios.get('static/data.json').then((res) => {
-    //   this.goods = res.data.goods;
-    //   this.$nextTick(() => {
-    //     this._initScroll(); // 初始化scroll
-    //     this._calculateHeight(); // 初始化列表高度列表
-    //   })
-    // });
   },
   data() {
     return {
@@ -153,16 +147,19 @@ export default {
     },
     goDetail(food) {
       this.selectedFood = food
-      this.$nextTick(() => {
-        this.$refs.myFood.showToggle()
-      })
+      if (food.image) {
+        this.$nextTick(() => {
+          this.$refs.myFood.showToggle()
+        })
+      }
     }
   },
   components: {
     iconMap,
     shopCart,
     cartcontrol,
-    foodDetail
+    foodDetail,
+    star
   }
 }
 
@@ -236,6 +233,21 @@ export default {
         .content
           flex 1
           padding-left 10px
+          .food
+            margin 2px 0 8px 0
+            font-size 14px
+            line-height 14px
+            height 14px
+            font-weight 700
+            color rgb(7,17,27)
+          .nr
+            margin 2px 0 8px 5px
+            font-size 12px
+            line-height 12px
+            height 14px
+            font-style italic
+            font-weight 700
+            color rgb(147,153,159)
           h2
             margin 2px 0 8px 0
             font-size 14px
@@ -247,6 +259,8 @@ export default {
             font-size 10px
             color rgb(147,153,159)
             line-height 10px
+            .star-wrapper
+              margin-right 4px
             .sellCount
               margin-right 4px
           .description

@@ -10,30 +10,34 @@
         <div class="back" @click="showToggle()">
           <i class="icon-arrow_lift"></i>
         </div>
-        <img :src="food.image" height="425" width="100%">
+        <img :src="food.image" :height="imgHeight" width="100%">
         <div class="info">
           <div class="title">{{food.name}}</div>
-          <div class="desc">
+          <p class="desc" v-show="food.menunr">Nr. {{food.menunr}}</p> 
+          <div class="star-wrapper" v-if="food.rating">
+            <star :size="24" :score="food.rating"></star>
+          </div>
+          <!-- <div class="desc">            
             <span>月售{{food.sellCount}}</span>
             <span>好评率{{food.rating}}%</span>
-          </div>
+          </div> -->
           <div class="price">
             <span class="unit">€</span>{{food.price}}
             <span class="oldPrice" v-show="food.oldPrice">€{{food.oldPrice}}</span>
           </div>
           <div class="shopCart">
             <transition name="fade">
-              <div class="text" @click="addCart($event)" v-show="!food.count">加入购物车</div>
+              <div class="text" @click="addCart($event)" v-show="!food.count">{{trans.addtoshoppingcart}}</div>
             </transition>
           </div>
-          <cartcontrol :food="food"></cartcontrol>
+          <cartcontrol :food="food" v-show="food.count"></cartcontrol>
         </div>
         <div class="divider"></div>
         <div class="desc">
-          <div class="title">商品介绍</div>
+          <div class="title">{{trans.description}}</div>
           <div class="content">{{food.info}}</div>
         </div>
-        <div class="divider"></div>
+        <!-- <div class="divider"></div>
         <div class="evaluation">
           <div class="title">
             商品评价
@@ -64,7 +68,7 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </transition>
@@ -75,10 +79,12 @@
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
+import star from 'components/star/star'
 
 export default {
   components: {
-    cartcontrol
+    cartcontrol,
+    star
   },
   props: {
     food: Object
@@ -103,7 +109,8 @@ export default {
         commmentCatetory: 2,
         active: false
       }],
-      evelflag: true
+      evelflag: true,
+      trans: ml.trans
     }
   },
   computed: {
@@ -114,6 +121,13 @@ export default {
         })
       }
       return this.food.ratings.filter((data) => this.evelflag ? this.currentCommmentCatetory && data.text : this.currentCommmentCatetory)
+    },
+    imgHeight() {
+      if (screen.width < 800) {
+        return 350
+      } else {
+        return 450
+      }
     }
   },
   methods: {
@@ -210,6 +224,8 @@ export default {
     box-sizing border-box
     width 100%
     padding 18px
+    .star-wrapper    
+      margin-top 4px  
     .title
       font-size 14px
       font-weight 700

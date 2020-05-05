@@ -7,27 +7,33 @@
         </div>
         <div class="content">
             <div class="title">
-                <span class="brand"></span>
+                <!-- <span class="brand"></span> -->
                 <span class="name">{{seller.name}}</span>
             </div>
-            <div class="description">
-                {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}}
+            <div class="star-wrapper">
+              <star :size="36" :score="seller.score"></star>
             </div>
-            <div class="supports" v-if="seller.supports">
+            <!-- <div class="description">               
+                {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}}
+            </div> -->
+            <!-- <div class="supports" v-if="seller.supports">
                 <div class="supports_desc">
                     <span class="icon" :class="iconClassMap[seller.supports[0].type]"></span>
                     <span class="text">{{seller.supports[0].description}}</span>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
-            <span class="count">{{seller.supports.length+'个'}}</span>
+            <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
+            <span class="count">{{seller.supports.length+'...'}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
   </div>
-  <div class="bulletin-wrapper" @click="showDetails()">
+  <div class="bulletin-wrapper" @click="showDetails()" v-if="seller.supports.length>0">
     <span class="bulletin-title"></span>
-    <span class="bulletin-text">{{seller.bulletin}}</span>
+    <!-- <i class="fa fa-bullhorn"></i> -->
+    <!-- <span class="bulletin-text">{{seller.bulletin}}</span> -->
+    <span class="bulletin-text">{{seller.supports[0].description}}</span>
     <i class="icon-keyboard_arrow_right"></i>
   </div>
   <div class="background">
@@ -43,7 +49,7 @@
             </div>
             <div class="title">
               <div class="line"> </div>
-              <div class="text">优惠信息</div>
+              <div class="text">{{ml.trans.promotion}}</div>
               <div class="line"></div>
             </div>
             <ul v-if="seller.supports" class="supports">
@@ -54,7 +60,7 @@
             </ul>
             <div class="title">
               <div class="line"> </div>
-              <div class="text">商家公告</div>
+              <div class="text">{{ml.trans.shopannouncement}}</div>
               <div class="line"></div>
             </div>
             <div class="bulletin">{{seller.bulletin}}</div>
@@ -85,7 +91,8 @@ export default {
   data() {
     return {
       detailShow: false,
-      seller: data.seller
+      seller: data.seller,
+      ml: ml /* must first assign to local element of data then can use ml. can't use {{ml.trans.promotion}} in template. */
     }
   },
   methods: {
@@ -132,10 +139,13 @@ export default {
           background-size 30px 18px
           background-repeat no-repeat
         .name
-          margin-left 6px
+          // margin-left 6px
           font-size 16px
           line-height 18px
           font-weight bold
+      .star-wrapper
+        margin 5px 5px 5px 0
+        text-align left
       .description
         font-size 12px
         margin-bottom 10px

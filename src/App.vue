@@ -58,7 +58,7 @@ export default {
     return {
       seller: data.seller,
       data: data,
-      ml: ml[`${ml.ln}`],
+      ml: ml.trans,
       visibletabs: ml.visibletabs,
       activetab: ml.activetab
     }
