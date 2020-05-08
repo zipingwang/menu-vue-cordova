@@ -7,24 +7,40 @@
   </transition>
   <transition name="move">
     <div class="detailWrapper" ref="detailWrapper" v-show="show">
-      <div class="list-content" ref="foodlist">
-          <ul>
-            <li class="food" v-for="food in selectFoods">
-              <span class="name">{{food.name}}</span>
-              <span class="price">{{food.count}}</span>
-              <span class="subtotal">{{food.price * food.count}} </span>
-            </li>
-          </ul>
+      <div class="billcontainer">
+          <div class="columnpadding"></div>
+          <div class="billcontent">
+            <ul>
+              <li class="rowheader">
+                <span class="columncount">Aantal</span>
+                <span class="columnname">Omschrijving</span>
+                <span class="columnunitprice">Prijs </span>
+                <span class="columnprice">Bedrag </span>
+              </li>
+              <li class="row" v-for="food in selectFoods">
+                <span class="columncount">{{food.count}}</span>
+                <span class="columnname">{{food.name}}</span>
+                <span class="columnunitprice">{{food.price}} </span>
+                <span class="columnprice">{{food.price * food.count}} </span>
+              </li>
+              <li class="footline">
+                <span class="columncount">{{totalCount}}</span>
+                <span class="columnname"></span>
+                <span class="columnunitprice"></span>
+                <span class="columnprice">{{totalPrice}}</span>
+              </li>
+            </ul>
+            <div class="totalline">Totaal        €{{totalPrice}}</div>
+            <div type="buttonarea">
+              <button type="button" @click="connect()">Ok</button> <button type="button" @click="hidecheckout()">Cancel</button>
+            </div>
+          </div>
+          <div class="columnpadding"></div>
+          <div class="button">
+
+          </div>
       </div>
-      <div>
-      <button type="button" @click="connect()">Ok</button>
-      </div>
-      <div>
-      <button type="button" @click="hidecheckout()">Cancel</button>
-      </div>
-      <div class="detail-close">
-        <i class="icon-close" @click="hidecheckout()"></i>
-      </div>
+
     </div>
   </transition>
   </div>
@@ -33,54 +49,6 @@
 <script>
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
-
-// Reference to simpleHub proxy
-// var simpleHubProxy;
-// var url = 'https://localhost:44337/signalr';
-// var userName = 'vue app';
-
-// function connect() {
-//   alert('click');
-//     // Load auto generated hub script dynamically and perform connection operation when loading completed
-//     // SignalR server location is specified by 'Url' input element, hub script must be loaded from the same location
-//     // For production, remove this call and uncomment the script block in the header part
-//   $.getScript(url + '/hubs', function() {
-//     $.connection.hub.url = url;
-//     // Declare a proxy to reference the hub.
-//     simpleHubProxy = $.connection.simpleHub;
-
-//     // Reigster to the 'AddMessage' callback method of the hub
-//     // This method is invoked by the hub
-//     simpleHubProxy.client.orderReceivedInBackOffice = function (userName, order, time) {
-//       alert('order confirmed');
-//       // writeToLog(name + ':' + message);
-//     };
-
-//     // Connect to hub
-//     $.connection.hub.start().done(function () {
-//       // writeToLog('Connected.');
-//       simpleHubProxy.server.Connect(userName);
-//       simpleHubProxy.server.OrderFromWeb(userName, 'my order', '');
-//     });
-//   });
-// }
-
-// // Disconnect from the server
-// function disconnect() {
-//   if (simpleHubProxy != null) {
-//     $.connection.hub.stop().done(function() {
-//       simpleHubProxy = null;
-//       // writeToLog("Disconnected.");
-//     });
-//   }
-// }
-
-// // Send a message to server
-// function sendMessage() {
-//   if (simpleHubProxy != null) {
-//     simpleHubProxy.server.send($('#txtMessage').val());
-//   }
-// }
 
 export default {
   components: {
@@ -102,57 +70,47 @@ export default {
     }
   },
   computed: {
+    totalCount() {
+      let count = 0
+      this.selectFoods.forEach((food) => {
+        count += food.count
+      })
+      return count
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      this._initScroll(); // 初始化scroll
+    })
   },
   methods: {
+    _initScroll() {
+      // alert('ok')
+      // console.log(`_initScrollseller ${this.data.monthmenu.title},`)
+      let smallScreen = screen.width <= 800;
+      console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
+      this.foodsScroll = new BScroll(this.$refs.detailWrapper, {
+        click: true,
+        probeType: 3,
+        scrollbar: {
+          fade: smallScreen,
+          interactive: !smallScreen // new in 1.8.0
+        },
+        mouseWheel: {
+          speed: 20,
+          invert: false
+        }
+      });
+    },
     showcheckout() {
       this.show = true;
+      _initScroll();
     },
     hidecheckout() {
       this.show = false;
     },
     connect() {
       alert('click');
-        // Load auto generated hub script dynamically and perform connection operation when loading completed
-        // SignalR server location is specified by 'Url' input element, hub script must be loaded from the same location
-        // For production, remove this call and uncomment the script block in the header part
-      $.getScript(this.url + '/hubs', function() {
-        $.connection.hub.url = this.url;
-        // Declare a proxy to reference the hub.
-        this.simpleHubProxy = $.connection.orderHub;
-
-        // Reigster to the 'AddMessage' callback method of the hub
-        // This method is invoked by the hub
-        // this.simpleHubProxy.client.orderReceivedInBackOffice = function (userName, order, time) {
-        //   alert('order confirmed');
-        //   // writeToLog(name + ':' + message);
-        // };
-
-        alert('before start connect to server');
-        // Connect to hub
-        // $.connection.hub.start().done(function () {
-        //   alert('success');
-        //   this.afterconnecttoserver()
-        // }
-        $.connection.hub.start().done(function () {
-          alert('connected');
-        });
-        alert('after start connect to server');
-      });
-    },
-    afterconnecttoserver() {
-      alert('success server');
-      this.simpleHubProxy.server.connect(this.userName);
-      this.simpleHubProxy.server.orderFromWeb(this.userName, 'my order', '');
-      alert('order send to server');
-    },
-    // Disconnect from the server
-    disconnect() {
-      if (this.simpleHubProxy != null) {
-        $.connection.hub.stop().done(function() {
-          this.simpleHubProxy = null;
-          // writeToLog("Disconnected.");
-        });
-      }
     }
   }
 }
@@ -160,6 +118,65 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+* {
+  box-sizing: border-box;
+}
+.billcontainer {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.billcontent {
+  flex: 80%
+}
+
+.rowheader {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom : 20px;
+  padding-bottom : 10px;
+  padding-top: 50px;
+  border-bottom : 1px dashed
+}
+.footline {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-top: 20px;
+  border-top : 1px dashed
+}
+
+/* Container for flexboxes */
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom : 10px;
+}
+
+/* Create four equal columns */
+.columncount {
+  flex: 10%;
+  //text-align right;
+  //padding-right 20px;
+}
+
+.columnname {
+  flex: 70%;
+}
+.columnunitprice {
+  flex: 10%;
+}
+.columnprice {
+  flex: 10%;
+}
+.columnpadding {
+  flex : 10%
+}
+.totalline
+{
+  margin-top: 40px
+  text-align: center;
+  font-size: 24px;
+}
 .detail
   position fixed
   left 0

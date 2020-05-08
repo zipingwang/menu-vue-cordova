@@ -10,6 +10,7 @@
 }
 
 /* Create four equal columns */
+/* maximum 4 column, if screen width is not enough, it will display less column, e.g. 3 or 2 or 1, new row will made. */
 .column {
   flex: 25%;
   padding: 20px;
@@ -40,7 +41,7 @@
   .row
     .column
       text-align center
-      color rgb(77,85,93)     
+      color rgb(77,85,93)
       .ricetableblock
         border 1px solid #f3f5f7
         border-radius: 10px;
@@ -48,24 +49,24 @@
         box-sizing border-box
         .title
           font-size 24px
-          line-height 24px   
+          line-height 24px
           margin-top 20px
-        .pricelineblock      
+        .pricelineblock
           .priceline
             font-size 16px
-            line-height 16px   
+            line-height 16px
             margin-top 20px
         .foodblock
           margin-top 50px
-          .foodlineblock        
+          .foodlineblock
             .foodline
               font-size 16px
-              height 16px        
+              height 16px
             .seperator
               margin-top 5px
               height 30px
               font-size 16px
-              line-height 30px       
+              line-height 30px
         .endlineblock
           .endline
             margin-top 50px
@@ -75,12 +76,12 @@
             margin-bottom 20px
             padding-bottom 20px
         .endfilling
-            height 20px           
+            height 20px
   .map
     text-align center
     margin-top 20px
     margin-bottom 100px
-    
+
 </style>
 
 <template lang="html">
@@ -96,7 +97,7 @@
                 <div class="pricelineblock">
                     <ul>
                         <li class="priceline" v-for="priceline in ricetable.pricelines">
-                            <div class="priceline">{{priceline}}</div>                   
+                            <div class="priceline">{{priceline}}</div>
                         </li>
                     </ul>
                 </div>
@@ -111,15 +112,15 @@
                 <div class="endlineblock">
                     <ul>
                         <li class="endline" v-for="endline in ricetable.endlines">
-                            <div class="endline">{{endline}}</div>                   
+                            <div class="endline">{{endline}}</div>
                         </li>
                     </ul>
-                </div>    
-                <div class="endfilling"></div>                           
-            </div>     
-        </div>  
-      </div>      
-    </div>        
+                </div>
+                <div class="endfilling"></div>
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
