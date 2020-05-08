@@ -18,7 +18,7 @@
           另需要配送费€{{deliveryPrice}}元
         </div> -->
       </div>
-      <div class="content-right" :class="{'enough':totalPrice>=minPrice}">
+      <div class="content-right" :class="{'enough':totalPrice>=minPrice}" @click="checkout">
         {{payDesc}}
       </div>
     </div>
@@ -52,10 +52,12 @@
         </div>
       </div>
     </transition>
+    <!-- <modals-container /> -->
   </div>
   <transition name="fade-backdrop">
     <div class="backdrop" v-show="showBackdrop" @click="hideBackdrop"></div>
   </transition>
+  <checkout ref="mycheckout" :selectFoods="selectFoods" :totalPrice="totalPrice"></checkout>
   </div>
 </template>
 
@@ -63,6 +65,7 @@
 import cartcontrol from 'components/cartcontrol/cartcontrol'
 import backdrop from 'components/backdrop/backdrop'
 import BScroll from 'better-scroll'
+import checkout from 'components/checkout/checkout'
 
 export default {
   props: {
@@ -94,7 +97,8 @@ export default {
       }],
       dropBalls: [],
       listShow: false,
-      trans: ml.trans
+      trans: ml.trans,
+      checkoutvisible: false
     }
   },
   created() {
@@ -215,17 +219,31 @@ export default {
         ball.show = false
         el.style.display = 'none'
       }
+    },
+    checkout() {
+      this.$refs.mycheckout.showcheckout()
+      // this.$modal.show(checkout, {
+      //   text: 'This text is passed as a property'
+      // }, {
+      //   overlayTransition: 'overtransition'
+      // }, {
+      //   draggable: true
+      // })
     }
   },
   components: {
     cartcontrol,
-    backdrop
+    backdrop,
+    checkout
   }
 }
 
 </script>
 
 <style lang="stylus" scoped>
+.vm--overlay {
+  background: red;
+}
 .shopCart
   position fixed
   left 0
