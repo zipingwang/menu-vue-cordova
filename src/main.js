@@ -67,7 +67,8 @@ new Vue({
   }
 }).$mount('#app')
 
+// ml.trans = ml[`${ml.ln}`] /* can't put here, must in created, otherwise not accessed in App.vue */
 // router.push(`${ml.activetab}`)
-console.log(JSON.stringify(data.seller))
-alert('default tab' + data.seller.defaultTab)
+// console.log(JSON.stringify(data.seller))
+// alert('default tab' + data.seller.defaultTab)
 router.push(`${ml.visibletabs[data.seller.defaultTab]}`)

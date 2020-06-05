@@ -23,26 +23,26 @@
   <v-header :seller="seller"></v-header>
   <div class="tab">
     <div class="tab-item" v-if="visibletabs.includes('goods')">
-      <router-link to="/goods">{{ml.product}}</router-link>
+      <router-link to="/goods">{{trans.product}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('rating')">
-      <router-link to="/ratings">{{ml.rating}}</router-link>
+      <router-link to="/ratings">{{trans.rating}}</router-link>
     </div>
     <div class="tab-item" v-if="visibletabs.includes('monthmenu')" >
-      <router-link to="/monthmenu">{{ml.monthmenu}}</router-link>
+      <router-link to="/monthmenu">{{trans.monthmenu}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('ricetable')">
-      <router-link to="/ricetable">{{ml.ricetable}}</router-link>
+      <router-link to="/ricetable">{{trans.ricetable}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('info')">
-      <router-link to="/info">{{ml.info}}</router-link>
+      <router-link to="/info">{{trans.info}}</router-link>
     </div>
     <div class="tab-item" v-if="visibletabs.includes('shop')">
       <router-link to="/seller">商家</router-link>
     </div>
   </div>
   <keep-alive>
-      <router-view :seller="seller" :data="data" :ml="ml"></router-view>
+      <router-view :seller="seller" :data="data" :ml="trans"></router-view>
   </keep-alive>
 </div>
 
@@ -58,15 +58,12 @@ export default {
     return {
       seller: data.seller,
       data: data,
-      ml: ml.trans,
+      trans: ml.trans,
       visibletabs: ml.visibletabs,
       activetab: ml.activetab
     }
   },
   computed: {
-    showgoodstab() {
-      return ml.visibletabs.includes('goods');
-    }
   },
   components: {
     'v-header': header

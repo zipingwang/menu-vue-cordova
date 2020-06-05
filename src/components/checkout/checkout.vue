@@ -72,7 +72,8 @@ export default {
   data() {
     return {
       show: false,
-      trans: ml.trans,
+      // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
+      trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
@@ -108,8 +109,8 @@ export default {
       this._initScroll(); // 初始化scroll
     })
     this.connectToSignalRServer()
-    alert('trans:' + JSON.stringify(trans))
-    console.log(JSON.stringify(ml))
+    console.log('checkout JSON.stringify(this.trans)')
+    console.log(JSON.stringify(this.trans))
   },
   methods: {
     _initScroll() {

@@ -143,11 +143,6 @@ export default {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
-    alert('OK')
-    alert(seller.googlemapurl)
-    // setTimeout(() => {
-    //   this._initScroll()
-    // }, 2000);
   },
   methods: {
     _initScroll() {
