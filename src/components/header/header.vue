@@ -3,7 +3,8 @@
 <div class="header">
     <div class="content-wrapper">
         <div class="avatar">
-          <img :src="seller.avatar" width="64" height="64" />
+          <!-- <img :src="seller.avatar" width="64" height="64" /> -->
+          <img src="http://www.freeobject.com/static/img/menu20163icon.jpg" width="64" height="64" />
         </div>
         <div class="content">
             <div class="title">
@@ -13,7 +14,7 @@
             <div class="star-wrapper">
               <star :size="36" :score="seller.score"></star>
             </div>
-            <!-- <div class="description">               
+            <!-- <div class="description">
                 {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}}
             </div> -->
             <!-- <div class="supports" v-if="seller.supports">

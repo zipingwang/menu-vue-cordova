@@ -45,7 +45,7 @@
         </li>
       </ul>
     </div>
-    <shopCart :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods"></shopCart>
+    <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml"></shopCart>
     <foodDetail :food="selectedFood" v-if="selectedFood" ref="myFood"></foodDetail>
   </div>
 
@@ -65,7 +65,8 @@ const ERR_OK = 0
 const eventHub = new Vue()
 export default {
   props: {
-    seller: Object
+    seller: Object,
+    ml: Object
   },
   created() {
     this.$nextTick(() => {

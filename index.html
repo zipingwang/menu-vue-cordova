@@ -5,16 +5,23 @@
     <title>sell</title>
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
-    
+
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; connect-src 'self' ws:;"> -->
-    
+
     <!-- allow image from internet. https://stackoverflow.com/questions/40595787/remote-image-not-loading-in-cordova/40601554-->
     <!-- not woking in hwawei p30: cannot load image. tested in emulator and medion, it works-->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * filesystem: data:; connect-src 'self' ws:; "> -->
-       
+    <!-- hwawei can only access https images, don't know why, maybe it is security in hwawei itsself-->
+    <!-- if cordova, content="default-src 'self' *, * is important for accessing google map -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * filesystem: data:; connect-src 'self' ws:; "> -->
+
   <link rel="stylesheet" href="static/css/reset.css">
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
-  <script src="static/data.js" type="text/javascript"></script>  
+  <script src="static/data.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- <script src="Scripts/jquery-3.4.1.min.js"></script> -->
+  <!--Reference the SignalR library. -->
+  <!-- <script src="Scripts/jquery.signalR-2.4.1.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/signalr@2.4.1/jquery.signalR.js"></script>
   <!-- <link rel="stylesheet" href="static/css/font-awesome.min.css"> -->
   <!-- <script src="static/ml.js" type="text/javascript"></script>   -->
   <!-- <script>

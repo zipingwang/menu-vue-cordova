@@ -67,4 +67,7 @@ new Vue({
   }
 }).$mount('#app')
 
-router.push(`${ml.activetab}`)
+// router.push(`${ml.activetab}`)
+console.log(JSON.stringify(data.seller))
+alert('default tab' + data.seller.defaultTab)
+router.push(`${ml.visibletabs[data.seller.defaultTab]}`)

@@ -42,7 +42,7 @@
     </div>
   </div>
   <keep-alive>
-      <router-view :seller="seller" :data="data" :ml="ml"></router-view>    
+      <router-view :seller="seller" :data="data" :ml="ml"></router-view>
   </keep-alive>
 </div>
 

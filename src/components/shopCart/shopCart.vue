@@ -57,7 +57,7 @@
   <transition name="fade-backdrop">
     <div class="backdrop" v-show="showBackdrop" @click="hideBackdrop"></div>
   </transition>
-  <checkout ref="mycheckout" :selectFoods="selectFoods" :totalPrice="totalPrice"></checkout>
+  <checkout ref="mycheckout" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" ml="ml"></checkout>
   </div>
 </template>
 
@@ -80,7 +80,9 @@ export default {
     minPrice: {
       type: Number,
       default: 0
-    }
+    },
+    seller: {},
+    ml: {}
   },
   data() {
     return {
