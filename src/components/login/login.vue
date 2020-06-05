@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
   <transition name="fade">
-    <div v-show="show" class="detail" @click="hidecheckout()">
+    <div v-show="show" class="detail" @click="hidelogin()">
     <!-- <div class="detail" @click="showToggle()"> -->
     </div>
   </transition>
@@ -10,35 +10,30 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
-            <ul>
-              <li class="rowheader">
-                <span class="columncount">{{trans.ordercount}}</span>
-                <span class="columnname">{{trans.orderdescription}}</span>
-                <span class="columnunitprice">{{trans.orderunitprice}}</span>
-                <span class="columnprice">{{trans.orderlinetotal}}</span>
-              </li>
-              <li class="row" v-for="food in selectFoods">
-                <span class="columncount">{{food.count}}</span>
-                <span class="columnname">{{food.name}}</span>
-                <span class="columnunitprice">{{food.price}} </span>
-                <span class="columnprice">{{food.price * food.count}} </span>
-              </li>
-              <li class="footline">
-                <span class="columncount">{{totalCount}}</span>
-                <span class="columnname"></span>
-                <span class="columnunitprice"></span>
-                <span class="columnprice">{{totalPrice}}</span>
-              </li>
-            </ul>
-            <div class="totalline">{{trans.ordertotal}}        €{{totalPrice}}</div>
-            <div class="ordertext" v-if="!seller.supportOnlineOrder">
-              U kan deze bestelling plaatsen door te bellen naar 051207637
-            </div>
-            <div class="buttonarea">
-              <span class="close" @click="connect()" v-if="seller.supportOnlineOrder">OK</span>
-              <!-- <button type="button" @click="connect()" v-if="seller.supportOnlineOrder">Ok</button> -->
-              <span class="close" @click="hidecheckout()">Sluiten</span>
-              <!-- <button type="button" @click="hidecheckout()">Cancel</button> -->
+            <card class="customer">
+                <p slot="title">{{trans.login}}</p>
+                <i-form ref="formInline" :model="formInline" :rules="ruleInline" inline>
+                    <form-item prop="user">
+                        <i-input type="text" v-model="formInline.user" placeholder="Username">
+                            <icon type="ios-person-outline" slot="prepend"></icon>
+                        </i-input>
+                    </form-item>
+                    <form-item prop="password">
+                        <i-input type="password" v-model="formInline.password" >
+                            <icon type="ios-lock-outline" slot="prepend"></icon>
+                        </i-input>
+                    </form-item>
+                    <form-item>
+                        <i-button type="success" @click="handleSubmit('formInline')">Signin</i-button>
+                    </form-item>
+                </i-form>
+            </card>
+            <div class="notcustomeryet">
+            <card>
+                <p slot="title">{{trans.noggeenaccount}}</p>
+                <Button type="success" class="register" @click="register()">{{trans.register}}</Button>
+                <Button type="success" class="loginasgust" @click="loginasguest()">{{trans.loginasguest}}</Button>
+            </card>
             </div>
           </div>
           <div class="columnpadding"></div>
@@ -49,6 +44,7 @@
 
     </div>
   </transition>
+  <register ref="myregister" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml"></register>
   </div>
 </template>
 
@@ -56,9 +52,11 @@
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
+import register from 'components/register/register'
 
 export default {
   components: {
+    register
   },
   props: {
     seller: {},
@@ -72,12 +70,24 @@ export default {
   data() {
     return {
       show: false,
-      // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
       trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
-      connectionId: ''
+      connectionId: '',
+      formInline: {
+        user: '',
+        password: ''
+      },
+      ruleInline: {
+        user: [
+          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -109,8 +119,6 @@ export default {
       this._initScroll(); // 初始化scroll
     })
     this.connectToSignalRServer()
-    console.log('checkout JSON.stringify(this.trans)')
-    console.log(JSON.stringify(this.trans))
   },
   methods: {
     _initScroll() {
@@ -129,14 +137,33 @@ export default {
         }
       });
     },
-    showcheckout() {
+    register() {
+      this.show = false
+      this.$refs.myregister.showregister()
+    },
+    loginasguest() {
+      // alert('loginasguest')
+      // this.$emit('loginevent', 'loginasguest')
+      this.show = false
+      this.$root.eventHub.$emit('login.loggedin', 'loginasguest')
+    },
+    showlogin() {
       this.show = true;
       this.$nextTick(() => {
         this.foodsScroll.refresh(); // 初始化scroll
       })
     },
-    hidecheckout() {
+    hidelogin() {
       this.show = false;
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.$Message.success('Success!');
+        } else {
+          this.$Message.error('Fail!');
+        }
+      })
     },
     connect() {
       if (!this.simpleHubProxy) {
@@ -217,11 +244,11 @@ export default {
     },
     onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
       if (this.connectionId === webClientConnectionId) {
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
         this.$Modal.success({
           title: 'Success',
           content: '<p>Order is geplaast</p>'
         });
+        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
       }
     },
     sendOrder() {
@@ -268,17 +295,20 @@ export default {
 .billcontainer {
   display: flex;
   flex-wrap: nowrap;
+  margin: 50px auto
 }
 .billcontent {
   flex: 80%
 }
-
+.loginasguest {
+  margin: 20px auto
+}
 .rowheader {
   display: flex;
   flex-wrap: nowrap;
   margin-bottom : 20px;
   padding-bottom : 10px;
-  padding-top: 50px;
+  padding-top: 20px;
   border-bottom : 1px dashed
 }
 .footline {
@@ -375,6 +405,13 @@ export default {
   &.move-enter,&.move-leave-active{
     transform translate3d(100%,0,0)
   }
+  .billcontainer
+      .billcontent
+        .notcustomeryet
+          margin 20px auto
+        .register
+          margin 10px 20px
+
 @media screen and (min-width: 800px)
   .detailWrapper
     position fixed
@@ -393,14 +430,7 @@ export default {
     &.move-enter,&.move-leave-active{
       transform translate3d(10%,0,0)
     }
- .detail-close
-    position relative
-    width 32px
-    height 32px
-    margin -64px auto 0 auto
-    clear both
-    font-size 32px
-    color rgba(0,0,0,0.5)
+
 
 
 </style>

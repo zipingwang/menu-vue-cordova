@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
   <transition name="fade">
-    <div v-show="show" class="detail" @click="hidecheckout()">
+    <div v-show="show" class="detail" @click="hideregister()">
     <!-- <div class="detail" @click="showToggle()"> -->
     </div>
   </transition>
@@ -10,36 +10,50 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
-            <ul>
-              <li class="rowheader">
-                <span class="columncount">{{trans.ordercount}}</span>
-                <span class="columnname">{{trans.orderdescription}}</span>
-                <span class="columnunitprice">{{trans.orderunitprice}}</span>
-                <span class="columnprice">{{trans.orderlinetotal}}</span>
-              </li>
-              <li class="row" v-for="food in selectFoods">
-                <span class="columncount">{{food.count}}</span>
-                <span class="columnname">{{food.name}}</span>
-                <span class="columnunitprice">{{food.price}} </span>
-                <span class="columnprice">{{food.price * food.count}} </span>
-              </li>
-              <li class="footline">
-                <span class="columncount">{{totalCount}}</span>
-                <span class="columnname"></span>
-                <span class="columnunitprice"></span>
-                <span class="columnprice">{{totalPrice}}</span>
-              </li>
-            </ul>
-            <div class="totalline">{{trans.ordertotal}}        €{{totalPrice}}</div>
-            <div class="ordertext" v-if="!seller.supportOnlineOrder">
-              U kan deze bestelling plaatsen door te bellen naar 051207637
-            </div>
-            <div class="buttonarea">
-              <span class="close" @click="connect()" v-if="seller.supportOnlineOrder">OK</span>
-              <!-- <button type="button" @click="connect()" v-if="seller.supportOnlineOrder">Ok</button> -->
-              <span class="close" @click="hidecheckout()">Sluiten</span>
-              <!-- <button type="button" @click="hidecheckout()">Cancel</button> -->
-            </div>
+            <card class="customer">
+                <p slot="title">{{trans.register}}</p>
+                 <i-form ref="formItem" :model="formItem" :rules="ruleCustom" :label-width="80">
+                      <FormItem :label="trans.createuserfirstname">
+                        <i-input v-model="formItem.firstname" :placeholder="trans.createuserfirstname"></i-input>
+                    </FormItem>
+                    <FormItem :label="trans.createuserlastname">
+                        <i-input v-model="formItem.lastname" :placeholder="trans.createuserlastname"></i-input>
+                    </FormItem>
+                     <FormItem :label="trans.createusertelephone">
+                        <i-input v-model="formItem.telephone" :placeholder="trans.createusertelephone"></i-input>
+                    </FormItem>
+        <form-item label="Password" prop="password">
+            <i-input type="password" v-model="formItem.password"></i-input>
+        </form-item>
+        <form-item label="Confirm" prop="passwordconfirm">
+            <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
+        </form-item>
+        <form-item>
+            <i-button type="primary" @click="handleSubmit('formItem')">Submit</i-button>
+            <i-button @click="handleReset('formItem')" style="margin-left: 8px">Reset</i-button>
+        </form-item>
+    </i-form>
+                <!-- <i-form ref="formItem" :model="formItem" :rules="ruleInline">
+                    <FormItem :label="trans.createuserfirstname">
+                        <i-input v-model="formItem.firstname" :placeholder="trans.createuserfirstname"></i-input>
+                    </FormItem>
+                    <FormItem :label="trans.createuserlastname">
+                        <i-input v-model="formItem.lastname" :placeholder="trans.createuserlastname"></i-input>
+                    </FormItem>
+                     <FormItem :label="trans.createusertelephone">
+                        <i-input v-model="formItem.telephone" :placeholder="trans.createusertelephone"></i-input>
+                    </FormItem>
+                     <form-item label="Password" prop="password">
+                        <i-input type="password" v-model="formItem.password"></i-input>
+                    </form-item>
+                    <form-item label="Confirm" prop="passwordconfirm">
+                        <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
+                    </form-item>
+                    <form-item>
+                        <i-button type="success" @click="handleSubmit('formInline')">{{trans.register}}</i-button>
+                    </form-item>
+                </i-form> -->
+            </card>
           </div>
           <div class="columnpadding"></div>
           <!-- <div class="button">
@@ -57,6 +71,7 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 
+
 export default {
   components: {
   },
@@ -70,14 +85,78 @@ export default {
     ml: {}
   },
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your password'));
+      } else {
+        if (this.formItem.passwordconfirm !== '') {
+          // 对第二个密码框单独验证
+          this.$refs.formItem.validateField('passwordconfirm');
+        }
+        callback();
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your password again'));
+      } else if (value !== this.formItem.password) {
+        callback(new Error('The two input passwords do not match!'));
+      } else {
+        callback();
+      }
+    };
+    // const validateAge = (rule, value, callback) => {
+    //   if (!value) {
+    //     return callback(new Error('Age cannot be empty'));
+    //   }
+    //   // 模拟异步验证效果
+    //   setTimeout(() => {
+    //     if (!Number.isInteger(value)) {
+    //       callback(new Error('Please enter a numeric value'));
+    //     } else {
+    //       if (value < 18) {
+    //         callback(new Error('Must be over 18 years of age'));
+    //       } else {
+    //         callback();
+    //       }
+    //     }
+    //   }, 1000);
+    // };
     return {
       show: false,
-      // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
       trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
-      connectionId: ''
+      connectionId: '',
+      formItem: {
+        title: '',
+        firstname: '',
+        lastname: '',
+        birthday: '',
+        birthdayday: '',
+        birthdaymonth: '',
+        birthdayyear: '',
+        address: '',
+        postcode: '',
+        place: '',
+        telephone: '',
+        mobile: '',
+        email: '',
+        password: '',
+        passwordconfirm: ''
+      },
+      ruleCustom: {
+        password: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        passwordconfirm: [
+          { validator: validatePassCheck, trigger: 'blur' }
+        ]
+        // age: [
+        //   { validator: validateAge, trigger: 'blur' }
+        // ]
+      }
     }
   },
   computed: {
@@ -109,8 +188,6 @@ export default {
       this._initScroll(); // 初始化scroll
     })
     this.connectToSignalRServer()
-    console.log('checkout JSON.stringify(this.trans)')
-    console.log(JSON.stringify(this.trans))
   },
   methods: {
     _initScroll() {
@@ -129,14 +206,30 @@ export default {
         }
       });
     },
-    showcheckout() {
+    showregister() {
       this.show = true;
       this.$nextTick(() => {
         this.foodsScroll.refresh(); // 初始化scroll
       })
     },
-    hidecheckout() {
+    hideregister() {
       this.show = false;
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.$Message.success('Success!');
+        } else {
+          this.$Message.error('Fail!');
+        }
+      })
+    },
+    handleReset(name) {
+      alert(name);
+      console.log(this.$refs[name]);
+      console.log(JSON.stringify(this.formItem));
+      this.formItem.lastname = '';
+      this.$refs[name].resetFields();
     },
     connect() {
       if (!this.simpleHubProxy) {
@@ -217,11 +310,11 @@ export default {
     },
     onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
       if (this.connectionId === webClientConnectionId) {
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
         this.$Modal.success({
           title: 'Success',
           content: '<p>Order is geplaast</p>'
         });
+        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
       }
     },
     sendOrder() {
@@ -268,17 +361,17 @@ export default {
 .billcontainer {
   display: flex;
   flex-wrap: nowrap;
+  margin: 50px auto
 }
 .billcontent {
   flex: 80%
 }
-
 .rowheader {
   display: flex;
   flex-wrap: nowrap;
   margin-bottom : 20px;
   padding-bottom : 10px;
-  padding-top: 50px;
+  padding-top: 20px;
   border-bottom : 1px dashed
 }
 .footline {
@@ -375,6 +468,13 @@ export default {
   &.move-enter,&.move-leave-active{
     transform translate3d(100%,0,0)
   }
+  .billcontainer
+      .billcontent
+        .notcustomeryet
+          margin 20px auto
+        .register
+          margin 10px 20px
+
 @media screen and (min-width: 800px)
   .detailWrapper
     position fixed
@@ -393,14 +493,7 @@ export default {
     &.move-enter,&.move-leave-active{
       transform translate3d(10%,0,0)
     }
- .detail-close
-    position relative
-    width 32px
-    height 32px
-    margin -64px auto 0 auto
-    clear both
-    font-size 32px
-    color rgba(0,0,0,0.5)
+
 
 
 </style>

@@ -11,11 +11,14 @@ import vueTap from 'v-tap'
 import fastclick from 'fastclick'
 import Vuex from 'vuex'
 import VueLazyload from 'vue-lazyload'
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
 
 Vue.use(vueTap)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueLazyload);
+Vue.use(ViewUI);
 
 const store = new Vuex.Store({
   state: {

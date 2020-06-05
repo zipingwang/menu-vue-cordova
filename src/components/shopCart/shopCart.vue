@@ -58,6 +58,7 @@
     <div class="backdrop" v-show="showBackdrop" @click="hideBackdrop"></div>
   </transition>
   <checkout ref="mycheckout" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml"></checkout>
+  <login ref="mylogin" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml" v-on:loginevent="onlogin()"></login>
   </div>
 </template>
 
@@ -66,6 +67,7 @@ import cartcontrol from 'components/cartcontrol/cartcontrol'
 import backdrop from 'components/backdrop/backdrop'
 import BScroll from 'better-scroll'
 import checkout from 'components/checkout/checkout'
+import login from 'components/login/login'
 
 export default {
   props: {
@@ -105,6 +107,7 @@ export default {
   },
   created() {
     this.$root.eventHub.$on('cart.add', this.drop)
+    this.$root.eventHub.$on('login.loggedin', this.onlogin)
   },
   computed: {
     showBackdrop() {
@@ -223,7 +226,8 @@ export default {
       }
     },
     checkout() {
-      this.$refs.mycheckout.showcheckout()
+      this.$refs.mylogin.showlogin()
+      // this.$refs.mycheckout.showcheckout()
       // this.$modal.show(checkout, {
       //   text: 'This text is passed as a property'
       // }, {
@@ -231,12 +235,20 @@ export default {
       // }, {
       //   draggable: true
       // })
+    },
+    onlogin(logincondition) {
+      // alert('logincondition')
+      // alert(logincondition)
+      if (logincondition === 'loginasguest') {
+        this.$refs.mycheckout.showcheckout()
+      }
     }
   },
   components: {
     cartcontrol,
     backdrop,
-    checkout
+    checkout,
+    login
   }
 }
 
