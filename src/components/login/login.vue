@@ -98,26 +98,20 @@ export default {
       })
       return count
     },
-    orderRequestString() {
-      let orderline = ''
+    signinString() {
       let requestString = ''
-      for (var icount = 0; icount < this.selectFoods.length; icount++) {
-        if (icount > 0) {
-          orderline = orderline + '@@'
-        }
-        orderline = orderline + this.selectFoods[icount].menunr + '@' + this.selectFoods[icount].count
-      }
-      requestString = 'id:b613762f-29b9-442d-871c-9c9344ff6e4c@@@ORDER@@@20090808001@@@' /* template for RestSoft.WPF */
-      requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
-      requestString = requestString + '@@@Option1@@Today@@18:25@@@'
-      requestString = requestString + orderline + '@@@'
+      requestString = JSON.stringify(this.formInline)
       return requestString
+    },
+    testmethod() {
+      return 'hello'
     }
   },
   created() {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
+    this.$root.eventHub.$on('signalr.onSigninConfirmedFromServerToWeb', this.onSigninConfirmedFromServerToWeb)
   },
   methods: {
     _initScroll() {
@@ -158,19 +152,28 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
+          console.log('this.signinString');
+          // Console.log(this.testmethod); /* fataal error. console is lowercase, not Console */
+          this.$root.eventHub.$emit('signalr.signin', this.signinString);
           this.$Message.success('Success!');
         } else {
           this.$Message.error('Fail!');
         }
       })
     },
-    onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
-      if (this.connectionId === webClientConnectionId) {
+    onSigninConfirmedFromServerToWeb(userId, sessionId) {
+      alert(userId)
+      if (userId !== '-1') {
         this.$Modal.success({
           title: 'Success',
-          content: '<p>Order is geplaast</p>'
+          content: '<p>onSigninConfirmedFromServerToWeb is geplaast</p>'
         });
         // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
+      } else {
+        this.$Modal.success({
+          title: 'Failed',
+          content: '<p>Login failed</p>'
+        });
       }
     }
   }

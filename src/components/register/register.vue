@@ -167,19 +167,9 @@ export default {
       })
       return count
     },
-    orderRequestString() {
-      let orderline = ''
+    registerString() {
       let requestString = ''
-      for (var icount = 0; icount < this.selectFoods.length; icount++) {
-        if (icount > 0) {
-          orderline = orderline + '@@'
-        }
-        orderline = orderline + this.selectFoods[icount].menunr + '@' + this.selectFoods[icount].count
-      }
-      requestString = 'id:b613762f-29b9-442d-871c-9c9344ff6e4c@@@ORDER@@@20090808001@@@' /* template for RestSoft.WPF */
-      requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
-      requestString = requestString + '@@@Option1@@Today@@18:25@@@'
-      requestString = requestString + orderline + '@@@'
+      requestString = JSON.stringify(this.formItem)
       return requestString
     }
   },
@@ -187,6 +177,7 @@ export default {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
+    this.$root.eventHub.$on('signalr.onRegisterUserConfirmedFromServerToWeb', this.onRegisterUserConfirmedFromServerToWeb)
   },
   methods: {
     _initScroll() {
@@ -218,6 +209,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.$Message.success('Success!');
+          this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
         } else {
           this.$Message.error('Fail!');
         }
@@ -230,13 +222,18 @@ export default {
       this.formItem.lastname = '';
       this.$refs[name].resetFields();
     },
-    onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
-      if (this.connectionId === webClientConnectionId) {
+    onRegisterUserConfirmedFromServerToWeb(userId, sessionId) {
+      alert(userId)
+      if (userId === '-1') {
+        this.$Modal.success({
+          title: 'Failed',
+          content: '<p>User is registered failed</p>'
+        });
+      } else {
         this.$Modal.success({
           title: 'Success',
-          content: '<p>Order is geplaast</p>'
+          content: '<p>User is registered</p>'
         });
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
       }
     }
   }

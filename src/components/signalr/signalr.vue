@@ -28,8 +28,8 @@ export default {
   created() {
     this.connectToSignalRServer()
     this.$root.eventHub.$on('signalr.sendOrder', this.sendOrder)
-    this.$root.eventHub.$on('signalr.onRegisterUserConfirmedFromServerToWeb', this.sendOrder)
-    this.$root.eventHub.$on('signalr.onSigninConfirmedFromServerToWeb', this.sendOrder)
+    this.$root.eventHub.$on('signalr.registerUser', this.registerUser)
+    this.$root.eventHub.$on('signalr.signin', this.signin)
   },
   methods: {
     connect() {
@@ -42,15 +42,18 @@ export default {
     },
     connectToSignalRServer() {
       // alert('click 2');
-      // let url = 'http://localhost:44337/signalr';
+      let url = 'http://localhost:44337/signalr';
       // let url = '/signalr';
       // let url = 'http://www.freeobject.com/signalr';
-      let url = this.url + '/signalr';
+      // let url = this.url + '/signalr';
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog
       var tempOnConnnected = this.onConnected
       var temponOrderConfirmedFromServerToWeb = this.onOrderConfirmedFromServerToWeb
+      var temponRegisterUserConfirmedFromServerToWeb = this.onRegisterUserConfirmedFromServerToWeb
+      var temponSigninConfirmedFromServerToWeb = this.onSigninConfirmedFromServerToWeb
+
       var tempSimpleHubProxy = this.simpleHubProxy
       var tempSetSimpleHubProxy = this.setSimpleHubProxy
       // Handler.tempWriteLog = function (name) {
@@ -83,6 +86,17 @@ export default {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
           temponOrderConfirmedFromServerToWeb(webClientConnectionId, orderId)
+        };
+        tempSimpleHubProxy.client.onRegisterUserConfirmedFromServerToWeb = function (webClientConnectionId, userId, sessionId) {
+          // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
+          // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
+          temponRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
+        };
+        tempSimpleHubProxy.client.onSigninConfirmedFromServerToWeb = function (webClientConnectionId, userId, sessionId) {
+          // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
+          // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
+          alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
+          temponSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
         };
         tempSimpleHubProxy.client.messageReceived = function (name, message, time, userimg) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
@@ -119,23 +133,16 @@ export default {
       this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, 'vue', user);
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
+      alert('onRegisterUserConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
         this.$root.eventHub.$emit('signalr.onRegisterUserConfirmedFromServerToWeb', userId, sessionId)
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
-        // this.$Modal.success({
-        //   title: 'Success',
-        //   content: '<p>Order is geplaast signalr</p>'
-        // });
       }
     },
     onSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
+      alert('onSigninConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
+        alert('onSigninConfirmedFromServerToWeb2 userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
         this.$root.eventHub.$emit('signalr.onSigninConfirmedFromServerToWeb', userId, sessionId)
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
-        // this.$Modal.success({
-        //   title: 'Success',
-        //   content: '<p>Order is geplaast signalr</p>'
-        // });
       }
     },
     onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
