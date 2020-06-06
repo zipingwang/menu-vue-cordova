@@ -118,7 +118,6 @@ export default {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
-    this.connectToSignalRServer()
   },
   methods: {
     _initScroll() {
@@ -165,83 +164,6 @@ export default {
         }
       })
     },
-    connect() {
-      if (!this.simpleHubProxy) {
-        alert('simpleHubProxy is null')
-        this.connectToSignalRServer();
-      }
-      alert(this.simpleHubProxy)
-      this.sendOrder()
-    },
-    connectToSignalRServer() {
-      // alert('click 2');
-      // let url = 'http://localhost:44337/signalr';
-      // let url = '/signalr';
-      // let url = 'http://www.freeobject.com/signalr';
-      let url = this.url + '/signalr';
-      var Handler = {}
-      // Handler.tempWriteLog = this.writeToLog
-      var tempWriteLog = this.writeToLog
-      var tempOnConnnected = this.onConnected
-      var temponOrderConfirmedFromServerToWeb = this.onOrderConfirmedFromServerToWeb
-      var tempSimpleHubProxy = this.simpleHubProxy
-      var tempSetSimpleHubProxy = this.setSimpleHubProxy
-      // Handler.tempWriteLog = function (name) {
-      //   console.log(name)
-      // }
-      $.getScript(url + '/hubs', function() {
-        $.connection.hub.url = url;
-        // alert(this.writeToLog)
-        // Declare a proxy to reference the hub.
-        // this.simpleHubProxy = $.connection.chatHub;
-        tempSimpleHubProxy = $.connection.orderHub;
-        alert(tempSimpleHubProxy)
-        tempSetSimpleHubProxy(tempSimpleHubProxy)
-        // tempSimpleHubProxy = $.connection.chatHub;
-        // tempSimpleHubProxy = this.simpleHubProxy;
-        // alert(this.simpleHubProxy);
-        // Reigster to the "AddMessage" callback method of the hub
-        // This method is invoked by the hub
-        tempSimpleHubProxy.client.addMessage = function (name, message) {
-          this.writeToLog(name + ':' + message);
-        };
-        tempSimpleHubProxy.client.onConnected = function (id, userName, connectedusers) {
-          // this.writeToLog('onconneccted' + name + ':' + message);
-          // alert('onconneccted' + name + ':' + message)
-          // Handler['tempWriteLog']('onconnected' + name + ':' + message);
-          // tempWriteLog('onconnected' + name + ':' + message);
-          tempOnConnnected(id, userName, connectedusers)
-        };
-        tempSimpleHubProxy.client.orderConfirmedFromServerToWeb = function (webClientConnectionId, orderId) {
-          // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
-          // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
-          temponOrderConfirmedFromServerToWeb(webClientConnectionId, orderId)
-        };
-        tempSimpleHubProxy.client.messageReceived = function (name, message, time, userimg) {
-          // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
-          tempWriteLog('messagereceived' + name + ':' + message);
-        };
-        // Connect to hub
-        $.connection.hub.start().done(function() {
-          // this.writeToLog('Connected.');
-          // alert('Connected ok')
-          // if (this) {
-          //   alert('not null')
-          // } else {
-          //   alert('null')
-          // }
-          // alert(tempSimpleHubProxy)
-
-          tempSimpleHubProxy.server.connect('vue');
-        });
-      });
-
-      alert(tempSimpleHubProxy)
-    },
-    onConnected(id, userName, allConnectedUsers) {
-      this.connectionId = id
-      // alert('onConnected:' + this.connectionId)
-    },
     onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
       if (this.connectionId === webClientConnectionId) {
         this.$Modal.success({
@@ -250,37 +172,6 @@ export default {
         });
         // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
       }
-    },
-    sendOrder() {
-      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, 'vue', this.orderRequestString);
-    },
-    writeToLog(msg) {
-      alert(msg)
-    },
-    setSimpleHubProxy(proxy) {
-      this.simpleHubProxy = proxy;
-    },
-    connect2() {
-      alert('click');
-      let url = 'http://localhost/SendOrder.ashx'
-      // axios.post(url, {
-      //   order: '1@@2@@vital@@wang', /* server side can't get order parameter */
-      //   lastName: 'Williams'
-      // })
-      // .then((response) => {
-      //   alert('response from server 1');
-      //   console.log(response);
-      // }, (error) => {
-      //   console.log(error);
-      // })
-      $.post(url,
-        {
-          order: this.requestString,
-          city: 'Duckburg'
-        },
-        function (data, status) {
-          alert('Data: ' + data + '\nStatus: ' + status);
-        });
     }
   }
 }

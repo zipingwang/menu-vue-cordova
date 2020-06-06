@@ -20,6 +20,7 @@
 
 <template>
 <div>
+  <signalr ref="mysignalr" :seller="seller" :ml="trans"></signalr>
   <v-header :seller="seller"></v-header>
   <div class="tab">
     <div class="tab-item" v-if="visibletabs.includes('goods')">
@@ -50,6 +51,7 @@
 
 <script>
 import header from 'components/header/header'
+import signalr from 'components/signalr/signalr'
 
 const ERR_OK = 0
 
@@ -66,7 +68,8 @@ export default {
   computed: {
   },
   components: {
-    'v-header': header
+    'v-header': header,
+    'signalr': signalr
   }
 }
 
