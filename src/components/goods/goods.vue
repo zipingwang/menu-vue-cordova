@@ -45,7 +45,7 @@
         </li>
       </ul>
     </div>
-    <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml"></shopCart>
+    <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml" :data="data"></shopCart>
     <foodDetail :food="selectedFood" v-if="selectedFood" ref="myFood"></foodDetail>
   </div>
 

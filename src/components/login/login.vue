@@ -11,10 +11,10 @@
           <div class="columnpadding"></div>
           <div class="billcontent">
             <card class="customer">
-                <p slot="title">{{trans.login}}</p>
+                <p slot="title">{{ml.login}}</p>
                 <i-form ref="formInline" :model="formInline" :rules="ruleInline" inline>
                     <form-item prop="user">
-                        <i-input type="text" v-model="formInline.user" placeholder="Username">
+                        <i-input type="text" v-model="formInline.user" :placeholder="ml.loginnameplaceholder">
                             <icon type="ios-person-outline" slot="prepend"></icon>
                         </i-input>
                     </form-item>
@@ -24,16 +24,17 @@
                         </i-input>
                     </form-item>
                     <form-item>
-                        <i-button type="success" @click="handleSubmit('formInline')">Signin</i-button>
+                        <i-button type="success" @click="handleSubmit('formInline')">{{ml.login}}</i-button>
                     </form-item>
                 </i-form>
             </card>
             <div class="notcustomeryet">
             <card>
-                <p slot="title">{{trans.noggeenaccount}}</p>
-                <Button type="success" class="register" @click="register()">{{trans.register}}</Button>
-                <Button type="success" class="loginasgust" @click="loginasguest()">{{trans.loginasguest}}</Button>
-            </card>
+                <p slot="title">{{ml.noggeenaccount}}</p>
+                <Button type="success" class="register" @click="register()">{{ml.register}}</Button>
+                <Button type="success" class="loginasgust" @click="loginasguest()">{{ml.loginasguest}}</Button>
+                <Button type="success" class="close" @click="hidelogin()">{{ml.cancel}}</Button>            </card>
+
             </div>
           </div>
           <div class="columnpadding"></div>
@@ -70,7 +71,6 @@ export default {
   data() {
     return {
       show: false,
-      trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
@@ -81,11 +81,11 @@ export default {
       },
       ruleInline: {
         user: [
-          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+          { required: true, message: this.ml.requiedfield, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          { required: true, message: this.ml.requiedfield, trigger: 'blur' }
+          // { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
         ]
       }
     }
@@ -138,7 +138,8 @@ export default {
       // alert('loginasguest')
       // this.$emit('loginevent', 'loginasguest')
       this.show = false
-      this.$root.eventHub.$emit('login.loggedin', 'loginasguest')
+      data.options.cusId = 'guest'
+      this.$root.eventHub.$emit('login.loggedin', 'guest')
     },
     showlogin() {
       this.show = true;
@@ -162,17 +163,19 @@ export default {
       })
     },
     onSigninConfirmedFromServerToWeb(userId, sessionId) {
-      alert(userId)
+      // alert(userId)
       if (userId !== '-1') {
-        this.$Modal.success({
-          title: 'Success',
-          content: '<p>onSigninConfirmedFromServerToWeb is geplaast</p>'
-        });
-        // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
+        this.show = false
+        data.options.cusId = userId
+        this.$root.eventHub.$emit('login.loggedin', userId)
+        // this.$Modal.success({
+        //   title: this.ml.success,
+        //   content: '<p>onSigninConfirmedFromServerToWeb is geplaast</p>'
+        // });
       } else {
         this.$Modal.success({
-          title: 'Failed',
-          content: '<p>Login failed</p>'
+          title: this.ml.failed,
+          content: this.ml.loginfailed
         });
       }
     }
@@ -195,7 +198,7 @@ export default {
   flex: 80%
 }
 .loginasguest {
-  margin: 20px auto
+  margin: 10px 20px
 }
 .rowheader {
   display: flex;
@@ -254,13 +257,7 @@ export default {
   margin-top: 20px;
 }
 .close {
-  text-align: center;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  background: #00b43c;
-  color: white;
-  line-height: 48px;
+  margin: 10px 20px
 }
 .detail
   position fixed

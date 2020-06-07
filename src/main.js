@@ -13,6 +13,10 @@ import Vuex from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
+// import VueI18n from 'vue-i18n';
+import en from 'view-design/dist/locale/en-US';
+import nl from 'view-design/dist/locale/nl-NL';
+import zh from 'view-design/dist/locale/zh-CN';
 
 Vue.use(vueTap)
 Vue.use(VueRouter)
@@ -55,9 +59,15 @@ const router = new VueRouter({
   linkActiveClass: 'active'
 })
 
+// const i18n = new VueI18n({
+//   locale: 'nl',  // set locale
+//   messages  // set locale messages
+// });
+
 new Vue({
   router,
   store,
+  // i18n,
   template: '<App/>',
   components: {
     App
@@ -66,7 +76,37 @@ new Vue({
     eventHub: new Vue()
   },
   created() {
-    ml.trans = ml[`${ml.ln}`]
+    ml.trans = ml[`${ml.ln}`] /* dynamic inject */
+    // var urlVars = this.getUrlVars()
+    var urlVars = this.getUrlVars()
+    data.options = {}
+    data.options.tableNr = ''
+    data.options.ln = ''
+    data.options.takeaway = '0'
+    data.options.cusId = ''
+    if ('table' in urlVars) {
+      data.options.tableNr = urlVars['table']
+    }
+    if ('ln' in urlVars) {
+      data.options.ln = urlVars['ln']
+      ml.trans = ml[data.options.ln] /* dynamic inject */
+    }
+    if ('takeaway' in urlVars) {
+      data.options.takeaway = urlVars['takeaway']
+    }
+    console.log(this.getUrlVars())
+    console.log(urlVars)
+    // window.location.href = window.location.href.substring(0, window.location.href.indexOf('?'))
+    alert(window.location.href)
+  },
+  methods: {
+    getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
   }
 }).$mount('#app')
 

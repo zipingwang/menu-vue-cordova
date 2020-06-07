@@ -15,8 +15,6 @@ export default {
   data() {
     return {
       show: false,
-      // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
-      trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
@@ -37,7 +35,6 @@ export default {
         alert('simpleHubProxy is null')
         this.connectToSignalRServer();
       }
-      alert(this.simpleHubProxy)
       this.sendOrder()
     },
     connectToSignalRServer() {
@@ -65,7 +62,7 @@ export default {
         // Declare a proxy to reference the hub.
         // this.simpleHubProxy = $.connection.chatHub;
         tempSimpleHubProxy = $.connection.orderHub;
-        alert(tempSimpleHubProxy)
+        // alert(tempSimpleHubProxy)
         tempSetSimpleHubProxy(tempSimpleHubProxy)
         // tempSimpleHubProxy = $.connection.chatHub;
         // tempSimpleHubProxy = this.simpleHubProxy;
@@ -95,7 +92,7 @@ export default {
         tempSimpleHubProxy.client.onSigninConfirmedFromServerToWeb = function (webClientConnectionId, userId, sessionId) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
-          alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
+          // alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
           temponSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
         };
         tempSimpleHubProxy.client.messageReceived = function (name, message, time, userimg) {
@@ -117,11 +114,11 @@ export default {
         });
       });
 
-      alert(tempSimpleHubProxy)
+      // alert(tempSimpleHubProxy)
     },
     onConnected(id, userName, allConnectedUsers) {
       this.connectionId = id
-      alert('onConnected:' + this.connectionId)
+      // alert('onConnected:' + this.connectionId)
     },
     sendOrder(order) {
       this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, 'vue', order);
@@ -133,15 +130,15 @@ export default {
       this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, 'vue', user);
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
-      alert('onRegisterUserConfirmedFromServerToWeb')
+      // alert('onRegisterUserConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
         this.$root.eventHub.$emit('signalr.onRegisterUserConfirmedFromServerToWeb', userId, sessionId)
       }
     },
     onSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
-      alert('onSigninConfirmedFromServerToWeb')
+      // alert('onSigninConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
-        alert('onSigninConfirmedFromServerToWeb2 userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
+        console.log('onSigninConfirmedFromServerToWeb2 userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
         this.$root.eventHub.$emit('signalr.onSigninConfirmedFromServerToWeb', userId, sessionId)
       }
     },
@@ -156,7 +153,7 @@ export default {
       }
     },
     writeToLog(msg) {
-      alert(msg)
+      console.log(msg)
     },
     setSimpleHubProxy(proxy) {
       this.simpleHubProxy = proxy;

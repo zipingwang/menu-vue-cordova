@@ -11,17 +11,34 @@
           <div class="columnpadding"></div>
           <div class="billcontent">
             <card class="customer">
-                <p slot="title">{{trans.register}}</p>
-                 <i-form ref="formItem" :model="formItem" :rules="ruleCustom" :label-width="80">
-                      <FormItem :label="trans.createuserfirstname">
-                        <i-input v-model="formItem.firstname" :placeholder="trans.createuserfirstname"></i-input>
+                <p slot="title">{{ml.register}}</p>
+                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="80">
+                      <FormItem :label="ml.createuserfirstname">
+                        <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
                     </FormItem>
-                    <FormItem :label="trans.createuserlastname">
-                        <i-input v-model="formItem.lastname" :placeholder="trans.createuserlastname"></i-input>
+                    <FormItem :label="ml.createuserlastname">
+                        <i-input v-model="formItem.lastname" :placeholder="ml.createuserlastname"></i-input>
                     </FormItem>
-                     <FormItem :label="trans.createusertelephone">
-                        <i-input v-model="formItem.telephone" :placeholder="trans.createusertelephone"></i-input>
+                     <FormItem :label="ml.createusertelephone" prop="telephone">
+                        <i-input v-model="formItem.telephone" :placeholder="ml.createusertelephone"></i-input>
                     </FormItem>
+                     <FormItem :label="ml.createuseremail" prop="email">
+                        <i-input v-model="formItem.email"></i-input>
+                    </FormItem>
+    </i-form>
+                 <i-form ref="formItem2" :model="formItem" :rules="ruleCustom" :label-width="80">
+                      <!-- <FormItem :label="ml.createuserfirstname">
+                        <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
+                    </FormItem>
+                    <FormItem :label="ml.createuserlastname">
+                        <i-input v-model="formItem.lastname" :placeholder="ml.createuserlastname"></i-input>
+                    </FormItem>
+                     <FormItem :label="ml.createusertelephone" prop="telephone">
+                        <i-input v-model="formItem.telephone" :placeholder="ml.createusertelephone"></i-input>
+                    </FormItem>
+                     <FormItem :label="ml.createuseremail" prop="email">
+                        <i-input v-model="formItem.email"></i-input>
+                    </FormItem> -->
         <form-item label="Password" prop="password">
             <i-input type="password" v-model="formItem.password"></i-input>
         </form-item>
@@ -29,30 +46,10 @@
             <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
         </form-item>
         <form-item>
-            <i-button type="primary" @click="handleSubmit('formItem')">Submit</i-button>
+            <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button>
             <i-button @click="handleReset('formItem')" style="margin-left: 8px">Reset</i-button>
         </form-item>
     </i-form>
-                <!-- <i-form ref="formItem" :model="formItem" :rules="ruleInline">
-                    <FormItem :label="trans.createuserfirstname">
-                        <i-input v-model="formItem.firstname" :placeholder="trans.createuserfirstname"></i-input>
-                    </FormItem>
-                    <FormItem :label="trans.createuserlastname">
-                        <i-input v-model="formItem.lastname" :placeholder="trans.createuserlastname"></i-input>
-                    </FormItem>
-                     <FormItem :label="trans.createusertelephone">
-                        <i-input v-model="formItem.telephone" :placeholder="trans.createusertelephone"></i-input>
-                    </FormItem>
-                     <form-item label="Password" prop="password">
-                        <i-input type="password" v-model="formItem.password"></i-input>
-                    </form-item>
-                    <form-item label="Confirm" prop="passwordconfirm">
-                        <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
-                    </form-item>
-                    <form-item>
-                        <i-button type="success" @click="handleSubmit('formInline')">{{trans.register}}</i-button>
-                    </form-item>
-                </i-form> -->
             </card>
           </div>
           <div class="columnpadding"></div>
@@ -87,24 +84,46 @@ export default {
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please enter your password'));
+        callback(new Error(this.ml.requiedfield));
       } else {
         if (this.formItem.passwordconfirm !== '') {
           // 对第二个密码框单独验证
-          this.$refs.formItem.validateField('passwordconfirm');
+          this.$refs.formItem2.validateField('passwordconfirm');
         }
         callback();
       }
     };
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please enter your password again'));
+        callback(new Error(this.ml.requiedfield));
       } else if (value !== this.formItem.password) {
-        callback(new Error('The two input passwords do not match!'));
+        callback(new Error(this.ml.passwordmismatch));
       } else {
         callback();
       }
     };
+    // const validateEmail = (rule, value, callback) => {
+    //   // alert('befor validateemail')
+    //   var result = validateEmail(value)
+    //   alert(result);
+    //   if (value === '' && this.formItem.telephone === '') {
+    //     callback(new Error(this.ml.requiedfield));
+    //   } else if (value !== '') {
+    //     callback(new Error(this.ml.invalid));
+    //   } else {
+    //     callback();
+    //   }
+    // };
+    // const validateTelephone = (rule, value, callback) => {
+    //   if (value === '' && this.formItem.email === '') {
+    //     callback(new Error(this.ml.requiedfield));
+    //   } else if (value !== '' && value.length <= 8) {
+    //     callback(new Error(this.ml.minimumlength));
+    //   } else {
+    //     callback();
+    //   }
+    // };
+
     // const validateAge = (rule, value, callback) => {
     //   if (!value) {
     //     return callback(new Error('Age cannot be empty'));
@@ -124,7 +143,6 @@ export default {
     // };
     return {
       show: false,
-      trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
@@ -153,9 +171,22 @@ export default {
         passwordconfirm: [
           { validator: validatePassCheck, trigger: 'blur' }
         ]
-        // age: [
-        //   { validator: validateAge, trigger: 'blur' }
+        // email: [
+        //   { validator: validateEmail, trigger: 'blur' }
+        // ],
+        // telephone: [
+        //   { validator: validateTelephone, trigger: 'blur' }
         // ]
+      },
+      ruleValidate: {
+        telephone: [
+            { required: true, message: 'The name cannot be empty', trigger: 'blur' },
+            { type: 'string', min: 8, message: 'Introduce no less than 20 words', trigger: 'blur' }
+        ],
+        email: [
+            { required: false, message: 'Mailbox cannot be empty', trigger: 'blur' },
+            { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -206,14 +237,28 @@ export default {
       this.show = false;
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success('Success!');
-          this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
-        } else {
-          this.$Message.error('Fail!');
-        }
+      var isvalid = false
+      this.$refs.formItem1.validate((valid) => {
+        isvalid = valid
       })
+      alert(isvalid)
+      this.$refs.formItem2.validate((valid) => {
+        isvalid = valid && isvalid
+      })
+      if (isvalid) {
+        this.$Message.success('Success!');
+        this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
+      } else {
+        this.$Message.error('Fail!');
+      }
+      // this.$refs[name].validate((valid) => {
+      //   if (valid) {
+      //     this.$Message.success('Success!');
+      //     this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
+      //   } else {
+      //     this.$Message.error('Fail!');
+      //   }
+      // })
     },
     handleReset(name) {
       alert(name);

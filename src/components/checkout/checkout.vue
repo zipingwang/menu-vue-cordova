@@ -1,5 +1,10 @@
 <template lang="html">
   <div>
+    <backdrop :isShow="showWaiting"></backdrop>
+    <div class="spin" v-show="showWaiting">
+      <spin size="large" v-show="showWaiting"></spin>
+    </div>
+
   <transition name="fade">
     <div v-show="show" class="detail" @click="hidecheckout()">
     <!-- <div class="detail" @click="showToggle()"> -->
@@ -12,10 +17,10 @@
           <div class="billcontent">
             <ul>
               <li class="rowheader">
-                <span class="columncount">{{trans.ordercount}}</span>
-                <span class="columnname">{{trans.orderdescription}}</span>
-                <span class="columnunitprice">{{trans.orderunitprice}}</span>
-                <span class="columnprice">{{trans.orderlinetotal}}</span>
+                <span class="columncount">{{ml.ordercount}}</span>
+                <span class="columnname">{{ml.orderdescription}}</span>
+                <span class="columnunitprice">{{ml.orderunitprice}}</span>
+                <span class="columnprice">{{ml.orderlinetotal}}</span>
               </li>
               <li class="row" v-for="food in selectFoods">
                 <span class="columncount">{{food.count}}</span>
@@ -30,9 +35,12 @@
                 <span class="columnprice">{{totalPrice}}</span>
               </li>
             </ul>
-            <div class="totalline">{{trans.ordertotal}}        €{{totalPrice}}</div>
+            <div class="totalline">{{ml.ordertotal}}        €{{totalPrice}}</div>
+            <div class="ordercomment" v-if="seller.supportOnlineOrder">
+              <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment"></textarea>
+            </div>
             <div class="ordertext" v-if="!seller.supportOnlineOrder">
-              U kan deze bestelling plaatsen door te bellen naar 051207637
+              {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
             <div class="buttonarea">
               <span class="close" @click="sendOrder()" v-if="seller.supportOnlineOrder">OK</span>
@@ -56,9 +64,11 @@
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
+import backdrop from 'components/backdrop/backdrop'
 
 export default {
   components: {
+    backdrop
   },
   props: {
     seller: {},
@@ -67,17 +77,21 @@ export default {
       default: []
     },
     totalPrice: 0,
-    ml: {}
+    ml: {},
+    data: {}
   },
   data() {
     return {
       show: false,
       // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
-      trans: this.ml,
       url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
-      connectionId: ''
+      connectionId: '',
+      ordercomment: '',
+      showWaiting: false,
+      mySendingTimer: {},
+      startTime: {}
     }
   },
   computed: {
@@ -100,7 +114,7 @@ export default {
       requestString = 'id:b613762f-29b9-442d-871c-9c9344ff6e4c@@@ORDER@@@20090808001@@@' /* template for RestSoft.WPF */
       requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
       requestString = requestString + '@@@Option1@@Today@@18:25@@@'
-      requestString = requestString + orderline + '@@@'
+      requestString = requestString + orderline + '@@@' + this.ordercomment
       return requestString
     }
   },
@@ -114,6 +128,7 @@ export default {
     console.log(JSON.stringify(this.trans))
   },
   methods: {
+
     _initScroll() {
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
@@ -140,14 +155,31 @@ export default {
       this.show = false;
     },
     onOrderConfirmedFromServerToWeb(orderId) {
+      this.showWaiting = false
+      clearInterval(this.mySendingTimer)
       this.$Modal.success({
-        title: 'Success',
-        content: '<p>Order is geplaast</p> in checkout'
+        title: this.ml.success,
+        content: this.ml.ordersendsuccess
       });
     },
+    checkSending() {
+      console.log('checkSending')
+      if (this.startTime.setSeconds(this.startTime.getSeconds() + 10) < new Date()) {
+        clearInterval(this.mySendingTimer)
+        this.showWaiting = false
+        this.$Modal.success({
+          title: this.ml.failed,
+          content: this.ml.ordersendfailed
+        });
+      } else {
+        this.startTime.setSeconds(this.startTime.getSeconds() - 10)
+      }
+    },
     sendOrder() {
-      this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString);
-      // this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, 'vue', this.orderRequestString);
+      this.showWaiting = true
+      this.startTime = new Date()
+      this.mySendingTimer = setInterval(this.checkSending, 1000)
+      this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
     },
     connect2() {
       alert('click');
@@ -236,6 +268,14 @@ export default {
   text-align: center;
   font-size: 24px;
 }
+.ordercomment
+{
+  margin-top: 40px
+}
+.ordercommenttext
+{
+  padding: 2px 5px
+}
 .ordertext {
   margin-top: 10px;
   text-align: center;
@@ -253,6 +293,20 @@ export default {
   background: #00b43c;
   color: white;
   line-height: 48px;
+}
+.backdrop {
+  z-index 150
+}
+.spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  z-index: 160;
+  width: 100px;
+  height: 100px;
+  background solid red;
 }
 .detail
   position fixed

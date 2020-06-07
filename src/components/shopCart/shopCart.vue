@@ -34,8 +34,8 @@
     <transition name="transHeight">
       <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
-          <h1 class="title">{{trans.shoppingcart}}</h1>
-          <span class="empty" @click="setEmpty()">{{trans.clearshoppingcart}}</span>
+          <h1 class="title">{{ml.shoppingcart}}</h1>
+          <span class="empty" @click="setEmpty()">{{ml.clearshoppingcart}}</span>
         </div>
         <div class="list-content" ref="foodlist">
           <ul>
@@ -57,7 +57,7 @@
   <transition name="fade-backdrop">
     <div class="backdrop" v-show="showBackdrop" @click="hideBackdrop"></div>
   </transition>
-  <checkout ref="mycheckout" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml"></checkout>
+  <checkout ref="mycheckout" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml" :data="data"></checkout>
   <login ref="mylogin" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml" v-on:loginevent="onlogin()"></login>
   </div>
 </template>
@@ -84,7 +84,8 @@ export default {
       default: 0
     },
     seller: {},
-    ml: {}
+    ml: {},
+    data: {}
   },
   data() {
     return {
@@ -101,7 +102,6 @@ export default {
       }],
       dropBalls: [],
       listShow: false,
-      trans: this.ml,
       checkoutvisible: false
     }
   },
@@ -140,7 +140,7 @@ export default {
       return false
     },
     payDesc() {
-      return this.trans.checkout
+      return this.ml.checkout
       // let diff = this.minPrice - this.totalPrice
       // if (!this.totalPrice) {
       //   return `€${this.totalPrice}起送`
@@ -226,7 +226,12 @@ export default {
       }
     },
     checkout() {
-      this.$refs.mylogin.showlogin()
+      if (this.seller.supportOnlineOrder && (data.options.cusId === '-1' || data.options.cusId === '')) {
+        this.$refs.mylogin.showlogin()
+      } else {
+        this.$refs.mycheckout.showcheckout()
+      }
+      // alert(data.options.tableNr)
       // this.$refs.mycheckout.showcheckout()
       // this.$modal.show(checkout, {
       //   text: 'This text is passed as a property'
@@ -236,12 +241,13 @@ export default {
       //   draggable: true
       // })
     },
-    onlogin(logincondition) {
+    onlogin(cusId) {
       // alert('logincondition')
       // alert(logincondition)
-      if (logincondition === 'loginasguest') {
-        this.$refs.mycheckout.showcheckout()
-      }
+      // if (logincondition === 'guest') {
+      //  this.$refs.mycheckout.showcheckout()
+      // }
+      this.$refs.mycheckout.showcheckout()
     }
   },
   components: {

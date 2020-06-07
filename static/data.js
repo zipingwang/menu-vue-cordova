@@ -5,6 +5,7 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 	"visibletabs": ["goods", "ricetable", "info"],
 	"activetab": ["goods"],
 	"ln": "nl",
+	"lns": [{"code":"nl", "name":"Nederlands"}, {"code":"zh", "name":"中文"}],
 	"zh": {
 		"product": "商品",
 		"info": "商家",
@@ -85,7 +86,18 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 		"orderlinetotal": "Bedrag",
 		"ordertotal": "Totaal",
 		"orderonlineordernotsupported": "U kan deze bestelling plaatsen door te bellen naar",
-		"loginname": "E-mailadres of telefoonnummer", 
+			"ordercomment": "Eventuele extra opmerking...",
+			"success": "sucess",
+			"ordersendsuccess": "Bestelling is geplaatst",
+			"failed": "Zonder success",
+			"ordersendfailed": "Bestelling is niet geplaatst, U kan deze bestelling plaatsen via telefoon",
+			"loginnameplaceholder": "telefoonnummer of E-mailadres", 			
+			"requiedfield": "veld is leeg",
+			"loginfailed": "Gebruiker betaat niet, gelieve eerst te registreren",
+			"useralreadyexists": "Gebruiker bestaat al",
+			"passwordmismatch": "Password mismatch",
+			"minimumlengthrequired": "Te kort",
+			"invalid": "niet geldig",
 		"password": "Wachtwoord",
 		"login": "Aanmelden",
 		"register": "Registreren",
@@ -107,4 +119,8 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 		"createuserpasswordconfirm": "Wachtwoord bevestigen",
 		"loginasguest":"Aanmelden als gast"
 	}
+};
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 };

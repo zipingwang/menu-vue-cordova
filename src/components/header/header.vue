@@ -23,6 +23,7 @@
                 </div>
             </div> -->
         </div>
+        <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img>
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
             <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
             <span class="count">{{seller.supports.length+'...'}}</span>
@@ -49,7 +50,7 @@
             </div>
             <div class="title">
               <div class="line"> </div>
-              <div class="text">{{ml.trans.promotion}}</div>
+              <div class="text">{{ml.promotion}}</div>
               <div class="line"></div>
             </div>
             <ul v-if="seller.supports" class="supports">
@@ -60,7 +61,7 @@
             </ul>
             <div class="title">
               <div class="line"> </div>
-              <div class="text">{{ml.trans.shopannouncement}}</div>
+              <div class="text">{{ml.shopannouncement}}</div>
               <div class="line"></div>
             </div>
             <div class="bulletin">{{seller.bulletin}}</div>
@@ -68,6 +69,31 @@
       </div>
       <div class="detail-close">
         <i class="icon-close" @click="hideDetail()"></i>
+      </div>
+    </div>
+    <div v-if="languageShow" class="detail">
+      <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"> </div>
+              <div class="line"></div>
+            </div>
+            <div class="language-wrapper">
+              <ul>
+                <li v-for="ln in lns" class="language-item" @click="hideLanguages(ln)">
+                  <!-- <span class="icon" :class="iconClassMap[item.type]"></span> -->
+                  <h1 class="language">{{ln["name"]}}</h1>
+                </li>
+              </ul>
+            </div>
+          </div>
+      </div>
+      <div class="detail-close">
+        <i class="icon-close" @click="hideLanguages()"></i>
       </div>
     </div>
   </transition>
@@ -79,9 +105,11 @@
 import star from 'components/star/star'
 
 export default {
-  // props: {
-  //   //seller: data.seller
-  // },
+  props: {
+    seller: {},
+    lns: {},
+    ml: {}
+  },
   created() {
     this.iconClassMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   },
@@ -91,8 +119,7 @@ export default {
   data() {
     return {
       detailShow: false,
-      seller: data.seller,
-      ml: ml /* must first assign to local element of data then can use ml. can't use {{ml.trans.promotion}} in template. */
+      languageShow: false
     }
   },
   methods: {
@@ -101,6 +128,13 @@ export default {
     },
     hideDetail() {
       this.detailShow = false;
+    },
+    showLanguages() {
+      this.languageShow = true;
+    },
+    hideLanguages(ln) {
+      this.languageShow = false;
+      this.$root.eventHub.$emit('ml.change', ln['code'])
     }
   }
 }
@@ -188,6 +222,12 @@ export default {
         font-size 10px
         margin-left 2px
         line-height 24px
+    .language
+      position absolute
+      right 12px
+      top 10px
+      height 24px
+      width 24px
   .bulletin-wrapper
     position relative
     height 28px
@@ -297,6 +337,13 @@ export default {
           font-weight 200
           color rgb(255,255,255)
           line-height 24px
+        .language
+          font-size 16px
+          font-weight 700
+          width 100%
+          color rgb(255,255,255)
+          line-height 60px
+          text-align center
 
     .detail-close
       position relative

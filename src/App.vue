@@ -21,7 +21,7 @@
 <template>
 <div>
   <signalr ref="mysignalr" :seller="seller" :ml="trans"></signalr>
-  <v-header :seller="seller"></v-header>
+  <v-header :seller="seller" :lns="lns" :ml="trans"></v-header>
   <div class="tab">
     <div class="tab-item" v-if="visibletabs.includes('goods')">
       <router-link to="/goods">{{trans.product}}</router-link>
@@ -61,15 +61,33 @@ export default {
       seller: data.seller,
       data: data,
       trans: ml.trans,
+      lns: ml.lns,
       visibletabs: ml.visibletabs,
       activetab: ml.activetab
     }
   },
+  created() {
+    this.$root.eventHub.$on('ml.change', this.changeLanguage)
+  },
   computed: {
+    urlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
   },
   components: {
     'v-header': header,
     'signalr': signalr
+  },
+  methods: {
+    changeLanguage(lan) {
+      alert('changeLanguage')
+      console.log(ml[lan])
+      this.trans = ml[lan]
+    }
   }
 }
 
