@@ -12,12 +12,12 @@
         </div>
         <img :src="food.image" :height="imgHeight" width="100%">
         <div class="info">
-          <div class="title">{{food.name}}</div>
-          <p class="desc" v-show="food.menunr">Nr. {{food.menunr}}</p> 
+          <div class="title">{{food.name[data.currentlnindex]}}</div>
+          <p class="desc" v-show="food.menunr">Nr. {{food.menunr}}</p>
           <div class="star-wrapper" v-if="food.rating">
             <star :size="24" :score="food.rating"></star>
           </div>
-          <!-- <div class="desc">            
+          <!-- <div class="desc">
             <span>月售{{food.sellCount}}</span>
             <span>好评率{{food.rating}}%</span>
           </div> -->
@@ -87,7 +87,8 @@ export default {
     star
   },
   props: {
-    food: Object
+    food: Object,
+    data: {}
   },
   data() {
     return {
@@ -170,7 +171,7 @@ export default {
 <style lang="stylus" scoped>
 @media screen and (min-width: 800px)
   .detail
-      position fixed    
+      position fixed
       left 0
       top 0
       bottom 48px
@@ -178,7 +179,7 @@ export default {
       z-index 30
       background rgba(7,17,27,0.8)
       backdrop-filter blur(10px)
-      transition all 0.4s ease      
+      transition all 0.4s ease
 .detailWrapper
   position fixed
   left 0
@@ -196,7 +197,7 @@ export default {
   }
 @media screen and (min-width: 800px)
   .detailWrapper
-    position fixed  
+    position fixed
     top 0
     left 20%
     margin-right -20%
@@ -204,12 +205,12 @@ export default {
     width 100%
     max-width: 800px
     background white
-    transition all 0.4s ease  
+    transition all 0.4s ease
     &.move-enter-avtive,&.move-leave{
-      transform translate3d(0,0,0)      
+      transform translate3d(0,0,0)
     }
     &.move-enter,&.move-leave-active{
-      transform translate3d(10%,0,0)     
+      transform translate3d(10%,0,0)
     }
 .foodDetail
   .back
@@ -224,8 +225,8 @@ export default {
     box-sizing border-box
     width 100%
     padding 18px
-    .star-wrapper    
-      margin-top 4px  
+    .star-wrapper
+      margin-top 4px
     .title
       font-size 14px
       font-weight 700

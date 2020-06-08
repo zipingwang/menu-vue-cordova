@@ -24,7 +24,7 @@
               </li>
               <li class="row" v-for="food in selectFoods">
                 <span class="columncount">{{food.count}}</span>
-                <span class="columnname">{{food.name}}</span>
+                <span class="columnname">{{food.name[data.currentlnindex]}}</span>
                 <span class="columnunitprice">{{food.price}} </span>
                 <span class="columnprice">{{food.price * food.count}} </span>
               </li>

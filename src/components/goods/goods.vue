@@ -22,7 +22,7 @@
               </div>
               <div class="content">
                 <!-- <span class="food">{{food.name}}</span> <span class="nr">nr. {{food.menunr}}</span>  -->
-                <h2>{{food.name}}</h2>
+                <h2>{{food.name[data.currentlnindex]}}</h2>
                 <!-- <p class="description" v-show="food.description">{{food.description}}</p>                  -->
                 <p class="description" v-show="food.menunr">Nr. {{food.menunr}}</p>
                 <div class="sell-info">
@@ -46,7 +46,7 @@
       </ul>
     </div>
     <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml" :data="data"></shopCart>
-    <foodDetail :food="selectedFood" v-if="selectedFood" ref="myFood"></foodDetail>
+    <foodDetail :food="selectedFood" :data="data" v-if="selectedFood" ref="myFood"></foodDetail>
   </div>
 
 </template>
@@ -66,7 +66,8 @@ const eventHub = new Vue()
 export default {
   props: {
     seller: Object,
-    ml: Object
+    ml: Object,
+    data: {}
   },
   created() {
     this.$nextTick(() => {
@@ -76,7 +77,7 @@ export default {
   },
   data() {
     return {
-      data: data,
+      // data: data,
       goods: data.goods,
       listHeight: [],
       foodsScrollY: 0,

@@ -84,7 +84,7 @@
             </div>
             <div class="language-wrapper">
               <ul>
-                <li v-for="ln in lns" class="language-item" @click="hideLanguages(ln)">
+                <li v-for="(ln, index) in lns" class="language-item" @click="hideLanguages(ln, index)">
                   <!-- <span class="icon" :class="iconClassMap[item.type]"></span> -->
                   <h1 class="language">{{ln["name"]}}</h1>
                 </li>
@@ -132,9 +132,10 @@ export default {
     showLanguages() {
       this.languageShow = true;
     },
-    hideLanguages(ln) {
+    hideLanguages(ln, index) {
+      alert(index)
       this.languageShow = false;
-      this.$root.eventHub.$emit('ml.change', ln['code'])
+      this.$root.eventHub.$emit('ml.change', ln['code'], index)
     }
   }
 }

@@ -61,12 +61,13 @@ export default {
       seller: data.seller,
       data: data,
       trans: ml.trans,
-      lns: ml.lns,
+      lns: data.seller.lns,
       visibletabs: ml.visibletabs,
       activetab: ml.activetab
     }
   },
   created() {
+    this.data.currentlnindex = 0
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
   },
   computed: {
@@ -83,10 +84,11 @@ export default {
     'signalr': signalr
   },
   methods: {
-    changeLanguage(lan) {
+    changeLanguage(lan, index) {
       alert('changeLanguage')
       console.log(ml[lan])
       this.trans = ml[lan]
+      this.data.currentlnindex = index
     }
   }
 }
