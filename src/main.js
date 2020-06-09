@@ -80,12 +80,14 @@ new Vue({
     // var urlVars = this.getUrlVars()
     var urlVars = this.getUrlVars()
     data.options = {}
-    data.options.tableNr = ''
+    data.options.client = 'vue'
+    data.options.table = ''
     data.options.ln = ''
     data.options.takeaway = '0'
     data.options.cusId = ''
+    data.options.shopId = ''
     if ('table' in urlVars) {
-      data.options.tableNr = urlVars['table']
+      data.options.table = urlVars['table']
     }
     if ('ln' in urlVars) {
       data.options.ln = urlVars['ln']
@@ -94,10 +96,12 @@ new Vue({
     if ('takeaway' in urlVars) {
       data.options.takeaway = urlVars['takeaway']
     }
+    if ('shopid' in urlVars) {
+      data.options.shopId = urlVars['shopid']
+    }
     console.log(this.getUrlVars())
     console.log(urlVars)
-    // window.location.href = window.location.href.substring(0, window.location.href.indexOf('?'))
-    alert(window.location.href)
+    console.log(data.options)
   },
   methods: {
     getUrlVars() {

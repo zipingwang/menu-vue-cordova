@@ -20,7 +20,7 @@
 
 <template>
 <div>
-  <signalr ref="mysignalr" :seller="seller" :ml="trans"></signalr>
+  <signalr ref="mysignalr" :seller="seller" :ml="trans" :data="data"></signalr>
   <v-header :seller="seller" :lns="lns" :ml="trans"></v-header>
   <div class="tab">
     <div class="tab-item" v-if="visibletabs.includes('goods')">
@@ -69,11 +69,12 @@ export default {
   created() {
     this.data.currentlnindex = 0
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
+    this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
   },
   computed: {
     urlVars() {
       var vars = {};
-      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&#]*)/gi, function(m, key, value) {
         vars[key] = value;
       });
       return vars;
@@ -85,10 +86,23 @@ export default {
   },
   methods: {
     changeLanguage(lan, index) {
-      alert('changeLanguage')
-      console.log(ml[lan])
+      // alert('changeLanguage')
+      // console.log(ml[lan])
       this.trans = ml[lan]
       this.data.currentlnindex = index
+    },
+    menudownloaded(data) {
+      // alert('menudownloaded')
+      var obj = JSON.parse(data)
+      console.log(data)
+      this.$nextTick(() => {
+        this.data.currentlnindex = 0
+        this.lns = obj.seller.lns
+        this.seller = obj.seller
+        this.data = obj
+        console.log(JSON.stringify(this.data))
+      })
+      console.log(JSON.stringify(this.data))
     }
   }
 }

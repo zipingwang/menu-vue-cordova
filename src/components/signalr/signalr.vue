@@ -10,13 +10,13 @@ export default {
   },
   props: {
     seller: {},
-    ml: {}
+    ml: {},
+    data: {}
   },
   data() {
     return {
-      show: false,
       url: this.seller.sellerurl,
-      userName: 'vue app',
+      // userName: 'vue app',
       simpleHubProxy: null,
       connectionId: ''
     }
@@ -47,9 +47,11 @@ export default {
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog
       var tempOnConnnected = this.onConnected
+      var tempDownloadMenu = this.downloadMenu
       var temponOrderConfirmedFromServerToWeb = this.onOrderConfirmedFromServerToWeb
       var temponRegisterUserConfirmedFromServerToWeb = this.onRegisterUserConfirmedFromServerToWeb
       var temponSigninConfirmedFromServerToWeb = this.onSigninConfirmedFromServerToWeb
+      var temponMenuDownloaded = this.onMenuDownloaded
 
       var tempSimpleHubProxy = this.simpleHubProxy
       var tempSetSimpleHubProxy = this.setSimpleHubProxy
@@ -95,6 +97,11 @@ export default {
           // alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
           temponSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
         };
+        tempSimpleHubProxy.client.onMenuDownloaded = function (webClientConnectionId, data) {
+          // alert('tempSimpleHubProxy.client.onMenuDownloaded')
+          // alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
+          temponMenuDownloaded(webClientConnectionId, data)
+        };
         tempSimpleHubProxy.client.messageReceived = function (name, message, time, userimg) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           tempWriteLog('messagereceived' + name + ':' + message);
@@ -111,6 +118,7 @@ export default {
           // alert(tempSimpleHubProxy)
 
           tempSimpleHubProxy.server.connect('vue');
+          tempDownloadMenu();
         });
       });
 
@@ -121,13 +129,19 @@ export default {
       // alert('onConnected:' + this.connectionId)
     },
     sendOrder(order) {
-      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, 'vue', order);
+      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.data.options, order);
     },
     registerUser(User) {
-      this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, 'vue', User);
+      this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, this.data.options, User);
     },
     signin(user) {
-      this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, 'vue', user);
+      this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.data.options, user);
+    },
+    downloadMenu() {
+      // alert('downloadMenu')
+      // console.log(this.data.options)
+      // this.simpleHubProxy.server.downloadMenu(''); // this.data.options);
+      this.simpleHubProxy.server.downloadMenu(JSON.stringify(this.data.options));
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
@@ -151,6 +165,10 @@ export default {
         //   content: '<p>Order is geplaast signalr</p>'
         // });
       }
+    },
+    onMenuDownloaded(webClientConnectionId, data) {
+      // alert('onRegisterUserConfirmedFromServerToWeb')
+      this.$root.eventHub.$emit('signalr.downloaded', data)
     },
     writeToLog(msg) {
       console.log(msg)
