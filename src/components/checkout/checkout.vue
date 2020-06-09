@@ -272,9 +272,12 @@ export default {
 {
   margin-top: 40px
 }
-.ordercommenttext
-{
-  padding: 2px 5px
+.ordercommenttext {
+  float: left;
+  width: 100%;
+  padding: 2px 5px;
+  outline: none;
+  resize: none;
 }
 .ordertext {
   margin-top: 10px;
