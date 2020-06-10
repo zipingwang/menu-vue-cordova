@@ -41,6 +41,9 @@
     <div class="tab-item" v-if="visibletabs.includes('shop')">
       <router-link to="/seller">商家</router-link>
     </div>
+    <div class="tab-item">
+      <router-link to="/admin">商家</router-link>
+    </div>
   </div>
   <keep-alive>
       <router-view :seller="seller" :data="data" :ml="trans"></router-view>
@@ -63,7 +66,8 @@ export default {
       trans: ml.trans,
       lns: data.seller.lns,
       visibletabs: ml.visibletabs,
-      activetab: ml.activetab
+      activetab: ml.activetab,
+      dataReday: false
     }
   },
   created() {
@@ -95,14 +99,6 @@ export default {
       // alert('menudownloaded')
       var obj = JSON.parse(data)
       console.log(data)
-      this.$nextTick(() => {
-        this.data.currentlnindex = 0
-        this.lns = obj.seller.lns
-        this.seller = obj.seller
-        this.data = obj
-        console.log(JSON.stringify(this.data))
-      })
-      console.log(JSON.stringify(this.data))
     }
   }
 }
