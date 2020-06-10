@@ -32,17 +32,17 @@ export default {
   methods: {
     connect() {
       if (!this.simpleHubProxy) {
-        alert('simpleHubProxy is null')
+        // alert('simpleHubProxy is null')
         this.connectToSignalRServer();
       }
       this.sendOrder()
     },
     connectToSignalRServer() {
       // alert('click 2');
-      let url = 'http://localhost:44337/signalr';
+      // let url = 'http://localhost:44337/signalr';
       // let url = '/signalr';
       // let url = 'http://www.freeobject.com/signalr';
-      // let url = this.url + '/signalr';
+      let url = this.url + '/signalr';
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog
@@ -129,19 +129,19 @@ export default {
       // alert('onConnected:' + this.connectionId)
     },
     sendOrder(order) {
-      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.data.options, order);
+      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.getDataOptionsString(), order);
     },
     registerUser(User) {
-      this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, this.data.options, User);
+      this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, this.getDataOptionsString(), User);
     },
     signin(user) {
-      this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.data.options, user);
+      this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.getDataOptionsString(), user);
     },
     downloadMenu() {
       // alert('downloadMenu')
       // console.log(this.data.options)
       // this.simpleHubProxy.server.downloadMenu(''); // this.data.options);
-      this.simpleHubProxy.server.downloadMenu(JSON.stringify(this.data.options));
+      this.simpleHubProxy.server.downloadMenu(this.getDataOptionsString());
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
@@ -169,6 +169,9 @@ export default {
     onMenuDownloaded(webClientConnectionId, data) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
       this.$root.eventHub.$emit('signalr.downloaded', data)
+    },
+    getDataOptionsString() {
+      return JSON.stringify(this.data.options);
     },
     writeToLog(msg) {
       console.log(msg)

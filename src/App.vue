@@ -95,14 +95,14 @@ export default {
       // alert('menudownloaded')
       var obj = JSON.parse(data)
       console.log(data)
-      this.$nextTick(() => {
-        this.data.currentlnindex = 0
-        this.lns = obj.seller.lns
-        this.seller = obj.seller
-        this.data = obj
-        console.log(JSON.stringify(this.data))
-      })
-      console.log(JSON.stringify(this.data))
+      // this.$nextTick(() => {
+      //   this.data.currentlnindex = 0
+      //   this.lns = obj.seller.lns
+      //   this.seller = obj.seller
+      //   this.data = obj
+      //   console.log(JSON.stringify(this.data))
+      // })
+      // console.log(JSON.stringify(this.data))
     }
   }
 }

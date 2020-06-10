@@ -133,7 +133,7 @@ export default {
       this.languageShow = true;
     },
     hideLanguages(ln, index) {
-      alert(index)
+      // alealert(index)
       this.languageShow = false;
       this.$root.eventHub.$emit('ml.change', ln['code'], index)
     }
