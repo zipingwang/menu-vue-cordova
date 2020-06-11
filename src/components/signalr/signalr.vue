@@ -39,10 +39,10 @@ export default {
     },
     connectToSignalRServer() {
       // alert('click 2');
-      // let url = 'http://localhost:44337/signalr';
+      let url = 'http://localhost:44337/signalr';
       // let url = '/signalr';
       // let url = 'http://www.freeobject.com/signalr';
-      let url = this.url + '/signalr';
+      // let url = this.url + '/signalr';
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog

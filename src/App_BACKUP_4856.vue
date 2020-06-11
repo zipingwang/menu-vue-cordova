@@ -99,6 +99,17 @@ export default {
       // alert('menudownloaded')
       var obj = JSON.parse(data)
       console.log(data)
+<<<<<<< HEAD
+      // this.$nextTick(() => {
+      //   this.data.currentlnindex = 0
+      //   this.lns = obj.seller.lns
+      //   this.seller = obj.seller
+      //   this.data = obj
+      //   console.log(JSON.stringify(this.data))
+      // })
+      // console.log(JSON.stringify(this.data))
+=======
+>>>>>>> 9924b67d6a9d47cc127f86b6550deaf10d9f0ca7
     }
   }
 }

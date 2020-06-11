@@ -7,6 +7,7 @@ import monthmenu from 'components/monthmenu/monthmenu'
 import info from 'components/info/info'
 import ricetable from 'components/ricetable/ricetable'
 import seller from 'components/seller/seller'
+import admin from 'components/admin/admin'
 import vueTap from 'v-tap'
 import fastclick from 'fastclick'
 import Vuex from 'vuex'
@@ -52,6 +53,9 @@ const router = new VueRouter({
   }, {
     path: '/ricetable',
     component: ricetable
+  }, {
+    path: '/admin',
+    component: admin
   }, {
     path: '/seller',
     component: seller
@@ -119,3 +123,4 @@ new Vue({
 // console.log(JSON.stringify(data.seller))
 // alert('default tab' + data.seller.defaultTab)
 router.push(`${ml.visibletabs[data.seller.defaultTab]}`)
+// router.push(`admin`)

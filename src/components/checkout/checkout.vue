@@ -114,7 +114,8 @@ export default {
       requestString = 'id:b613762f-29b9-442d-871c-9c9344ff6e4c@@@ORDER@@@20090808001@@@' /* template for RestSoft.WPF */
       requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
       requestString = requestString + '@@@Option1@@Today@@18:25@@@'
-      requestString = requestString + orderline + '@@@' + this.ordercomment
+      requestString = requestString + orderline + '@@@' + this.ordercomment + '@@@' + JSON.stringify(this.data.options)
+      console.log(this.data.options)
       return requestString
     }
   },
