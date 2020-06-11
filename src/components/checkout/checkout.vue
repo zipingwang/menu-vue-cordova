@@ -155,7 +155,7 @@ export default {
     hidecheckout() {
       this.show = false;
     },
-    onOrderConfirmedFromServerToWeb(orderId) {
+    onOrderConfirmedFromServerToWeb(order, addremove) {
       this.showWaiting = false
       clearInterval(this.mySendingTimer)
       this.$Modal.success({

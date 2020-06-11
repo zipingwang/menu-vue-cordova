@@ -74,11 +74,7 @@ export default {
   },
   props: {
     seller: {},
-    selectFoods: {
-      type: Array,
-      default: []
-    },
-    totalPrice: 0,
+    data: {},
     ml: {}
   },
   data() {
@@ -191,13 +187,6 @@ export default {
     }
   },
   computed: {
-    totalCount() {
-      let count = 0
-      this.selectFoods.forEach((food) => {
-        count += food.count
-      })
-      return count
-    },
     registerString() {
       let requestString = ''
       requestString = JSON.stringify(this.formItem)

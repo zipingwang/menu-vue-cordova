@@ -45,7 +45,7 @@
 
     </div>
   </transition>
-  <register ref="myregister" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml"></register>
+  <register ref="myregister" :seller="seller" :data="data" :ml="ml"></register>
   </div>
 </template>
 
@@ -61,11 +61,7 @@ export default {
   },
   props: {
     seller: {},
-    selectFoods: {
-      type: Array,
-      default: []
-    },
-    totalPrice: 0,
+    data: {},
     ml: {}
   },
   data() {
@@ -91,13 +87,6 @@ export default {
     }
   },
   computed: {
-    totalCount() {
-      let count = 0
-      this.selectFoods.forEach((food) => {
-        count += food.count
-      })
-      return count
-    },
     signinString() {
       let requestString = ''
       requestString = JSON.stringify(this.formInline)
@@ -139,7 +128,8 @@ export default {
       // this.$emit('loginevent', 'loginasguest')
       this.show = false
       data.options.cusId = 'guest'
-      this.$root.eventHub.$emit('login.loggedin', 'guest')
+      data.options.isAdmin = '0'
+      this.$root.eventHub.$emit('login.loggedin', {'rid': 'guest', 'isAdmin': '0'})
     },
     showlogin() {
       this.show = true;
@@ -162,12 +152,14 @@ export default {
         }
       })
     },
-    onSigninConfirmedFromServerToWeb(userId, sessionId) {
+    onSigninConfirmedFromServerToWeb(user) {
       // alert(userId)
-      if (userId !== '-1') {
+      if (user.rid !== '-1') {
         this.show = false
-        data.options.cusId = userId
-        this.$root.eventHub.$emit('login.loggedin', userId)
+        data.options.cusId = user.rid
+        data.options.isAdmin = user.isAdmin
+        this.$root.eventHub.$emit('login.loggedin', user)
+        // this.$root.eventHub.$emit('signalr.downloadOrder')
         // this.$Modal.success({
         //   title: this.ml.success,
         //   content: '<p>onSigninConfirmedFromServerToWeb is geplaast</p>'

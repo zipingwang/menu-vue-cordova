@@ -28,6 +28,8 @@ export default {
     this.$root.eventHub.$on('signalr.sendOrder', this.sendOrder)
     this.$root.eventHub.$on('signalr.registerUser', this.registerUser)
     this.$root.eventHub.$on('signalr.signin', this.signin)
+    this.$root.eventHub.$on('signalr.downloadOrder', this.downloadOrder)
+    this.$root.eventHub.$on('signalr.closeOrder', this.closeOrder)
   },
   methods: {
     connect() {
@@ -52,6 +54,7 @@ export default {
       var temponRegisterUserConfirmedFromServerToWeb = this.onRegisterUserConfirmedFromServerToWeb
       var temponSigninConfirmedFromServerToWeb = this.onSigninConfirmedFromServerToWeb
       var temponMenuDownloaded = this.onMenuDownloaded
+      var temponMessageReceived = this.onMessageReceived
 
       var tempSimpleHubProxy = this.simpleHubProxy
       var tempSetSimpleHubProxy = this.setSimpleHubProxy
@@ -81,30 +84,31 @@ export default {
           // tempWriteLog('onconnected' + name + ':' + message);
           tempOnConnnected(id, userName, connectedusers)
         };
-        tempSimpleHubProxy.client.orderConfirmedFromServerToWeb = function (webClientConnectionId, orderId) {
+        tempSimpleHubProxy.client.orderConfirmedFromServerToWeb = function (webClientConnectionId, order, addremove) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
-          temponOrderConfirmedFromServerToWeb(webClientConnectionId, orderId)
+          temponOrderConfirmedFromServerToWeb(webClientConnectionId, order, addremove)
         };
         tempSimpleHubProxy.client.onRegisterUserConfirmedFromServerToWeb = function (webClientConnectionId, userId, sessionId) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
           temponRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
         };
-        tempSimpleHubProxy.client.onSigninConfirmedFromServerToWeb = function (webClientConnectionId, userId, sessionId) {
+        tempSimpleHubProxy.client.onSigninConfirmedFromServerToWeb = function (webClientConnectionId, response) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
           // alert('tempSimpleHubProxy.client.orderConfirmedFromServerToWeb')
           // alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
-          temponSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId)
+          temponSigninConfirmedFromServerToWeb(webClientConnectionId, response)
         };
         tempSimpleHubProxy.client.onMenuDownloaded = function (webClientConnectionId, data) {
           // alert('tempSimpleHubProxy.client.onMenuDownloaded')
           // alert('onSigninConfirmedFromServerToWeb userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
           temponMenuDownloaded(webClientConnectionId, data)
         };
-        tempSimpleHubProxy.client.messageReceived = function (name, message, time, userimg) {
+        tempSimpleHubProxy.client.onReceiveMessage = function (webClientConnectionId, message) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
-          tempWriteLog('messagereceived' + name + ':' + message);
+          // tempWriteLog('messagereceived' + name + ':' + message);
+          temponMessageReceived(webClientConnectionId, message)
         };
         // Connect to hub
         $.connection.hub.start().done(function() {
@@ -118,7 +122,7 @@ export default {
           // alert(tempSimpleHubProxy)
 
           tempSimpleHubProxy.server.connect('vue');
-          tempDownloadMenu();
+          // tempDownloadMenu();
         });
       });
 
@@ -143,22 +147,38 @@ export default {
       // this.simpleHubProxy.server.downloadMenu(''); // this.data.options);
       this.simpleHubProxy.server.downloadMenu(this.getDataOptionsString());
     },
+    downloadOrder() {
+      // alert('downloadOrder')
+      this.simpleHubProxy.server.downloadOrder(this.getDataOptionsString());
+    },
+    closeOrder(orderId) {
+      // alert('downloadOrder')
+      this.simpleHubProxy.server.closeOrder(this.getDataOptionsString(), orderId);
+    },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
         this.$root.eventHub.$emit('signalr.onRegisterUserConfirmedFromServerToWeb', userId, sessionId)
       }
     },
-    onSigninConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
+    onSigninConfirmedFromServerToWeb(webClientConnectionId, responsedata) {
       // alert('onSigninConfirmedFromServerToWeb')
+      console.log(typeof responsedata);
+      var s = '{"rid":"2020","isAdmin":"0"}'
+      console.log(typeof s);
+      var sobject = JSON.parse(s)
+      console.log(sobject)
+      console.log(responsedata)
+      var responseobject = JSON.parse(responsedata)
+      console.log(responseobject)
       if (this.connectionId === webClientConnectionId) {
-        console.log('onSigninConfirmedFromServerToWeb2 userid:' + userId + 'sessionId:' + sessionId + 'connectionId:' + webClientConnectionId);
-        this.$root.eventHub.$emit('signalr.onSigninConfirmedFromServerToWeb', userId, sessionId)
+        console.log('onSigninConfirmedFromServerToWeb2 userid:');
+        this.$root.eventHub.$emit('signalr.onSigninConfirmedFromServerToWeb', responseobject)
       }
     },
-    onOrderConfirmedFromServerToWeb(webClientConnectionId, orderId) {
+    onOrderConfirmedFromServerToWeb(webClientConnectionId, order, addremove) {
       if (this.connectionId === webClientConnectionId) {
-        this.$root.eventHub.$emit('signalr.onOrderConfirmedFromServerToWeb', orderId)
+        this.$root.eventHub.$emit('signalr.onOrderConfirmedFromServerToWeb', order, addremove)
         // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)
         // this.$Modal.success({
         //   title: 'Success',
@@ -169,6 +189,20 @@ export default {
     onMenuDownloaded(webClientConnectionId, data) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
       this.$root.eventHub.$emit('signalr.downloaded', data)
+    },
+    onMessageReceived(webClientConnectionId, messageString) {
+      // console.log(messageString)
+      var message = JSON.parse(messageString)
+      // console.log(message)
+      // alert(message.status)
+      if (message.status === 'ok') {
+        if (message.messageType === 'downloadorder') {
+          // alert('before emit signalr.orderDownloaded ')
+          // console.log(message.messageBody)
+          this.$root.eventHub.$emit('signalr.orderDownloaded', message.messageBody)
+          // alert('after emit signalr.orderDownloaded ')
+        }
+      }
     },
     getDataOptionsString() {
       return JSON.stringify(this.data.options);

@@ -58,7 +58,7 @@
     <div class="backdrop" v-show="showBackdrop" @click="hideBackdrop"></div>
   </transition>
   <checkout ref="mycheckout" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml" :data="data"></checkout>
-  <login ref="mylogin" :seller="seller" :selectFoods="selectFoods" :totalPrice="totalPrice" :ml="ml" v-on:loginevent="onlogin()"></login>
+  <login ref="mylogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin()"></login>
   </div>
 </template>
 
@@ -226,7 +226,10 @@ export default {
       }
     },
     checkout() {
-      if (this.seller.supportOnlineOrder && (data.options.cusId === '-1' || data.options.cusId === '')) {
+      if (this.data.options.table !== '') { /* restaurant */
+        this.data.options.cusId = 'guest'
+        this.$refs.mycheckout.showcheckout()
+      } else if (this.seller.supportOnlineOrder && (data.options.cusId === '-2' || data.options.cusId === '-1' || data.options.cusId === '')) {
         this.$refs.mylogin.showlogin()
       } else {
         this.$refs.mycheckout.showcheckout()
@@ -241,7 +244,7 @@ export default {
       //   draggable: true
       // })
     },
-    onlogin(cusId) {
+    onlogin(cus) {
       // alert('logincondition')
       // alert(logincondition)
       // if (logincondition === 'guest') {

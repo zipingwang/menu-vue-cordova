@@ -90,6 +90,7 @@ new Vue({
     data.options.takeaway = '0'
     data.options.cusId = ''
     data.options.shopId = ''
+    data.options.isAdmin = '0'
     if ('table' in urlVars) {
       data.options.table = urlVars['table']
     }

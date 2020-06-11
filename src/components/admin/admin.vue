@@ -95,6 +95,7 @@
           border-radius 10px
         .foodlinecount
           width 20px
+          text-align right
         .foodlinename
           margin 0px
   .map
@@ -106,20 +107,22 @@
 
 <template lang="html">
   <div class="ratingsWrapper" ref="ratingsWrapper">
-    <login class="login" v-if="!loggedIn">
-    </login>
+<!--
+    <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
+    </login> -->
     <div class="ratings-content" v-if="loggedIn">
+      <div><span class="button" @click= "downloadOrder">check order</span></div>
       <div class="divider"></div>
       <div class="row">
         <div class="column" v-for="order in orders">
            <div class="ricetableblock">
                 <div class="title">
-                    <p>{{order.orderid}} {{order.datetime}} {{order.totalprice}} </p>
-                    {{order.customerinfo}}
+                    <p>{{order.tableNr}} {{getTakeawayString(order)}} {{order.orderTime}} {{order.totalPrice}} </p>
+                    {{order.customerInfo}}
                     {{order.info}}
                 </div>
                 <table class="foodlineblock">
-                  <tr class="foodline" v-for="(orderline, index) in order.orderlines">
+                  <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
                     <td class="foodlinename">{{orderline.name}}</td>
                   </tr>
@@ -171,46 +174,73 @@ export default {
   data() {
     return {
       modal1: false,
-      loggedIn: false,
       selectedOrder: {},
       ricetables: this.data.ricetables,
-      orders: [{
-        'orderid': '123',
-        'datetime': '18:50',
-        'totalprice': '20',
-        'customerinfo': 'customer',
-        'info': 'this is takeaway',
-        orderlines: [{
-          'nr': '100',
-          'count': '2',
-          'name': 'peking eend',
-          'price': '12'
-        }]},
-      {
-        'orderid': '345',
-        'datetime': '16:20',
-        'totalprice': '50',
-        'customerinfo': 'customer',
-        'info': 'this is takeaway',
-        orderlines: [{
-          'nr': '100',
-          'count': '2',
-          'name': 'peking eend',
-          'price': '12'
-        },
-        {
-          'nr': '200',
-          'count': '1',
-          'name': 'Kip groeten',
-          'price': '30'
-        }]}
-      ]
+      orders: []
+      // orders: [{
+      //   'orderid': '123',
+      //   'datetime': '18:50',
+      //   'totalprice': '20',
+      //   'customerinfo': 'customer',
+      //   'info': 'this is takeaway',
+      //   orderlines: [{
+      //     'nr': '100',
+      //     'count': '2',
+      //     'name': 'peking eend',
+      //     'price': '12'
+      //   }]},
+      // {
+      //   'orderid': '345',
+      //   'datetime': '16:20',
+      //   'totalprice': '50',
+      //   'customerinfo': 'customer',
+      //   'info': 'this is takeaway',
+      //   orderlines: [{
+      //     'nr': '100',
+      //     'count': '2',
+      //     'name': 'peking eend',
+      //     'price': '12'
+      //   },
+      //   {
+      //     'nr': '200',
+      //     'count': '1',
+      //     'name': 'Kip groeten',
+      //     'price': '30'
+      //   }]}
+      // ]
     }
   },
   created() {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
+    this.$root.eventHub.$on('signalr.orderDownloaded', this.orderDownloaded)
+    this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
+  },
+  computed: {
+    loggedIn() {
+      return this.data.options.isAdmin === '1'
+      // return this.data.options.cusId !== '' && this.data.options.cusId !== '-1' && this.data.options.cusId !== '-2'
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      // react to route changes...
+      // alert('route')
+      // console.log('route')
+      // console.log(to.path)
+      // console.log(from)
+      // console.log(this.data.options)
+      // if (to.path === '/admin') {
+      //   if (this.data.options.isAdmin === '1') {
+      //     this.downloadOrder()
+      //     this.$refs.myLogin.hidelogin()
+      //   } else {
+      //     this.$refs.myLogin.showlogin()
+      //   }
+      // }
+    }
   },
   methods: {
     _initScroll() {
@@ -234,6 +264,7 @@ export default {
     closeOrder(order) {
       this.modal1 = true
       this.selectedOrder = order
+      this.$root.eventHub.$emit('signalr.closeOrder', order.orderId)
       alert('close order' + JSON.stringify(order))
     },
     ok() {
@@ -243,6 +274,57 @@ export default {
     cancel() {
       this.$Message.info('Clicked cancel');
       this.selectedOrder = {}
+    },
+    downloadOrder() {
+      alert('this.$root.eventHub.$emit(signalr.downloadOrder)')
+      this.$root.eventHub.$emit('signalr.downloadOrder')
+    },
+    orderDownloaded(orders) {
+      // alert('orderDownloaded in admin')
+      // console.log(typeof orders);
+      this.orders = orders.orders
+      this.$nextTick(() => {
+        this._initScroll(); // 初始化scroll
+      })
+    },
+    onloggedin(cus) {
+      // console.log(cus)
+      // this.downloadOrder()
+    },
+    onOrderConfirmedFromServerToWeb(orderString, addremove) {
+      alert('onOrderConfirmedFromServerToWeb in admin')
+      var order = JSON.parse(orderString)
+      console.log(order)
+      debugger
+      if (addremove === '1') {
+        let flag = false
+        for (let index = 0; index < this.orders.length; index++) {
+          if (this.orders[index].orderId === order.orderId) {
+            flag = true
+            break
+          }
+        }
+        if (!flag) {
+          this.orders.push(order)
+          alert('add')
+        }
+      } else if (addremove === '-1') {
+        let flag = false
+        for (let index = 0; index < this.orders.length; index++) {
+          if (this.orders[index].orderId === order.orderId) {
+            this.orders.splice(index, 1);
+            alert('found')
+            break
+          }
+        }
+      }
+    },
+    getTakeawayString(order) {
+      if (order.isTakeaway === '0') {
+        return ''
+      } else {
+        return '外卖'
+      }
     }
   }
 }
