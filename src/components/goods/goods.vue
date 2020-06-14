@@ -74,6 +74,7 @@ export default {
       this._initScroll(); // 初始化scroll
       this._calculateHeight(); // 初始化列表高度列表
     })
+    this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
   },
   data() {
     return {
@@ -154,6 +155,19 @@ export default {
           this.$refs.myFood.showToggle()
         })
       }
+    },
+    onOrderConfirmedFromServerToWeb(order, addremove) {
+      if (addremove !== '1') {
+        return
+      }
+      this.selectFoods.length = 0
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            food.count = 0
+          }
+        })
+      })
     }
   },
   components: {

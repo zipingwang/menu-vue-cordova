@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <backdrop :isShow="showWaiting"></backdrop>
+    <backdrop :isShow="showWaiting" background="rgba(7,17,27,0.6)"></backdrop>
     <div class="spin" v-show="showWaiting">
       <spin size="large" v-show="showWaiting"></spin>
     </div>
@@ -156,11 +156,18 @@ export default {
       this.show = false;
     },
     onOrderConfirmedFromServerToWeb(order, addremove) {
+      if (addremove !== '1') {
+        return
+      }
       this.showWaiting = false
       clearInterval(this.mySendingTimer)
       this.$Modal.success({
         title: this.ml.success,
-        content: this.ml.ordersendsuccess
+        content: this.ml.ordersendsuccess,
+        onOk: () => {
+          this.hidecheckout()
+          this.$router.push('admin')
+        }
       });
     },
     checkSending() {

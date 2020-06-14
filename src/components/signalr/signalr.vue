@@ -30,6 +30,7 @@ export default {
     this.$root.eventHub.$on('signalr.signin', this.signin)
     this.$root.eventHub.$on('signalr.downloadOrder', this.downloadOrder)
     this.$root.eventHub.$on('signalr.closeOrder', this.closeOrder)
+    this.$root.eventHub.$on('signalr.deleteOrder', this.deleteOrder)
   },
   methods: {
     connect() {
@@ -154,6 +155,10 @@ export default {
     closeOrder(orderId) {
       // alert('downloadOrder')
       this.simpleHubProxy.server.closeOrder(this.getDataOptionsString(), orderId);
+    },
+    deleteOrder(orderId) {
+      // alert('downloadOrder')
+      this.simpleHubProxy.server.deleteOrder(this.getDataOptionsString(), orderId);
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')

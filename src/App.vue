@@ -41,8 +41,8 @@
     <div class="tab-item" v-if="visibletabs.includes('shop')">
       <router-link to="/seller">商家</router-link>
     </div>
-    <div class="tab-item">
-      <router-link to="/admin">商家</router-link>
+    <div class="tab-item" v-if="data.options.cusId != ''">
+      <router-link to="/admin">{{trans.mine}}</router-link>
     </div>
   </div>
   <keep-alive>

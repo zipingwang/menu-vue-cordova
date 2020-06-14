@@ -1,13 +1,19 @@
 <template lang="html">
   <transition name="fade-backdrop">
-    <div class="backdrop" v-show="isShow"></div>
+    <div ref="myBackDrop" class="backdrop" v-show="isShow"></div>
   </transition>
 </template>
 
 <script>
 export default {
   props: {
-    isShow: Boolean
+    isShow: Boolean,
+    background: ''
+  },
+  mounted() {
+    if (this.background !== '') {
+      this.$refs.myBackDrop.style.backgroundColor = this.background
+    }
   }
 }
 

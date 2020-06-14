@@ -44,6 +44,8 @@
   left: 0
   width: 100%
   overflow: hidden
+  .buttonarea
+    margin 8px 10px
 .ratings-content
   .row
     .column
@@ -54,6 +56,8 @@
         border-radius: 10px;
         height: 100%
         box-sizing border-box
+        .orderheader
+          font-size 24px
         .title
           font-size 24px
           line-height 24px
@@ -111,32 +115,76 @@
     <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
     </login> -->
     <div class="ratings-content" v-if="loggedIn">
-      <div><span class="button" @click= "downloadOrder">check order</span></div>
+      <div class="buttonarea">
+          <i-button size="small" type="primary"  @click= "downloadOrder()" icon="ios-download-outline">{{ml.checkorder}}</i-button>
+          <i-button size="small" :type="restaurantButtonType" @click= "getRestaurant()">{{ml.restaurant}} {{restaurantCount}}</i-button>
+          <i-button size="small" :type="takeawayButtonType"  @click= "getTakeaway()">{{ml.takeaway}} {{takeawayCount}}</i-button>
+          <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
+      </div>
       <div class="divider"></div>
       <div class="row">
-        <div class="column" v-for="order in orders">
+        <div class="column" v-for="order in visibleOrders">
            <div class="ricetableblock">
-                <div class="title">
+              <row :gutter="16" class="orderheader">
+                <i-col span="3">
+                    <div>{{order.tableNr}}</div>
+                </i-col>
+                <i-col span="6">
+                    <div>{{getTakeawayString(order)}}</div>
+                </i-col>
+                <i-col span="5">
+                    <div>{{order.orderTime}}</div>
+                </i-col>
+                <i-col span="4">
+                    <div>{{order.totalPrice}}€</div>
+                </i-col>
+                <i-col span="6">
+                    <dropdown style="margin-left: 20px" @on-click="changeOrder($event, order)">
+                    <i-button type="primary" icon="ios-menu"></i-button>
+                    <dropdown-menu slot="list">
+                        <dropdown-item name="closeOrder">{{ml.close}}</dropdown-item>
+                        <dropdown-item divided name="deleteOrder">{{ml.delete}}</dropdown-item>
+                        <!-- <dropdown-item name="closeOrder2">{{ml.close}}</dropdown-item> -->
+                    </dropdown-menu>
+                </dropdown>
+                     <!-- <i-button type="primary" size="small" shape="circle" icon="ios-menu" @click="closeOrder(order)"></i-button> -->
+                </i-col>
+            </row>
+                <!-- <div class="title">
                     <p>{{order.tableNr}} {{getTakeawayString(order)}} {{order.orderTime}} {{order.totalPrice}} </p>
                     {{order.customerInfo}}
                     {{order.info}}
-                </div>
+                </div> -->
                 <table class="foodlineblock">
                   <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
                     <td class="foodlinename">{{orderline.name}}</td>
                   </tr>
                 </table>
-                <span class="button" @click="closeOrder(order)">close</span>
+                <!-- <span class="button" @click="closeOrder(order)">close</span> -->
                 <modal
                   ref="dialog"
-                  v-model="modal1"
-                  title="Common Modal dialog box title"
-                  @on-ok="ok"
-                  @on-cancel="cancel">
-                  <p>Content of dialog</p>
-                  <p>Content of dialog</p>
-                  <p>Content of dialog</p>
+                  v-model="modalCloseOrder"
+                  :ok-text="ml.ok"
+                  :cancel-text="ml.cancel"
+                  @on-ok="ConfirmCloseOrder"
+                  @on-cancel="CancelCloseOrder">
+                   <p style="color:#f60;text-align:center">
+                    <icon type="md-information-circle"></icon>
+                    <span>{{ml.askconfirmcloseorder}}</span>
+                  </p>
+                </modal>
+                <modal
+                  ref="dialog"
+                  v-model="modalDeleteOrder"
+                  :ok-text="ml.ok"
+                  :cancel-text="ml.cancel"
+                  @on-ok="ConfirmDeleteOrder"
+                  @on-cancel="CancelDeleteOrder">
+                   <p style="color:#f60;text-align:center">
+                    <icon type="md-information-circle"></icon>
+                    <span>{{ml.askconfirmdeleteorder}}</span>
+                  </p>
                 </modal>
                 <!-- <div class="foodblock">
                     <ul>
@@ -173,41 +221,15 @@ export default {
   },
   data() {
     return {
-      modal1: false,
+      modalCloseOrder: false,
+      modalDeleteOrder: false,
       selectedOrder: {},
       ricetables: this.data.ricetables,
-      orders: []
-      // orders: [{
-      //   'orderid': '123',
-      //   'datetime': '18:50',
-      //   'totalprice': '20',
-      //   'customerinfo': 'customer',
-      //   'info': 'this is takeaway',
-      //   orderlines: [{
-      //     'nr': '100',
-      //     'count': '2',
-      //     'name': 'peking eend',
-      //     'price': '12'
-      //   }]},
-      // {
-      //   'orderid': '345',
-      //   'datetime': '16:20',
-      //   'totalprice': '50',
-      //   'customerinfo': 'customer',
-      //   'info': 'this is takeaway',
-      //   orderlines: [{
-      //     'nr': '100',
-      //     'count': '2',
-      //     'name': 'peking eend',
-      //     'price': '12'
-      //   },
-      //   {
-      //     'nr': '200',
-      //     'count': '1',
-      //     'name': 'Kip groeten',
-      //     'price': '30'
-      //   }]}
-      // ]
+      orders: [],
+      restaurantButtonType: 'default',
+      takeawayButtonType: 'default',
+      allButtonType: 'primary',
+      currentOrderType: 'all'
     }
   },
   created() {
@@ -216,12 +238,44 @@ export default {
     })
     this.$root.eventHub.$on('signalr.orderDownloaded', this.orderDownloaded)
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    console.log('admin vue created')
+    this.downloadOrder()
     // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
   },
   computed: {
     loggedIn() {
       return this.data.options.isAdmin === '1'
       // return this.data.options.cusId !== '' && this.data.options.cusId !== '-1' && this.data.options.cusId !== '-2'
+    },
+    visibleOrders() {
+      return this.orders.filter(
+        (order) => {
+          if (this.currentOrderType === 'restaurant') {
+            return order.isTakeaway === '0'
+          } else if (this.currentOrderType === 'takeaway') {
+            return order.isTakeaway === '1'
+          } else {
+            return true
+          }
+        }
+      )
+    },
+    takeawayCount() {
+      return this.orders.filter(
+        (order) => {
+          return order.isTakeaway === '1'
+        }
+      ).length
+    },
+    restaurantCount() {
+      return this.orders.filter(
+        (order) => {
+          return order.isTakeaway === '0'
+        }
+      ).length
+    },
+    allCount() {
+      return this.Orders ? 0 : this.orders.length
     }
   },
   watch: {
@@ -262,22 +316,27 @@ export default {
       });
     },
     closeOrder(order) {
-      this.modal1 = true
+      this.modalCloseOrder = true
       this.selectedOrder = order
-      this.$root.eventHub.$emit('signalr.closeOrder', order.orderId)
-      alert('close order' + JSON.stringify(order))
+      // this.$root.eventHub.$emit('signalr.closeOrder', order.orderId)
+      // alert('close order' + JSON.stringify(order))
     },
-    ok() {
-      this.$Message.info(JSON.stringify(this.selectedOrder));
+    ConfirmCloseOrder() {
+      // this.$Message.info(JSON.stringify(this.selectedOrder));
+      this.$root.eventHub.$emit('signalr.closeOrder', this.selectedOrder.orderId)
       this.selectedOrder = {}
+      this.modalCloseOrder = false
     },
-    cancel() {
-      this.$Message.info('Clicked cancel');
+    CancelCloseOrder() {
+      // this.$Message.info('Clicked cancel');
       this.selectedOrder = {}
+      this.modalCloseOrder = false
     },
     downloadOrder() {
-      alert('this.$root.eventHub.$emit(signalr.downloadOrder)')
-      this.$root.eventHub.$emit('signalr.downloadOrder')
+      // alert('this.$root.eventHub.$emit(signalr.downloadOrder)')
+      if (this.data.options.cusId !== '') {
+        this.$root.eventHub.$emit('signalr.downloadOrder')
+      }
     },
     orderDownloaded(orders) {
       // alert('orderDownloaded in admin')
@@ -292,28 +351,31 @@ export default {
       // this.downloadOrder()
     },
     onOrderConfirmedFromServerToWeb(orderString, addremove) {
-      alert('onOrderConfirmedFromServerToWeb in admin')
-      var order = JSON.parse(orderString)
-      console.log(order)
-      debugger
+      // alert('onOrderConfirmedFromServerToWeb in admin')
+      console.log(orderString)
+      // debugger
       if (addremove === '1') {
         let flag = false
+        let order = JSON.parse(orderString)
         for (let index = 0; index < this.orders.length; index++) {
           if (this.orders[index].orderId === order.orderId) {
             flag = true
+            this.$set(this.orders, index, order) /* replace existing order */
+            // this.orders[index] = order /* not update by vue */
             break
           }
         }
         if (!flag) {
           this.orders.push(order)
-          alert('add')
+          // alert('add')
         }
-      } else if (addremove === '-1') {
+      } else if (addremove === '-1' || addremove === '-2') { /* -1 close, -2 delete order */
         let flag = false
+        let orderId = orderString
         for (let index = 0; index < this.orders.length; index++) {
-          if (this.orders[index].orderId === order.orderId) {
+          if (this.orders[index].orderId === orderId) {
             this.orders.splice(index, 1);
-            alert('found')
+            // alert('found')
             break
           }
         }
@@ -325,6 +387,50 @@ export default {
       } else {
         return '外卖'
       }
+    },
+    getRestaurant() {
+      this.restaurantButtonType = 'primary'
+      this.takeawayButtonType = 'default'
+      this.allButtonType = 'default'
+      this.currentOrderType = 'restaurant'
+    },
+    getTakeaway() {
+      this.restaurantButtonType = 'default'
+      this.takeawayButtonType = 'primary'
+      this.allButtonType = 'default'
+      this.currentOrderType = 'takeaway'
+    },
+    getAll() {
+      this.restaurantButtonType = 'default'
+      this.takeawayButtonType = 'default'
+      this.allButtonType = 'primary'
+      this.currentOrderType = 'all'
+    },
+    deleteOrder(order) {
+      this.modalDeleteOrder = true
+      this.selectedOrder = order
+    },
+    ConfirmDeleteOrder() {
+      // this.$Message.info(JSON.stringify(this.selectedOrder));
+      this.$root.eventHub.$emit('signalr.deleteOrder', this.selectedOrder.orderId)
+      this.selectedOrder = {}
+      this.modalDeleteOrder = false
+    },
+    CancelDeleteOrder() {
+      // this.$Message.info('Clicked cancel');
+      this.selectedOrder = {}
+      this.modalDeleteOrder = false
+    },
+    changeOrder(item, order) {
+      // TODO: call two times when click once
+      if (item === 'closeOrder') {
+        // alert('closeorder')
+        this.closeOrder(order)
+      } else if (item === 'deleteOrder') {
+        this.deleteOrder(order)
+      }
+      console.log(order)
+      console.log(item)
     }
   }
 }

@@ -66,7 +66,8 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 		"useralreadyexists": "此用户已存在",
 		"passwordmismatch": "密码不同",
 		"minimumlengthrequired": "过短",
-		"invalid": "无效"
+		"invalid": "无效",
+			"askconfirmcloseorder": "Bent u zeker deze order wil afsluiten?"
 	},
 	"nl": {
 		"product": "Menu",
@@ -129,6 +130,14 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 		"useralreadyexists": "Gebruiker bestaat al",
 		"passwordmismatch": "Password mismatch",
 		"minimumlengthrequired": "Te kort",
-		"invalid": "niet geldig"
+		"invalid": "niet geldig",
+			"askconfirmcloseorder": "Bent u zeker deze order wil afsluiten?",
+			"askconfirmdeleteorder": "Bent u zeker deze order wil verwijderen?",
+			"checkorder":"Check order",
+			"restaurant":"Restaurant",
+			"takeaway":"Afhalen",
+			"all":"Alle",
+			"mine": "Mijn",
+			"delete": "Delete"
 	}
 };
