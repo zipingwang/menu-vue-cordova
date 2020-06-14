@@ -42,6 +42,26 @@
             <div class="ordertext" v-if="!seller.supportOnlineOrder">
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
+            <div>
+               <i-select v-model="takeawayTimeSlot" size="large" style="width:100px">
+                <i-option v-for="item in takeawayTimeSlots" :value="item">{{ item }}</i-option>
+                </i-select>
+            </div>
+            <div class="timeSlotWrapper">
+              <div calss = "timeSlotContainer">
+              <span>{{takeawayTimeSlot}}</span>
+              <Icon type="ios-time-outline" />
+              </div>
+            </div>
+            <TimePicker
+                hide-disabled-options
+                :disabled-hours="[1,5,10]"
+                :disabled-minutes="[0,10,20]"
+                :steps="[1, 5]"
+                :value="takeawayTimeSlot"
+                format="HH:mm"
+                placeholder="Select time"
+                style="width: 168px"></TimePicker>
             <div class="buttonarea">
               <span class="close" @click="sendOrder()" v-if="seller.supportOnlineOrder">OK</span>
               <!-- <button type="button" @click="connect()" v-if="seller.supportOnlineOrder">Ok</button> -->
@@ -91,7 +111,9 @@ export default {
       ordercomment: '',
       showWaiting: false,
       mySendingTimer: {},
-      startTime: {}
+      startTime: {},
+      takeawayTimeSlot: '1200',
+      takeawayTimeSlots: []
     }
   },
   computed: {
@@ -125,8 +147,17 @@ export default {
     })
     // this.connectToSignalRServer()
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    this.$root.eventHub.$on('signalr.onGetTakeawayTimeSlots', this.onGetTakeawayTimeSlots)
+
     console.log('checkout JSON.stringify(this.trans)')
     console.log(JSON.stringify(this.trans))
+  },
+  watch: {
+    show() {
+      if (this.show) {
+        this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+      }
+    }
   },
   methods: {
 
@@ -154,6 +185,16 @@ export default {
     },
     hidecheckout() {
       this.show = false;
+    },
+    onGetTakeawayTimeSlots(slots) {
+      console.log(slots)
+      let mySlots = slots // JSON.parse(slots)
+      console.log(mySlots)
+      console.log(typeof mySlots.timeSlots)
+      this.takeawayTimeSlots = mySlots.timeSlots
+      if (mySlots.timeSlots.length > 0) {
+        this.takeawayTimeSlot = mySlots.timeSlots[0]
+      }
     },
     onOrderConfirmedFromServerToWeb(order, addremove) {
       if (addremove !== '1') {
@@ -319,6 +360,14 @@ export default {
   height: 100px;
   background solid red;
 }
+.timeSlotContainer
+  margin auto 10px
+  line-height 20px
+.timeSlotWrapper
+  border solid 1px rgb(77,85,93)
+  height 30px
+  border-radius 2px
+  font-size 16px
 .detail
   position fixed
   left 0

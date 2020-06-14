@@ -39,7 +39,7 @@
   line-height: 48px;
 .ratingsWrapper
   position: absolute
-  top: 174px
+  top: 224px
   bottom: 0
   left: 0
   width: 100%
@@ -110,18 +110,19 @@
 </style>
 
 <template lang="html">
-  <div class="ratingsWrapper" ref="ratingsWrapper">
-<!--
-    <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
-    </login> -->
-    <div class="ratings-content" v-if="loggedIn">
+  <div class="ratings-content" v-if="loggedIn">
       <div class="buttonarea">
           <i-button size="small" type="primary"  @click= "downloadOrder()" icon="ios-download-outline">{{ml.checkorder}}</i-button>
           <i-button size="small" :type="restaurantButtonType" @click= "getRestaurant()">{{ml.restaurant}} {{restaurantCount}}</i-button>
           <i-button size="small" :type="takeawayButtonType"  @click= "getTakeaway()">{{ml.takeaway}} {{takeawayCount}}</i-button>
           <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
       </div>
-      <div class="divider"></div>
+  <div class="divider"></div>
+  <div class="ratingsWrapper" ref="ratingsWrapper">
+<!--
+    <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
+    </login> -->
+
       <div class="row">
         <div class="column" v-for="order in visibleOrders">
            <div class="ricetableblock">
@@ -133,13 +134,13 @@
                     <div>{{getTakeawayString(order)}}</div>
                 </i-col>
                 <i-col span="5">
-                    <div>{{order.orderTime}}</div>
+                    <div>{{getOrderTimeString(order)}}</div>
                 </i-col>
                 <i-col span="4">
                     <div>{{order.totalPrice}}€</div>
                 </i-col>
-                <i-col span="6">
-                    <dropdown style="margin-left: 20px" @on-click="changeOrder($event, order)">
+                <i-col span="6" v-if="data.options.isAdmin !=='' ">
+                    <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
                     <i-button type="primary" icon="ios-menu"></i-button>
                     <dropdown-menu slot="list">
                         <dropdown-item name="closeOrder">{{ml.close}}</dropdown-item>
@@ -237,7 +238,7 @@ export default {
       this._initScroll(); // 初始化scroll
     })
     this.$root.eventHub.$on('signalr.orderDownloaded', this.orderDownloaded)
-    this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    this.$root.eventHub.$on('signalr.broadcastOrder', this.onBroadcastOrder)
     console.log('admin vue created')
     this.downloadOrder()
     // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
@@ -286,14 +287,19 @@ export default {
       // console.log(to.path)
       // console.log(from)
       // console.log(this.data.options)
-      // if (to.path === '/admin') {
-      //   if (this.data.options.isAdmin === '1') {
-      //     this.downloadOrder()
-      //     this.$refs.myLogin.hidelogin()
-      //   } else {
-      //     this.$refs.myLogin.showlogin()
-      //   }
-      // }
+      if (to.path === '/admin') {
+        if (this.data.options.isAdmin === '1') {
+          // this.downloadOrder()
+          // this.$refs.myLogin.hidelogin()
+          // this._initScroll(); // 初始化scroll
+          this.foodsScroll.refresh()
+        } else {
+          // this.$refs.myLogin.showlogin()
+        }
+      }
+      // this.$nextTick(() => {
+      //   this._initScroll(); // 初始化scroll
+      // })
     }
   },
   methods: {
@@ -350,9 +356,11 @@ export default {
       // console.log(cus)
       // this.downloadOrder()
     },
-    onOrderConfirmedFromServerToWeb(orderString, addremove) {
+    onBroadcastOrder(messageBody) {
       // alert('onOrderConfirmedFromServerToWeb in admin')
-      console.log(orderString)
+      console.log(messageBody)
+      let orderString = messageBody.order
+      let addremove = messageBody.addOrRemove
       // debugger
       if (addremove === '1') {
         let flag = false
@@ -367,7 +375,7 @@ export default {
         }
         if (!flag) {
           this.orders.push(order)
-          // alert('add')
+          // downloadOrder()
         }
       } else if (addremove === '-1' || addremove === '-2') { /* -1 close, -2 delete order */
         let flag = false
@@ -380,12 +388,23 @@ export default {
           }
         }
       }
+      this.$nextTick(() => {
+        this.foodsScroll.refresh()
+        // this._initScroll(); // 初始化scroll
+      })
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
         return ''
       } else {
         return '外卖'
+      }
+    },
+    getOrderTimeString(order) {
+      if (order.isTakeaway === '0') {
+        return order.orderTime
+      } else {
+        return order.takeawayTime
       }
     },
     getRestaurant() {

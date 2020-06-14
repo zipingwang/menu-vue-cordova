@@ -31,6 +31,7 @@ export default {
     this.$root.eventHub.$on('signalr.downloadOrder', this.downloadOrder)
     this.$root.eventHub.$on('signalr.closeOrder', this.closeOrder)
     this.$root.eventHub.$on('signalr.deleteOrder', this.deleteOrder)
+    this.$root.eventHub.$on('signalr.getTakeawayTimeSlots', this.getTakeawayTimeSlots)
   },
   methods: {
     connect() {
@@ -160,6 +161,11 @@ export default {
       // alert('downloadOrder')
       this.simpleHubProxy.server.deleteOrder(this.getDataOptionsString(), orderId);
     },
+    getTakeawayTimeSlots(order) {
+      console.log('getTakeawayTimeSlots in signalr')
+      alert('getTakeawayTimeSlots in signalr')
+      this.simpleHubProxy.server.getTakeawayTimeSlots(this.getDataOptionsString(), order);
+    },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
@@ -196,16 +202,30 @@ export default {
       this.$root.eventHub.$emit('signalr.downloaded', data)
     },
     onMessageReceived(webClientConnectionId, messageString) {
-      // console.log(messageString)
+      console.log(messageString)
       var message = JSON.parse(messageString)
       // console.log(message)
       // alert(message.status)
       if (message.status === 'ok') {
-        if (message.messageType === 'downloadorder') {
-          // alert('before emit signalr.orderDownloaded ')
-          // console.log(message.messageBody)
-          this.$root.eventHub.$emit('signalr.orderDownloaded', message.messageBody)
-          // alert('after emit signalr.orderDownloaded ')
+        // if (message.messageType === 'downloadorder') {
+        //   // alert('before emit signalr.orderDownloaded ')
+        //   // console.log(message.messageBody)
+        //   this.$root.eventHub.$emit('signalr.orderDownloaded', message.messageBody)
+        //   // alert('after emit signalr.orderDownloaded ')
+        // }
+        switch (message.messageType) {
+          case 'downloadOrder':
+            this.$root.eventHub.$emit('signalr.orderDownloaded', message.messageBody)
+            break;
+          case 'broadcastOrder':
+            this.$root.eventHub.$emit('signalr.broadcastOrder', message.messageBody)
+            break;
+          case 'getTakeawayTimeSlots':
+            console.log('call back getTakeawayTimeSlots in signalr')
+            this.$root.eventHub.$emit('signalr.onGetTakeawayTimeSlots', message.messageBody)
+            break;
+          default:
+            // code block
         }
       }
     },
