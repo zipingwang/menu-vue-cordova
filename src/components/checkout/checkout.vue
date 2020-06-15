@@ -4,7 +4,7 @@
     <div class="spin" v-show="showWaiting">
       <spin size="large" v-show="showWaiting"></spin>
     </div>
-
+  <takeawayTimeSlots ref="takeawayTimeSlots" :takeawayTimeSlots="takeawayTimeSlots" @timeSlotSelected="timeSlotSelected"></takeawayTimeSlots>
   <transition name="fade">
     <div v-show="show" class="detail" @click="hidecheckout()">
     <!-- <div class="detail" @click="showToggle()"> -->
@@ -36,32 +36,18 @@
               </li>
             </ul>
             <div class="totalline">{{ml.ordertotal}}        €{{totalPrice}}</div>
+            <div class="timeSlotWrapper" @click="showTakeawayTimeSlots">
+              <div class = "timeSlotContainer">
+              {{ml.takeawaytime}}: <span>{{takeawayTimeSlot}}</span>
+              <Icon type="ios-time-outline" />
+              </div>
+            </div>
             <div class="ordercomment" v-if="seller.supportOnlineOrder">
               <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment"></textarea>
             </div>
             <div class="ordertext" v-if="!seller.supportOnlineOrder">
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
-            <div>
-               <i-select v-model="takeawayTimeSlot" size="large" style="width:100px">
-                <i-option v-for="item in takeawayTimeSlots" :value="item">{{ item }}</i-option>
-                </i-select>
-            </div>
-            <div class="timeSlotWrapper">
-              <div calss = "timeSlotContainer">
-              <span>{{takeawayTimeSlot}}</span>
-              <Icon type="ios-time-outline" />
-              </div>
-            </div>
-            <TimePicker
-                hide-disabled-options
-                :disabled-hours="[1,5,10]"
-                :disabled-minutes="[0,10,20]"
-                :steps="[1, 5]"
-                :value="takeawayTimeSlot"
-                format="HH:mm"
-                placeholder="Select time"
-                style="width: 168px"></TimePicker>
             <div class="buttonarea">
               <span class="close" @click="sendOrder()" v-if="seller.supportOnlineOrder">OK</span>
               <!-- <button type="button" @click="connect()" v-if="seller.supportOnlineOrder">Ok</button> -->
@@ -85,10 +71,12 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import backdrop from 'components/backdrop/backdrop'
+import takeawayTimeSlots from 'components/timeSlots/timeSlots'
 
 export default {
   components: {
-    backdrop
+    backdrop,
+    takeawayTimeSlots
   },
   props: {
     seller: {},
@@ -135,7 +123,7 @@ export default {
       }
       requestString = 'id:b613762f-29b9-442d-871c-9c9344ff6e4c@@@ORDER@@@20090808001@@@' /* template for RestSoft.WPF */
       requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
-      requestString = requestString + '@@@Option1@@Today@@18:25@@@'
+      requestString = requestString + '@@@Option1@@Today@@' + this.takeawayTimeSlot + '@@@'
       requestString = requestString + orderline + '@@@' + this.ordercomment + '@@@' + JSON.stringify(this.data.options)
       console.log(this.data.options)
       return requestString
@@ -186,6 +174,9 @@ export default {
     hidecheckout() {
       this.show = false;
     },
+    showTakeawayTimeSlots() {
+      this.$refs.takeawayTimeSlots.showTimeSlots()
+    },
     onGetTakeawayTimeSlots(slots) {
       console.log(slots)
       let mySlots = slots // JSON.parse(slots)
@@ -229,6 +220,10 @@ export default {
       this.startTime = new Date()
       this.mySendingTimer = setInterval(this.checkSending, 1000)
       this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
+    },
+    timeSlotSelected(timeSlot) {
+      console.log(timeSlot)
+      this.takeawayTimeSlot = timeSlot
     },
     connect2() {
       alert('click');
@@ -360,13 +355,17 @@ export default {
   height: 100px;
   background solid red;
 }
-.timeSlotContainer
-  margin auto 10px
-  line-height 20px
 .timeSlotWrapper
-  border solid 1px rgb(77,85,93)
-  height 30px
+  border solid 1px
+  height 50px
   border-radius 2px
+
+.timeSlotContainer
+  margin 12px 5px
+  line-height 20px
+  vertical-align middle
+  text-align center
+  // background red
   font-size 16px
 .detail
   position fixed

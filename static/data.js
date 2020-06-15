@@ -138,6 +138,8 @@ var data = {"seller":{"name":"Shanghai meeneemchinees","description":"Shanghai m
 			"takeaway":"Afhalen",
 			"all":"Alle",
 			"mine": "Mijn",
-			"delete": "Delete"
+			"delete": "Delete",
+			"selecttakeawaytimeslot": "Select afhalen tijdstip",
+			"takeawaytime": "Afhaaltijd"
 	}
 };
