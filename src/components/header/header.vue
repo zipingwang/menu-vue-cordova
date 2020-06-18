@@ -23,12 +23,24 @@
                 </div>
             </div> -->
         </div>
+
         <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img>
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
             <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
             <span class="count">{{seller.supports.length+'...'}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
+        <icon type="ios-keypad" size="20" class="config" v-if="lns.length>0" @click="showConfig" />
+        <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-model="configVisible">
+          <p><i-button @click="configSeller" type="primary">{{ml.seller}}</i-button></p>
+          <p><i-button @click="configMenuGroup" type="primary">{{ml.menugroup}}</i-button></p>
+          <p><i-button @click="configMenu" type="primary">{{ml.menu}}</i-button></p>
+          <p><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p>
+        </drawer>
+        <businessInfo ref="businessInfo" :ml="ml" :data="data"></businessInfo>
+        <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
+            shop
+        </drawer> -->
   </div>
   <div class="bulletin-wrapper" @click="showDetails()" v-if="seller.supports.length>0">
     <span class="bulletin-title"></span>
@@ -103,26 +115,47 @@
 
 <script>
 import star from 'components/star/star'
+import BScroll from 'better-scroll'
+import businessInfo from 'components/config/businessInfo/businessInfo'
 
 export default {
   props: {
     seller: {},
     lns: {},
-    ml: {}
+    ml: {},
+    data: {}
   },
   created() {
     this.iconClassMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   },
   components: {
-    star
+    star,
+    businessInfo
   },
   data() {
     return {
       detailShow: false,
-      languageShow: false
+      languageShow: false,
+      configVisible: false
     }
   },
   methods: {
+    _initScroll() {
+      let smallScreen = screen.width <= 800;
+      console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
+      this.foodsScroll = new BScroll(this.$refs.menuDrawer, {
+        click: true,
+        probeType: 3,
+        scrollbar: {
+          fade: smallScreen,
+          interactive: !smallScreen // new in 1.8.0
+        },
+        mouseWheel: {
+          speed: 20,
+          invert: false
+        }
+      });
+    },
     showDetails() {
       this.detailShow = true;
     },
@@ -136,6 +169,27 @@ export default {
       // alealert(index)
       this.languageShow = false;
       this.$root.eventHub.$emit('ml.change', ln['code'], index)
+    },
+    showConfig() {
+      // alert('showConfig')
+      this.configVisible = true
+      // setTimeout(() => {
+      //   this._initScroll()
+      // }, 1000);
+    },
+    configSeller() {
+      // alert('config selelr visiable')
+      // this.sellerVisible = true
+      this.$refs.businessInfo.showDraw()
+    },
+    configMenuGroup() {
+
+    },
+    configMenu() {
+
+    },
+    configRiceTable() {
+
     }
   }
 }
@@ -144,7 +198,6 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
 @import '../../common/stylus/mixin'
-
 
 .header
   position relative
@@ -227,6 +280,12 @@ export default {
       position absolute
       right 12px
       top 10px
+      height 24px
+      width 24px
+    .config
+      position absolute
+      right 12px
+      top 40px
       height 24px
       width 24px
   .bulletin-wrapper

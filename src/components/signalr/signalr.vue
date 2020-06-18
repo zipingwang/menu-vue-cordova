@@ -32,6 +32,7 @@ export default {
     this.$root.eventHub.$on('signalr.closeOrder', this.closeOrder)
     this.$root.eventHub.$on('signalr.deleteOrder', this.deleteOrder)
     this.$root.eventHub.$on('signalr.getTakeawayTimeSlots', this.getTakeawayTimeSlots)
+    this.$root.eventHub.$on('signalr.sendMessageFromWebToServer', this.sendMessageFromWebToServer)
   },
   methods: {
     connect() {
@@ -46,7 +47,13 @@ export default {
       let url = 'http://localhost:44337/signalr';
       // let url = '/signalr';
       // let url = 'http://www.freeobject.com/signalr';
+
       // let url = this.url + '/signalr';
+      // if (this.url === '') {
+      //   url = data.options.baseUrl + '/signalr'
+      // }
+      // url = 'http://localhost:44337/signalr'
+      console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog
@@ -166,6 +173,9 @@ export default {
       alert('getTakeawayTimeSlots in signalr')
       this.simpleHubProxy.server.getTakeawayTimeSlots(this.getDataOptionsString(), order);
     },
+    sendMessageFromWebToServer(message) {
+      this.simpleHubProxy.server.sendMessageFromWebToServer(message);
+    },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
       if (this.connectionId === webClientConnectionId) {
@@ -223,6 +233,14 @@ export default {
           case 'getTakeawayTimeSlots':
             console.log('call back getTakeawayTimeSlots in signalr')
             this.$root.eventHub.$emit('signalr.onGetTakeawayTimeSlots', message.messageBody)
+            break;
+          case 'saveBusinessInfo':
+            this.$root.eventHub.$emit('signalr.onSaveBusinessInfo', message.messageBody)
+            break;
+          case 'downLoadBusinessInfo':
+            console.log('call back downLoadBusinessInfo in signalr')
+            // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
             break;
           default:
             // code block

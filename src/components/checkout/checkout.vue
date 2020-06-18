@@ -49,9 +49,11 @@
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
             <div class="buttonarea">
-              <span class="close" @click="sendOrder()" v-if="seller.supportOnlineOrder">OK</span>
-              <!-- <button type="button" @click="connect()" v-if="seller.supportOnlineOrder">Ok</button> -->
-              <span class="close" @click="hidecheckout()">Sluiten</span>
+               <i-button type="primary" :loading="busyWithSending" @click="sendOrder">
+                  <span v-if="!busyWithSending">{{ml.confirm}}</span>
+                  <span v-else>{{ml.sending}}...</span>
+              </i-button>
+              <i-button type="primary" @click="hidecheckout">{{ml.cancel}}</i-button>
               <!-- <button type="button" @click="hidecheckout()">Cancel</button> -->
             </div>
           </div>
@@ -101,7 +103,8 @@ export default {
       mySendingTimer: {},
       startTime: {},
       takeawayTimeSlot: '1200',
-      takeawayTimeSlots: []
+      takeawayTimeSlots: [],
+      busyWithSending: false
     }
   },
   computed: {
@@ -191,7 +194,8 @@ export default {
       if (addremove !== '1') {
         return
       }
-      this.showWaiting = false
+      // this.showWaiting = false
+      this.busyWithSending = false
       clearInterval(this.mySendingTimer)
       this.$Modal.success({
         title: this.ml.success,
@@ -216,7 +220,8 @@ export default {
       }
     },
     sendOrder() {
-      this.showWaiting = true
+      // this.showWaiting = true
+      this.busyWithSending = true
       this.startTime = new Date()
       this.mySendingTimer = setInterval(this.checkSending, 1000)
       this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
@@ -330,7 +335,7 @@ export default {
 .buttonarea
 {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .close {
   text-align: center;

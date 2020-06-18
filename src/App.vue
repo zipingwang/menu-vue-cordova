@@ -21,7 +21,7 @@
 <template>
 <div>
   <signalr ref="mysignalr" :seller="seller" :ml="trans" :data="data"></signalr>
-  <v-header :seller="seller" :lns="lns" :ml="trans"></v-header>
+  <v-header :seller="seller" :lns="lns" :ml="trans" :data="data"></v-header>
   <div class="tab">
     <div class="tab-item" v-if="visibletabs.includes('goods')">
       <router-link to="/goods">{{trans.product}}</router-link>

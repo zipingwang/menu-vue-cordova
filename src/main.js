@@ -88,9 +88,11 @@ new Vue({
     data.options.table = ''
     data.options.ln = ''
     data.options.takeaway = '0'
-    data.options.cusId = '202' /* 202 is admin */
+    data.options.cusId = '' /* 202 is admin */
     data.options.shopId = ''
-    data.options.isAdmin = '1'
+    data.options.isAdmin = '0'
+    let baseUrl = this.getBaseUrl()
+    data.options.baseUrl = baseUrl
     if ('table' in urlVars) {
       data.options.table = urlVars['table']
     }
@@ -120,6 +122,19 @@ new Vue({
         vars[key] = value;
       });
       return vars;
+    },
+    getBaseUrl() {
+      let url = window.location.href
+      let indexhash = window.location.href.indexOf('?')
+      if (indexhash > 0) {
+        url = window.location.href.substring(0, indexhash)
+      } else {
+        indexhash = window.location.href.indexOf('#')
+        if (indexhash > 0) {
+          url = window.location.href.substring(0, indexhash)
+        }
+      }
+      return url
     }
   }
 }).$mount('#app')
