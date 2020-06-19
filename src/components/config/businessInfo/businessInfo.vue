@@ -1,15 +1,15 @@
 <template>
     <div>
         <Drawer
-            title="Create"
+            title="ml.businessinfo"
             v-model="show"
             width="100%"
             :mask-closable="false"
             :styles="styles"
         >
-        <i-form :model="formSeller" label-position="top">
+        <i-form  ref="formSeller" :model="formSeller" label-position="top" :rules="ruleValidate">
 
-          <form-item :label="ml.name">
+          <form-item :label="ml.name" prop="name">
                   <i-input v-model="formSeller.name"></i-input>
           </form-item>
 
@@ -54,10 +54,10 @@
           </form-item>
 
         </i-form>
-            <div class="demo-drawer-footer">
-                <Button style="margin-right: 8px" @click="close">Cancel</Button>
-                <Button type="primary" @click="saveBusinessInfo">Submit</Button>
-            </div>
+          <div class="demo-drawer-footer">
+              <Button style="margin-right: 8px" @click="close">Cancel</Button>
+              <Button type="primary" @click="saveBusinessInfo">Submit</Button>
+          </div>
         </Drawer>
     </div>
 </template>
@@ -85,6 +85,11 @@
           address: '',
           telephone: '',
           supportOnlineOrder: true
+        },
+        ruleValidate: {
+          name: [
+              { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+          ]
         },
         // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
         avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
@@ -114,7 +119,13 @@
         this.show = false
       },
       saveBusinessInfo() {
-        this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveBusinessInfo', 'messageBody': this.formSeller})
+        this.$refs.formSeller.validate((valid) => {
+          if (valid) {
+            this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveBusinessInfo', 'messageBody': this.formSeller})
+          } else {
+            this.$Message.error('Fail!');
+          }
+        })
       },
       onSaveBusinessInfo() {
         // alert('onSaveBusinessInfo')
@@ -125,6 +136,8 @@
         // alert('onDownloadBusinessInfo')
         console.log(messageBody)
         console.log(typeof messageBody)
+        console.log(messageBody.name)
+
         this.formSeller = messageBody
 
         this.$Message.success('Success');

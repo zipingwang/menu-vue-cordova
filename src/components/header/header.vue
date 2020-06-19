@@ -33,11 +33,14 @@
         <icon type="ios-keypad" size="20" class="config" v-if="lns.length>0" @click="showConfig" />
         <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-model="configVisible">
           <p><i-button @click="configSeller" type="primary">{{ml.seller}}</i-button></p>
-          <p><i-button @click="configMenuGroup" type="primary">{{ml.menugroup}}</i-button></p>
-          <p><i-button @click="configMenu" type="primary">{{ml.menu}}</i-button></p>
+          <p><i-button @click="configMenuGroups" type="primary">{{ml.menugroup}}</i-button></p>
+          <p><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
           <p><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p>
         </drawer>
         <businessInfo ref="businessInfo" :ml="ml" :data="data"></businessInfo>
+        <menuGroups ref="menuGroups" :ml="ml" :data="data"></menuGroups>
+        <menus ref="menus" :ml="ml" :data="data"></menus>
+
         <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
             shop
         </drawer> -->
@@ -117,6 +120,8 @@
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
 import businessInfo from 'components/config/businessInfo/businessInfo'
+import menuGroups from 'components/config/menuGroups/menuGroups'
+import menus from 'components/config/menus/menus'
 
 export default {
   props: {
@@ -130,7 +135,9 @@ export default {
   },
   components: {
     star,
-    businessInfo
+    businessInfo,
+    menuGroups,
+    menus
   },
   data() {
     return {
@@ -182,11 +189,11 @@ export default {
       // this.sellerVisible = true
       this.$refs.businessInfo.showDraw()
     },
-    configMenuGroup() {
-
+    configMenuGroups() {
+      this.$refs.menuGroups.showDraw()
     },
-    configMenu() {
-
+    configMenus() {
+      this.$refs.menus.showDraw()
     },
     configRiceTable() {
 

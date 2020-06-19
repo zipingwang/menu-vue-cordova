@@ -242,6 +242,20 @@ export default {
             // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
             this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
             break;
+          case 'downLoadMenuGroups':
+            console.log('call back downLoadMenuGroups in signalr')
+            // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onDownLoadMenuGroups', message.messageBody)
+            break;
+          case 'saveMenuGroup':
+            this.$root.eventHub.$emit('signalr.onSaveMenuGroup', message.messageBody)
+            break;
+          case 'deleteMenuGroup':
+            this.$root.eventHub.$emit('signalr.onDeleteMenuGroup', message.messageBody)
+            break;
+          case 'addMenuGroup':
+            this.$root.eventHub.$emit('signalr.onAddMenuGroup', message.messageBody)
+            break;
           default:
             // code block
         }
