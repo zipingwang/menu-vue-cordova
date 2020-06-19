@@ -28,15 +28,16 @@
               <Button type="primary" @click="addNewMenu">Add</Button>
           </div>
         </Drawer>
-        <menu ref="menu" :ml="ml" :data="data"></menu>
+        <themenu ref="themenu" :ml="ml" :data="data"></themenu>
     </div>
 </template>
 <script>
-import menu from 'components/config/menu/menu'
+
+import themenu from 'components/config/themenu/themenu'
 
 export default {
   components: {
-    menu
+    themenu
   },
   props: {
     ml: {},
@@ -52,7 +53,8 @@ export default {
       },
       show: this.visible,
       menus: [],
-      selectedMenu: {}
+      selectedMenu: {},
+      menuGroupIdsWeb: []
     }
   },
   created() {
@@ -73,7 +75,8 @@ export default {
       // alert('onDownloadBusinessInfo')
       console.log(messageBody)
       console.log(typeof messageBody)
-      this.menus = messageBody
+      this.menus = messageBody.menus
+      this.menuGroupIdsWeb = messageBody.menuGroupIdsWeb
       this.$Message.success('Success');
     },
     onDeleteMenu(messageBody) {
@@ -90,15 +93,15 @@ export default {
       console.log('open menu')
       this.selectedMenu = menu
       console.log(this.selectedMenu)
-      // this.$refs.menu.showDraw(menu)
-      console.log(this.$refs.menu)
-      this.$refs.menu.test()
+      console.log(this.$refs.themenu)
+      this.$refs.themenu.test()
+      this.$refs.themenu.showDraw(menu, this.menuGroupIdsWeb)
     },
     addNewMenu() {
       var menu = {}
-      menu.web = true
-      menu.displayOrder = 10
-      this.$refs.menu.showDraw(menu)
+      menu.menuDisplayInWeb = true
+      menu.menuDisplayOrder = 10
+      this.$refs.themenu.showDraw(menu, this.menuGroupIdsWeb)
     },
     onAddMenu(newMenu) {
       console.log('onAddMenu')
