@@ -118,7 +118,6 @@
         console.log('show draw')
         this.show = true
         this.formMenuGroup = menuGroup
-        this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'downLoadMenuGroup', 'messageBody': menuGroup.rid})
       },
       close() {
         this.show = false
