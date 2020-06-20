@@ -24,8 +24,8 @@
               </div>
             </div> <!--row -->
             <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">Close</Button>
-              <Button type="primary" @click="addNewMenu">Add</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <Button type="primary" @click="addNewMenu">{{ml.add}}</Button>
           </div>
         </Drawer>
         <themenu ref="themenu" :ml="ml" :data="data"></themenu>
@@ -77,7 +77,7 @@ export default {
       console.log(typeof messageBody)
       this.menus = messageBody.menus
       this.menuGroupIdsWeb = messageBody.menuGroupIdsWeb
-      this.$Message.success('Success');
+      this.$Message.success('{{ml.success}}');
     },
     onDeleteMenu(messageBody) {
       console.log('onDeleteMenu in menus')

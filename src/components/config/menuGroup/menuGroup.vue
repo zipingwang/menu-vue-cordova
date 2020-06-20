@@ -47,13 +47,13 @@
             @on-cancel="cancelDeleteMenuGroup">
               <p style="color:#f60;text-align:center">
               <icon type="md-information-circle"></icon>
-              <span>{{ml.askconfirmdeleteorder}}</span>
+              <span>{{ml.askconfirmdelete}}</span>
             </p>
           </modal>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="deleteMenuGroup">Delete</Button>
-              <Button style="margin-right: 8px" @click="close">Cancel</Button>
-              <Button type="primary" @click="saveMemuGroup">Submit</Button>
+              <Button style="margin-right: 8px" @click="deleteMenuGroup">{{ml.delete}}</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}</Button>
+              <Button type="primary" @click="saveMemuGroup">{{ml.save}}</Button>
           </div>
         </Drawer>
     </div>
@@ -162,7 +162,7 @@
       },
       onDeleteMenuGroup(messageBody) {
         console.log('onDeleteMenuGroup in menuGroup')
-        this.$Message.success('Success');
+        this.$Message.success('{{ml.deletesuccessfully}}}');
         this.close()
       },
       deleteMenuGroup() {
@@ -171,18 +171,18 @@
       handleUploadImageSuccess(res, file) {
         console.log('uploadimage success')
         file.url = this.avatarUrl
-        this.$Message.success('Success');
+        this.$Message.success('{{ml.success}}');
       },
       handleFormatError(file) {
         this.$Notice.warning({
-          title: 'The file format is incorrect',
-          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+          title: '',
+          desc: '{{ml.fileformatnotcorrect}}'
         });
       },
       handleMaxSize(file) {
         this.$Notice.warning({
-          title: 'Exceeding file size limit',
-          desc: 'File  ' + file.name + ' is too large, no more than 4M.'
+          title: '',
+          desc: '{{ml.filesizetoolarge}}'
         });
       }
     }

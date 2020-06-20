@@ -24,16 +24,21 @@
                         </i-input>
                     </form-item>
                     <form-item>
-                        <i-button type="success" @click="handleSubmit('formInline')">{{ml.login}}</i-button>
+                      <sendButton ref="myLoginButton" :text="ml.login" :ml="ml" :sendingText="ml.sending" :failedText="ml.loginfailed" @click="handleSubmit('formInline')"></sendButton>
+                      <!-- <i-button type="primary" :loading="busyWithSending" @click="handleSubmit('formInline')">
+                          <span v-if="!busyWithSending">{{ml.login}}</span>
+                          <span v-else>{{ml.sending}}...</span>
+                      </i-button> -->
+                      <!-- <i-button type="success" @click="handleSubmit('formInline')">{{ml.login}}</i-button> -->
                     </form-item>
                 </i-form>
             </card>
             <div class="notcustomeryet">
             <card>
                 <p slot="title">{{ml.noggeenaccount}}</p>
-                <Button type="success" class="register" @click="register()">{{ml.register}}</Button>
-                <Button type="success" class="loginasgust" @click="loginasguest()">{{ml.loginasguest}}</Button>
-                <Button type="success" class="close" @click="hidelogin()">{{ml.cancel}}</Button>            </card>
+                <Button type="primary" class="register" @click="register()">{{ml.register}}</Button>
+                <Button type="primary" class="loginasgust" @click="loginasguest()">{{ml.loginasguest}}</Button>
+                <Button type="primary" class="close" @click="hidelogin()">{{ml.cancel}}</Button>            </card>
 
             </div>
           </div>
@@ -54,10 +59,12 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import register from 'components/register/register'
+import sendButton from 'components/sendButton/sendButton'
 
 export default {
   components: {
-    register
+    register,
+    sendButton
   },
   props: {
     seller: {},
@@ -71,6 +78,9 @@ export default {
       userName: 'vue app',
       simpleHubProxy: null,
       connectionId: '',
+      // busyWithSending: false,
+      // startTime: {},
+      // mySendingTimer: {},
       formInline: {
         user: '',
         password: ''
@@ -144,16 +154,37 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           console.log('this.signinString');
+          this.$refs.myLoginButton.start()
           // Console.log(this.testmethod); /* fataal error. console is lowercase, not Console */
+          // this.busyWithSending = true
+          // this.startTime = new Date()
+          // this.mySendingTimer = setInterval(this.checkSending, 1000)
           this.$root.eventHub.$emit('signalr.signin', this.signinString);
-          this.$Message.success('Success!');
         } else {
-          this.$Message.error('Fail!');
+          this.busyWithSending = false
+          this.$Message.error('{{ml.formvalidationerror}}');
         }
       })
     },
+    // checkSending() {
+    //   console.log('checkSending')
+    //   if (this.startTime.setSeconds(this.startTime.getSeconds() + 10) < new Date()) {
+    //     this.busyWithSending = false
+    //     clearInterval(this.mySendingTimer)
+    //     // this.showWaiting = false
+    //     this.$Modal.success({
+    //       title: this.ml.failed,
+    //       content: this.ml.failed
+    //     });
+    //   } else {
+    //     this.startTime.setSeconds(this.startTime.getSeconds() - 10) /* set to its original time */
+    //   }
+    // },
     onSigninConfirmedFromServerToWeb(user) {
       // alert(userId)
+      // this.busyWithSending = false
+      // clearInterval(this.mySendingTimer)
+      ths.$$refs.myLoginButton.stop()
       if (user.rid !== '-1') {
         this.show = false
         data.options.cusId = user.rid

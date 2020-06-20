@@ -31,7 +31,7 @@
           </form-item>
            <form-item :label="ml.menugroup" prop="menuGroup">
                <i-select v-model="formMenu.menuGroupRid" style="width:200px">
-                  <i-option v-for="item in menuGroupIdsWeb" :value="item.rid" :key="item.rid">{{ item.name1 }}</i-option>
+                  <i-option v-for="item in menuGroupIdsWeb" :value="item.rid" :key="item.rid">{{item.name1}}</i-option>
               </i-select>
            </form-item>
           <form-item :label="ml.name1" prop="name1">
@@ -73,13 +73,13 @@
             @on-cancel="cancelDeleteMenu">
               <p style="color:#f60;text-align:center">
               <icon type="md-information-circle"></icon>
-              <span>{{ml.askconfirmdeleteorder}}</span>
+              <span>{{ml.askconfirmdelete}}</span>
             </p>
           </modal>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="deleteMenu">Delete</Button>
-              <Button style="margin-right: 8px" @click="close">Cancel</Button>
-              <Button type="primary" @click="saveMemuGroup">Submit</Button>
+              <Button style="margin-right: 8px" @click="deleteMenu">{{ml.delete}}}}</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}}}</Button>
+              <Button type="primary" @click="saveMemuGroup">{{ml.save}}}}</Button>
           </div>
         </Drawer>
     </div>
@@ -148,9 +148,6 @@
         console.log(menu.menuGroupRid)
         this.formMenu = menu
       },
-      test() {
-        console.log('test')
-      },
       close() {
         this.show = false
       },
@@ -160,7 +157,7 @@
             this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveMenu', 'messageBody': this.formMenu})
           } else {
             alert('not valid')
-            this.$Message.error('Fail!');
+            this.$Message.error('{{ml.formvalidationerror}}');
           }
         })
       },
@@ -173,7 +170,7 @@
       },
       onSaveMenu(messageBody) {
         alert('onSaveMenu')
-        this.$Message.success('Saved');
+        this.$Message.success('{{ml.savesuccessfully}}');
         console.log(messageBody)
         console.log(typeof messageBody)
         console.log(messageBody.name1)
@@ -190,11 +187,11 @@
         console.log(typeof messageBody)
         // this.formMenu.name1 = messageBody.name1
 
-        this.$Message.success('Success');
+        this.$Message.success('{{ml.success}}');
       },
       onDeleteMenu(messageBody) {
         console.log('onDeleteMenu in menu')
-        this.$Message.success('Success');
+        this.$Message.success('{{ml.success}}');
         this.close()
       },
       deleteMenu() {
@@ -207,14 +204,14 @@
       },
       handleFormatError(file) {
         this.$Notice.warning({
-          title: 'The file format is incorrect',
-          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+          title: '',
+          desc: '{{ml.fileformatnotcorrect}}'
         });
       },
       handleMaxSize(file) {
         this.$Notice.warning({
-          title: 'Exceeding file size limit',
-          desc: 'File  ' + file.name + ' is too large, no more than 4M.'
+          title: '',
+          desc: '{{ml.filesizetoolarge}}'
         });
       }
     }

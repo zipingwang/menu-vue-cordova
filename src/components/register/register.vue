@@ -12,11 +12,12 @@
           <div class="billcontent">
             <card class="customer">
                 <p slot="title">{{ml.register}}</p>
-                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="80">
-                      <FormItem :label="ml.createuserfirstname">
+                 <!-- <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="80"> -->
+                 <i-form ref="formItem1" :model="formItem" :label-width="80">
+                      <FormItem :label="ml.createuserfirstname" prop="firstname">
                         <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
                     </FormItem>
-                    <FormItem :label="ml.createuserlastname">
+                    <FormItem :label="ml.createuserlastname" prop="lastname">
                         <i-input v-model="formItem.lastname" :placeholder="ml.createuserlastname"></i-input>
                     </FormItem>
                      <FormItem :label="ml.createusertelephone" prop="telephone">
@@ -46,8 +47,10 @@
             <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
         </form-item>
         <form-item>
-            <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button>
-            <i-button @click="handleReset('formItem')" style="margin-left: 8px">Reset</i-button>
+            <sendButton ref="mySendButton" :text="ml.register" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
+            <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
+            <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button>
+            <i-button @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
         </form-item>
     </i-form>
             </card>
@@ -67,10 +70,12 @@
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
+import sendButton from 'components/sendButton/sendButton'
 
 
 export default {
   components: {
+    sendButton
   },
   props: {
     seller: {},
@@ -175,13 +180,21 @@ export default {
         // ]
       },
       ruleValidate: {
+        firstname: [
+            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
+            { type: 'string', min: 2, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
+        ],
+        lastname: [
+            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
+            { type: 'string', min: 2, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
+        ],
         telephone: [
-            { required: true, message: 'The name cannot be empty', trigger: 'blur' },
-            { type: 'string', min: 8, message: 'Introduce no less than 20 words', trigger: 'blur' }
+            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
+            { type: 'string', min: 8, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
         ],
         email: [
-            { required: false, message: 'Mailbox cannot be empty', trigger: 'blur' },
-            { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
+            { required: false, message: '{{ml.requiedfield}}', trigger: 'blur' },
+            { type: 'email', message: '{{ml.incorrectemailformat}}', trigger: 'blur' }
         ]
       }
     }
@@ -230,15 +243,15 @@ export default {
       this.$refs.formItem1.validate((valid) => {
         isvalid = valid
       })
-      alert(isvalid)
+      // alert(isvalid)
       this.$refs.formItem2.validate((valid) => {
         isvalid = valid && isvalid
       })
       if (isvalid) {
-        this.$Message.success('Success!');
+        this.$refs.mySendButton.start()
         this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
       } else {
-        this.$Message.error('Fail!');
+        this.$Message.error('{{ml.formvalidationerror}}');
       }
       // this.$refs[name].validate((valid) => {
       //   if (valid) {
@@ -249,24 +262,26 @@ export default {
       //   }
       // })
     },
+    cancel() {
+      this.show = false
+    },
     handleReset(name) {
-      alert(name);
       console.log(this.$refs[name]);
       console.log(JSON.stringify(this.formItem));
       this.formItem.lastname = '';
       this.$refs[name].resetFields();
     },
     onRegisterUserConfirmedFromServerToWeb(userId, sessionId) {
-      alert(userId)
+      this.$refs.sendButton.stop()
       if (userId === '-1') {
         this.$Modal.success({
-          title: 'Failed',
-          content: '<p>User is registered failed</p>'
+          title: '{{ml.failed}}',
+          content: '<p>{{ml.userregisterationfailed}}</p>'
         });
       } else {
         this.$Modal.success({
-          title: 'Success',
-          content: '<p>User is registered</p>'
+          title: '{{ml.success}}',
+          content: '<p>{{ml.userregisterationsuccess}}</p>'
         });
       }
     }

@@ -205,7 +205,6 @@ export default {
     },
     getTakeawayTimeSlots(order) {
       console.log('getTakeawayTimeSlots in signalr')
-      alert('getTakeawayTimeSlots in signalr')
       try {
         this.simpleHubProxy.server.getTakeawayTimeSlots(this.getDataOptionsString(), order);
       } catch (ex) {

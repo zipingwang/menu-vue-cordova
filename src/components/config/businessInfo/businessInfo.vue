@@ -55,8 +55,8 @@
 
         </i-form>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">Cancel</Button>
-              <Button type="primary" @click="saveBusinessInfo">Submit</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}}</Button>
+              <Button type="primary" @click="saveBusinessInfo">{{ml.save}}}}</Button>
           </div>
         </Drawer>
     </div>
@@ -123,13 +123,13 @@
           if (valid) {
             this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveBusinessInfo', 'messageBody': this.formSeller})
           } else {
-            this.$Message.error('Fail!');
+            this.$Message.error('{{ml.formvalidationerror}}');
           }
         })
       },
       onSaveBusinessInfo() {
         // alert('onSaveBusinessInfo')
-        this.$Message.success('Saved');
+        this.$Message.success('{{ml.savesuccessfully}}');
       },
       onDownLoadBusinessInfo(messageBody) {
         console.log('onDownloadBusinessInfo in businessinfo')
@@ -140,7 +140,7 @@
 
         this.formSeller = messageBody
 
-        this.$Message.success('Success');
+        this.$Message.success('{{ml.success}}');
       },
       handleUploadImageSuccess(res, file) {
         console.log('uploadimage success')
@@ -158,14 +158,14 @@
       },
       handleFormatError(file) {
         this.$Notice.warning({
-          title: 'The file format is incorrect',
-          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+          title: '',
+          desc: '{{ml.fileformatnotcorrect}}'
         });
       },
       handleMaxSize(file) {
         this.$Notice.warning({
-          title: 'Exceeding file size limit',
-          desc: 'File  ' + file.name + ' is too large, no more than 4M.'
+          title: '',
+          desc: '{{ml.filesizetoolarge}}'
         });
       }
     }

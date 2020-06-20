@@ -22,8 +22,8 @@
               </div>
             </div> <!--row -->
             <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">Close</Button>
-              <Button type="primary" @click="addNewMenuGroup">Add</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <Button type="primary" @click="addNewMenuGroup">{{ml.add}}</Button>
           </div>
         </Drawer>
         <menuGroup ref="menuGroup" :ml="ml" :data="data"></menuGroup>
@@ -72,7 +72,7 @@ export default {
       console.log(messageBody)
       console.log(typeof messageBody)
       this.menuGroups = messageBody
-      this.$Message.success('Success');
+      this.$Message.success('{{ml.success}}');
     },
     onDeleteMenuGroup(messageBody) {
       console.log('onDeleteMenuGroup in menugroups')
