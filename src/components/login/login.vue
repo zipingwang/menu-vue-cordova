@@ -184,7 +184,7 @@ export default {
       // alert(userId)
       // this.busyWithSending = false
       // clearInterval(this.mySendingTimer)
-      ths.$$refs.myLoginButton.stop()
+      this.$$refs.myLoginButton.stop()
       if (user.rid !== '-1') {
         this.show = false
         data.options.cusId = user.rid

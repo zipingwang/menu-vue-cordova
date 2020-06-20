@@ -272,7 +272,7 @@ export default {
       this.$refs[name].resetFields();
     },
     onRegisterUserConfirmedFromServerToWeb(userId, sessionId) {
-      this.$refs.sendButton.stop()
+      this.$refs.mySendButton.stop()
       if (userId === '-1') {
         this.$Modal.success({
           title: '{{ml.failed}}',
