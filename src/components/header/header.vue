@@ -30,8 +30,8 @@
             <span class="count">{{seller.supports.length+'...'}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
-        <icon type="ios-keypad" size="20" class="config" v-if="lns.length>0" @click="showConfig" />
-        <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-model="configVisible">
+        <icon type="ios-keypad" size="20" class="config" v-if="data.options.isAdmin === '1'" @click="showConfig" />
+        <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="configVisible">
           <p><i-button @click="configSeller" type="primary">{{ml.seller}}</i-button></p>
           <p><i-button @click="configMenuGroups" type="primary">{{ml.menugroup}}</i-button></p>
           <p><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>

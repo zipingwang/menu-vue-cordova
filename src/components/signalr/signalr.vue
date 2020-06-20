@@ -142,39 +142,84 @@ export default {
       // alert('onConnected:' + this.connectionId)
     },
     sendOrder(order) {
-      this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.getDataOptionsString(), order);
+      try {
+        this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.getDataOptionsString(), order);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     registerUser(User) {
-      this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, this.getDataOptionsString(), User);
+      try {
+        this.simpleHubProxy.server.registerUserFromWebToServer(this.connectionId, this.getDataOptionsString(), User);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     signin(user) {
-      this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.getDataOptionsString(), user);
+      try {
+        this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.getDataOptionsString(), user);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     downloadMenu() {
       // alert('downloadMenu')
       // console.log(this.data.options)
       // this.simpleHubProxy.server.downloadMenu(''); // this.data.options);
-      this.simpleHubProxy.server.downloadMenu(this.getDataOptionsString());
+      try {
+        this.simpleHubProxy.server.downloadMenu(this.getDataOptionsString());
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     downloadOrder() {
       // alert('downloadOrder')
-      this.simpleHubProxy.server.downloadOrder(this.getDataOptionsString());
+      try {
+        this.simpleHubProxy.server.downloadOrder(this.getDataOptionsString());
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     closeOrder(orderId) {
       // alert('downloadOrder')
-      this.simpleHubProxy.server.closeOrder(this.getDataOptionsString(), orderId);
+      try {
+        this.simpleHubProxy.server.closeOrder(this.getDataOptionsString(), orderId);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     deleteOrder(orderId) {
       // alert('downloadOrder')
-      this.simpleHubProxy.server.deleteOrder(this.getDataOptionsString(), orderId);
+      try {
+        this.simpleHubProxy.server.deleteOrder(this.getDataOptionsString(), orderId);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     getTakeawayTimeSlots(order) {
       console.log('getTakeawayTimeSlots in signalr')
       alert('getTakeawayTimeSlots in signalr')
-      this.simpleHubProxy.server.getTakeawayTimeSlots(this.getDataOptionsString(), order);
+      try {
+        this.simpleHubProxy.server.getTakeawayTimeSlots(this.getDataOptionsString(), order);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     sendMessageFromWebToServer(message) {
-      this.simpleHubProxy.server.sendMessageFromWebToServer(message);
+      try {
+        this.simpleHubProxy.server.sendMessageFromWebToServer(message);
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     },
     onRegisterUserConfirmedFromServerToWeb(webClientConnectionId, userId, sessionId) {
       // alert('onRegisterUserConfirmedFromServerToWeb')
