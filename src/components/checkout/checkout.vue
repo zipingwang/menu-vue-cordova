@@ -49,12 +49,8 @@
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
             <div class="buttonarea">
-               <i-button type="primary" :loading="busyWithSending" @click="sendOrder">
-                  <span v-if="!busyWithSending">{{ml.confirm}}</span>
-                  <span v-else>{{ml.sending}}...</span>
-              </i-button>
+              <sendButton ref="mySendButton" :text="ml.confirm" :ml="ml" :sendingText="ml.sending" :failedText="ml.ordersendfailed + ' ' + seller.telefoon" @click="sendOrder"></sendButton>
               <i-button type="primary" @click="hidecheckout">{{ml.cancel}}</i-button>
-              <!-- <button type="button" @click="hidecheckout()">Cancel</button> -->
             </div>
           </div>
           <div class="columnpadding"></div>
@@ -74,11 +70,13 @@ import BScroll from 'better-scroll'
 import axios from 'axios'
 import backdrop from 'components/backdrop/backdrop'
 import takeawayTimeSlots from 'components/timeSlots/timeSlots'
+import sendButton from 'components/sendButton/sendButton'
 
 export default {
   components: {
     backdrop,
-    takeawayTimeSlots
+    takeawayTimeSlots,
+    sendButton
   },
   props: {
     seller: {},
@@ -194,9 +192,8 @@ export default {
       if (addremove !== '1') {
         return
       }
-      // this.showWaiting = false
-      this.busyWithSending = false
-      clearInterval(this.mySendingTimer)
+      this.$refs.mySendButton.stop()
+      this.showWaiting = false
       this.$Modal.success({
         title: this.ml.success,
         content: this.ml.ordersendsuccess,
@@ -206,51 +203,17 @@ export default {
         }
       });
     },
-    checkSending() {
-      console.log('checkSending')
-      if (this.startTime.setSeconds(this.startTime.getSeconds() + 10) < new Date()) {
-        clearInterval(this.mySendingTimer)
-        this.showWaiting = false
-        this.$Modal.success({
-          title: this.ml.failed,
-          content: this.ml.ordersendfailed
-        });
-      } else {
-        this.startTime.setSeconds(this.startTime.getSeconds() - 10)
-      }
-    },
     sendOrder() {
       // this.showWaiting = true
-      this.busyWithSending = true
-      this.startTime = new Date()
-      this.mySendingTimer = setInterval(this.checkSending, 1000)
+      // this.busyWithSending = true
+      // this.startTime = new Date()
+      // this.mySendingTimer = setInterval(this.checkSending, 1000)
+      this.$refs.mySendButton.start()
       this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
     },
     timeSlotSelected(timeSlot) {
       console.log(timeSlot)
       this.takeawayTimeSlot = timeSlot
-    },
-    connect2() {
-      alert('click');
-      let url = 'http://localhost/SendOrder.ashx'
-      // axios.post(url, {
-      //   order: '1@@2@@vital@@wang', /* server side can't get order parameter */
-      //   lastName: 'Williams'
-      // })
-      // .then((response) => {
-      //   alert('response from server 1');
-      //   console.log(response);
-      // }, (error) => {
-      //   console.log(error);
-      // })
-      $.post(url,
-        {
-          order: this.requestString,
-          city: 'Duckburg'
-        },
-        function (data, status) {
-          alert('Data: ' + data + '\nStatus: ' + status);
-        });
     }
   }
 }
@@ -319,7 +282,7 @@ export default {
 }
 .ordercomment
 {
-  margin-top: 40px
+  margin-top: 10px
 }
 .ordercommenttext {
   float: left;
@@ -335,7 +298,7 @@ export default {
 .buttonarea
 {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 70px;
 }
 .close {
   text-align: center;
@@ -362,7 +325,7 @@ export default {
 }
 .timeSlotWrapper
   border solid 1px
-  height 50px
+  height 40px
   border-radius 2px
 
 .timeSlotContainer
