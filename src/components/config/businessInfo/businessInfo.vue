@@ -1,7 +1,7 @@
 <template>
     <div>
         <Drawer
-            title="ml.businessinfo"
+            :title="ml.businessinfo"
             v-model="show"
             width="100%"
             :mask-closable="false"
@@ -55,8 +55,8 @@
 
         </i-form>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}}</Button>
-              <Button type="primary" @click="saveBusinessInfo">{{ml.save}}}}</Button>
+              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}</Button>
+              <Button type="primary" @click="saveBusinessInfo">{{ml.save}}</Button>
           </div>
         </Drawer>
     </div>
