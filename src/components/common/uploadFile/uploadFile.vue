@@ -16,46 +16,30 @@
 export default {
   props: {
     ml: {},
-    text: '',
-    sendingText: {
-      default: ml.sending,
-      type: String
-    },
-    failedTitle: '',
-    failedText: '',
-    timeout: { /* if want to set default value, need to assign object */
-      default: 9, /* in seconds */
-      type: Number
-    }
-  },
-  data() {
-    return {
-      busyWithSending: false,
-      startTime: {},
-      mySendingTimer: {}
-    }
+    params: ''
   },
   computed: {
     uploadImageUrl() {
       let url = 'http://localhost:44337/'
       // let url = data.options.baseUrl
-      return url + 'RequestHandler.ashx?method=selleravatar'
+      return url + 'RequestHandler.ashx?' + this.params
     }
   },
   methods: {
     handleUploadImageSuccess(res, file) {
       console.log('uploadimage success')
-      file.url = this.avatarUrl
-      let avatarUrlTemp = this.avatarUrl
-      this.avatarUrl = ''
-      setTimeout(() => {
-        this.avatarUrl = avatarUrlTemp
-      }, 1000);
-      this.$nextTick(() => {
-        // this.avatarUrl = avatarUrlTemp
-      }
-      )
-      this.avatarUrl = avatarUrlTemp
+      this.$Message.success(this.ml.success);
+      // file.url = this.avatarUrl
+      // let avatarUrlTemp = this.avatarUrl
+      // this.avatarUrl = ''
+      // setTimeout(() => {
+      //   this.avatarUrl = avatarUrlTemp
+      // }, 1000);
+      // this.$nextTick(() => {
+      //   // this.avatarUrl = avatarUrlTemp
+      // }
+      // )
+      // this.avatarUrl = avatarUrlTemp
     },
     handleFormatError(file) {
       this.$Notice.warning({
@@ -71,7 +55,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="stylus" scoped>

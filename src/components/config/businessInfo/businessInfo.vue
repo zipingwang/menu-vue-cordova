@@ -22,16 +22,7 @@
           </form-item>
 
           <form-item :label="ml.avatar">
-              <Upload
-                :action= "uploadImageUrl"
-                :on-success="handleUploadImageSuccess"
-                :on-format-error="handleFormatError"
-                :on-exceeded-size="handleMaxSize"
-                :format="['jpg','jpeg','png']"
-                :max-size="4096"
-              >
-              <Button icon="ios-cloud-upload-outline">Upload files</Button>
-              </Upload>
+             <uploadFile :ml="ml" params = "method=selleravatar"></uploadFile>
           </form-item>
 
           <form-item :label="ml.openinghour">
@@ -64,10 +55,12 @@
 </template>
 <script>
 import sendButton from 'components/common/sendButton/sendButton'
+import uploadFile from 'components/common/uploadFile/uploadFile'
 
 export default {
   components: {
-    sendButton
+    sendButton,
+    uploadFile
   },
   props: {
     ml: {},
@@ -149,33 +142,33 @@ export default {
       this.formSeller = messageBody
 
       this.$Message.success(this.ml.success);
-    },
-    handleUploadImageSuccess(res, file) {
-      console.log('uploadimage success')
-      file.url = this.avatarUrl
-      let avatarUrlTemp = this.avatarUrl
-      this.avatarUrl = ''
-      setTimeout(() => {
-        this.avatarUrl = avatarUrlTemp
-      }, 1000);
-      this.$nextTick(() => {
-        // this.avatarUrl = avatarUrlTemp
-      }
-      )
-      this.avatarUrl = avatarUrlTemp
-    },
-    handleFormatError(file) {
-      this.$Notice.warning({
-        title: '',
-        desc: this.ml.fileformatnotcorrect
-      });
-    },
-    handleMaxSize(file) {
-      this.$Notice.warning({
-        title: '',
-        desc: this.ml.filesizetoolarge
-      });
     }
+    // handleUploadImageSuccess(res, file) {
+    //   console.log('uploadimage success')
+    //   file.url = this.avatarUrl
+    //   let avatarUrlTemp = this.avatarUrl
+    //   this.avatarUrl = ''
+    //   setTimeout(() => {
+    //     this.avatarUrl = avatarUrlTemp
+    //   }, 1000);
+    //   this.$nextTick(() => {
+    //     // this.avatarUrl = avatarUrlTemp
+    //   }
+    //   )
+    //   this.avatarUrl = avatarUrlTemp
+    // },
+    // handleFormatError(file) {
+    //   this.$Notice.warning({
+    //     title: '',
+    //     desc: this.ml.fileformatnotcorrect
+    //   });
+    // },
+    // handleMaxSize(file) {
+    //   this.$Notice.warning({
+    //     title: '',
+    //     desc: this.ml.filesizetoolarge
+    //   });
+    // }
   }
 }
 </script>

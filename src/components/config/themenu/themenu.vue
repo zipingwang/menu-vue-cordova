@@ -41,16 +41,7 @@
                   <i-input v-model="formMenu.name2"></i-input>
           </form-item>
           <form-item :label="ml.menuimage" prop="menuImage">
-              <Upload
-                :action= "uploadImageUrl"
-                :on-success="handleUploadImageSuccess"
-                :on-format-error="handleFormatError"
-                :on-exceeded-size="handleMaxSize"
-                :format="['jpg','jpeg','png']"
-                :max-size="4096"
-              >
-                <Button icon="ios-cloud-upload-outline">Upload files</Button>
-              </Upload>
+              <uploadFile :ml="ml" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile>
           </form-item>
           <form-item :label="ml.description" prop="description">
                   <i-input v-model="formMenu.description"></i-input>
@@ -87,10 +78,12 @@
 </template>
 <script>
   import sendButton from 'components/common/sendButton/sendButton'
+  import uploadFile from 'components/common/uploadFile/uploadFile'
 
   export default {
     components: {
-      sendButton
+      sendButton,
+      uploadFile
     },
     props: {
       ml: {},
