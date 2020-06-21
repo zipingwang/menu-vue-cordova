@@ -200,6 +200,9 @@ export default {
         onOk: () => {
           this.hidecheckout()
           this.$router.push('admin')
+          setTimeout(() => {
+            this.$root.eventHub.$emit('checkout.onOrderConfirmedFromServerToWeb', order, addremove)
+          }, 200)
         }
       });
     },

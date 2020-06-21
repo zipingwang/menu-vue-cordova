@@ -89,16 +89,7 @@ export default {
         name: [
             { required: true, message: this.ml.requiredfield, trigger: 'blur' }
         ]
-      },
-      // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
-      avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
-    }
-  },
-  computed: {
-    uploadImageUrl() {
-      let url = 'http://localhost:44337/'
-      // let url = data.options.baseUrl
-      return url + 'RequestHandler.ashx?method=selleravatar'
+      }
     }
   },
   created() {
@@ -110,7 +101,6 @@ export default {
   },
   methods: {
     showDraw() {
-      // alert(this.uploadImageUrl)
       this.show = true
       this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'downLoadBusinessInfo'})
     },
@@ -133,42 +123,15 @@ export default {
       this.$Message.success(this.ml.savesuccessfully);
     },
     onDownLoadBusinessInfo(messageBody) {
-      console.log('onDownloadBusinessInfo in businessinfo')
-      // alert('onDownloadBusinessInfo')
-      console.log(messageBody)
-      console.log(typeof messageBody)
-      console.log(messageBody.name)
+      // console.log('onDownloadBusinessInfo in businessinfo')
+      // // alert('onDownloadBusinessInfo')
+      // console.log(messageBody)
+      // console.log(typeof messageBody)
+      // console.log(messageBody.name)
 
       this.formSeller = messageBody
-
       this.$Message.success(this.ml.success);
     }
-    // handleUploadImageSuccess(res, file) {
-    //   console.log('uploadimage success')
-    //   file.url = this.avatarUrl
-    //   let avatarUrlTemp = this.avatarUrl
-    //   this.avatarUrl = ''
-    //   setTimeout(() => {
-    //     this.avatarUrl = avatarUrlTemp
-    //   }, 1000);
-    //   this.$nextTick(() => {
-    //     // this.avatarUrl = avatarUrlTemp
-    //   }
-    //   )
-    //   this.avatarUrl = avatarUrlTemp
-    // },
-    // handleFormatError(file) {
-    //   this.$Notice.warning({
-    //     title: '',
-    //     desc: this.ml.fileformatnotcorrect
-    //   });
-    // },
-    // handleMaxSize(file) {
-    //   this.$Notice.warning({
-    //     title: '',
-    //     desc: this.ml.filesizetoolarge
-    //   });
-    // }
   }
 }
 </script>

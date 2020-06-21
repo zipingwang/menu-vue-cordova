@@ -53,6 +53,7 @@ export default {
       //   url = data.options.baseUrl + '/signalr'
       // }
       // url = 'http://localhost:44337/signalr'
+      alert(data.options.baseUrl)
       console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
@@ -269,10 +270,10 @@ export default {
         // }
         switch (message.messageType) {
           case 'downloadOrder':
-            this.$root.eventHub.$emit('signalr.orderDownloaded', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onOrderDownloaded', message.messageBody)
             break;
           case 'broadcastOrder':
-            this.$root.eventHub.$emit('signalr.broadcastOrder', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onBroadcastOrder', message.messageBody)
             break;
           case 'getTakeawayTimeSlots':
             console.log('call back getTakeawayTimeSlots in signalr')

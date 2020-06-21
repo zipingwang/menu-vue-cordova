@@ -111,7 +111,7 @@
 
 <template lang="html">
   <div class="ratings-content" v-if="loggedIn">
-      <div class="buttonarea">
+      <div class="buttonarea"  v-if="isAdmin" >
           <i-button size="small" type="primary"  @click= "downloadOrder()" icon="ios-download-outline">{{ml.checkorder}}</i-button>
           <i-button size="small" :type="restaurantButtonType" @click= "getRestaurant()">{{ml.restaurant}} {{restaurantCount}}</i-button>
           <i-button size="small" :type="takeawayButtonType"  @click= "getTakeaway()">{{ml.takeaway}} {{takeawayCount}}</i-button>
@@ -139,7 +139,7 @@
                 <i-col span="4">
                     <div>{{order.totalPrice}}€</div>
                 </i-col>
-                <i-col span="6" v-if="data.options.isAdmin !=='' ">
+                <i-col span="6" v-if="isAdmin">
                     <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
                     <i-button type="primary" icon="ios-menu"></i-button>
                     <dropdown-menu slot="list">
@@ -237,16 +237,21 @@ export default {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
-    this.$root.eventHub.$on('signalr.orderDownloaded', this.orderDownloaded)
-    this.$root.eventHub.$on('signalr.broadcastOrder', this.onBroadcastOrder)
+    // this._initScroll(); // 初始化scroll
+    this.$root.eventHub.$on('signalr.onOrderDownloaded', this.onOrderDownloaded)
+    this.$root.eventHub.$on('signalr.onBroadcastOrder', this.onBroadcastOrder)
+    this.$root.eventHub.$on('checkout.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     console.log('admin vue created')
     this.downloadOrder()
     // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
   },
   computed: {
     loggedIn() {
-      return this.data.options.isAdmin === '1'
-      // return this.data.options.cusId !== '' && this.data.options.cusId !== '-1' && this.data.options.cusId !== '-2'
+      // return this.data.options.isAdmin === '1'
+      return this.data.options.cusId !== '' && this.data.options.cusId !== '-1' && this.data.options.cusId !== '-2'
+    },
+    isAdmin() {
+      this.data.options.isAdmin === '1' && this.data.options.cusId !== ''
     },
     visibleOrders() {
       return this.orders.filter(
@@ -392,6 +397,9 @@ export default {
         this.foodsScroll.refresh()
         // this._initScroll(); // 初始化scroll
       })
+    },
+    onOrderConfirmedFromServerToWeb() {
+
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
