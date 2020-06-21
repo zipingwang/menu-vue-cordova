@@ -1,7 +1,7 @@
 <template>
     <div>
         <Drawer
-            title="ml.menu"
+            :title="ml.menu"
             v-model="show"
             width="100%"
             :mask-closable="false"
@@ -77,15 +77,21 @@
             </p>
           </modal>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="deleteMenu">{{ml.delete}}}}</Button>
-              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}}}</Button>
-              <Button type="primary" @click="saveMemuGroup">{{ml.save}}}}</Button>
+              <Button  type="primary" style="margin-right: 8px" @click="deleteMenu">{{ml.delete}}</Button>
+              <Button  type="primary" style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <!-- <Button type="primary" @click="saveMemuGroup">{{ml.save}}</Button> -->
+              <sendButton ref="mySendButton" :text="ml.save" :sendingText="ml.sending" :failedText="ml.savefailed" @click="saveMenu"></sendButton>
           </div>
         </Drawer>
     </div>
 </template>
 <script>
+  import sendButton from 'components/common/sendButton/sendButton'
+
   export default {
+    components: {
+      sendButton
+    },
     props: {
       ml: {},
       data: {}
@@ -151,13 +157,14 @@
       close() {
         this.show = false
       },
-      saveMemuGroup() {
+      saveMenu() {
         this.$refs.formMenu.validate((valid) => {
           if (valid) {
+            this.$refs.mySendButton.start()
             this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveMenu', 'messageBody': this.formMenu})
           } else {
             alert('not valid')
-            this.$Message.error('{{ml.formvalidationerror}}');
+            this.$Message.error(this.ml.formvalidationerror);
           }
         })
       },
@@ -169,16 +176,18 @@
         this.modalDeleteMenu = false
       },
       onSaveMenu(messageBody) {
-        alert('onSaveMenu')
-        this.$Message.success('{{ml.savesuccessfully}}');
-        console.log(messageBody)
-        console.log(typeof messageBody)
-        console.log(messageBody.name1)
-        console.log(messageBody.displayOrder)
-        console.log(messageBody[0])
-        this.formMenu.name1 = messageBody.name1
-        console.log(this.formMenu)
-        alert('done')
+        this.$refs.mySendButton.stop()
+        // alert('onSaveMenu')
+        this.formMenu = messageBody
+        this.$Message.success(this.ml.savesuccessfully);
+        // console.log(messageBody)
+        // console.log(typeof messageBody)
+        // console.log(messageBody.name1)
+        // console.log(messageBody.displayOrder)
+        // console.log(messageBody[0])
+        // this.formMenu.name1 = messageBody.name1
+        // console.log(this.formMenu)
+        // alert('done')
       },
       onDownLoadMenu(messageBody) {
         console.log('onDownLoadMenu in menu')
@@ -187,11 +196,11 @@
         console.log(typeof messageBody)
         // this.formMenu.name1 = messageBody.name1
 
-        this.$Message.success('{{ml.success}}');
+        this.$Message.success(this.ml.success);
       },
       onDeleteMenu(messageBody) {
         console.log('onDeleteMenu in menu')
-        this.$Message.success('{{ml.success}}');
+        this.$Message.success(this.ml.deletesuccessfully);
         this.close()
       },
       deleteMenu() {
@@ -200,18 +209,18 @@
       handleUploadImageSuccess(res, file) {
         console.log('uploadimage success')
         file.url = this.avatarUrl
-        this.$Message.success('Success');
+        this.$Message.success(this.ml.success);
       },
       handleFormatError(file) {
         this.$Notice.warning({
           title: '',
-          desc: '{{ml.fileformatnotcorrect}}'
+          desc: this.ml.fileformatnotcorrect
         });
       },
       handleMaxSize(file) {
         this.$Notice.warning({
           title: '',
-          desc: '{{ml.filesizetoolarge}}'
+          desc: this.ml.filesizetoolarge
         });
       }
     }

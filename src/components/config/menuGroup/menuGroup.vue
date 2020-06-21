@@ -1,7 +1,7 @@
 <template>
     <div>
         <Drawer
-            title="ml.menugroup"
+            :title="ml.menugroup"
             v-model="show"
             width="100%"
             :mask-closable="false"
@@ -51,15 +51,21 @@
             </p>
           </modal>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="deleteMenuGroup">{{ml.delete}}</Button>
-              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}</Button>
-              <Button type="primary" @click="saveMemuGroup">{{ml.save}}</Button>
+              <sendButton ref="myDeleteButton" :text="ml.delete" :sendingText="ml.sending" :failedText="ml.deletefailed" @click="deleteMenuGroup" style="margin-right: 8px"></sendButton>
+              <!-- <Button style="margin-right: 8px" @click="deleteMenuGroup">{{ml.delete}}</Button> -->
+              <Button type="primary" style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <sendButton ref="mySendButton" :text="ml.save" :sendingText="ml.sending" :failedText="ml.savefailed" @click="saveMemuGroup"></sendButton>
+              <!-- <Button type="primary" @click="saveMemuGroup">{{ml.save}}</Button> -->
           </div>
         </Drawer>
     </div>
 </template>
 <script>
+  import sendButton from 'components/common/sendButton/sendButton'
   export default {
+    components: {
+      sendButton
+    },
     props: {
       ml: {},
       data: {}
@@ -125,14 +131,15 @@
       saveMemuGroup() {
         this.$refs.formMenuGroup.validate((valid) => {
           if (valid) {
+            this.$refs.mySendButton.start()
             this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveMenuGroup', 'messageBody': this.formMenuGroup})
           } else {
-            alert('not valid')
-            this.$Message.error('Fail!');
+            this.$Message.error(this.ml.formvalidationerror);
           }
         })
       },
       confirmDeleteMenuGroup() {
+        this.$refs.myDeleteButton.start()
         this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'deleteMenuGroup', 'messageBody': this.formMenuGroup})
         this.modalDeleteMenuGroup = false
       },
@@ -140,16 +147,17 @@
         this.modalDeleteMenuGroup = false
       },
       onSaveMenuGroup(messageBody) {
-        alert('onSaveMenuGroup')
-        this.$Message.success('Saved');
-        console.log(messageBody)
-        console.log(typeof messageBody)
-        console.log(messageBody.name1)
-        console.log(messageBody.displayOrder)
-        console.log(messageBody[0])
-        this.formMenuGroup.name1 = messageBody.name1
-        console.log(this.formMenuGroup)
-        alert('done')
+        this.$refs.mySendButton.stop()
+        this.$Message.success(this.ml.savesuccessfully);
+        this.formMenuGroup = messageBody
+        // console.log(messageBody)
+        // console.log(typeof messageBody)
+        // console.log(messageBody.name1)
+        // console.log(messageBody.displayOrder)
+        // console.log(messageBody[0])
+        // this.formMenuGroup.name1 = messageBody.name1
+        // console.log(this.formMenuGroup)
+        // alert('done')
       },
       onDownLoadMenuGroup(messageBody) {
         console.log('onDownLoadMenuGroup in menuGroup')
@@ -158,11 +166,12 @@
         console.log(typeof messageBody)
         // this.formMenuGroup.name1 = messageBody.name1
 
-        this.$Message.success('Success');
+        this.$Message.success(this.ml.success);
       },
       onDeleteMenuGroup(messageBody) {
         console.log('onDeleteMenuGroup in menuGroup')
-        this.$Message.success('{{ml.deletesuccessfully}}}');
+        this.$refs.myDeleteButton.stop()
+        this.$Message.success(this.ml.deletesuccessfully);
         this.close()
       },
       deleteMenuGroup() {
@@ -171,18 +180,18 @@
       handleUploadImageSuccess(res, file) {
         console.log('uploadimage success')
         file.url = this.avatarUrl
-        this.$Message.success('{{ml.success}}');
+        this.$Message.success(this.ml.success);
       },
       handleFormatError(file) {
         this.$Notice.warning({
           title: '',
-          desc: '{{ml.fileformatnotcorrect}}'
+          desc: this.ml.fileformatnotcorrect
         });
       },
       handleMaxSize(file) {
         this.$Notice.warning({
           title: '',
-          desc: '{{ml.filesizetoolarge}}'
+          desc: this.ml.filesizetoolarge
         });
       }
     }

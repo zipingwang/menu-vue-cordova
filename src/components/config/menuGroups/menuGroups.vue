@@ -1,7 +1,7 @@
 <template>
     <div>
         <Drawer
-            title="ml.menugroup"
+            :title="ml.menugroup"
             v-model="show"
             width="100%"
             :mask-closable="false"
@@ -22,7 +22,7 @@
               </div>
             </div> <!--row -->
             <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <Button  type="primary" style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
               <Button type="primary" @click="addNewMenuGroup">{{ml.add}}</Button>
           </div>
         </Drawer>

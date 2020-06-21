@@ -1,7 +1,7 @@
 <template>
     <div>
         <Drawer
-            title="ml.menu"
+            :title="ml.menu"
             v-model="show"
             width="100%"
             :mask-closable="false"
@@ -24,7 +24,7 @@
               </div>
             </div> <!--row -->
             <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <Button  type="primary" style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
               <Button type="primary" @click="addNewMenu">{{ml.add}}</Button>
           </div>
         </Drawer>
@@ -77,7 +77,7 @@ export default {
       console.log(typeof messageBody)
       this.menus = messageBody.menus
       this.menuGroupIdsWeb = messageBody.menuGroupIdsWeb
-      this.$Message.success('{{ml.success}}');
+      this.$Message.success(this.ml.success);
     },
     onDeleteMenu(messageBody) {
       console.log('onDeleteMenu in menus')
@@ -94,7 +94,6 @@ export default {
       this.selectedMenu = menu
       console.log(this.selectedMenu)
       console.log(this.$refs.themenu)
-      this.$refs.themenu.test()
       this.$refs.themenu.showDraw(menu, this.menuGroupIdsWeb)
     },
     addNewMenu() {

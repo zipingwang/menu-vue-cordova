@@ -70,7 +70,7 @@
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
-import sendButton from 'components/sendButton/sendButton'
+import sendButton from 'components/common/sendButton/sendButton'
 
 
 export default {

@@ -30,7 +30,7 @@
                 :format="['jpg','jpeg','png']"
                 :max-size="4096"
               >
-                <Button icon="ios-cloud-upload-outline">Upload files</Button>
+              <Button icon="ios-cloud-upload-outline">Upload files</Button>
               </Upload>
           </form-item>
 
@@ -55,121 +55,129 @@
 
         </i-form>
           <div class="demo-drawer-footer">
-              <Button style="margin-right: 8px" @click="close">{{ml.cancel}}</Button>
-              <Button type="primary" @click="saveBusinessInfo">{{ml.save}}</Button>
+              <Button type="primary" style="margin-right: 8px" @click="close">{{ml.goback}}</Button>
+              <sendButton ref="mySendButton" :text="ml.save" :sendingText="ml.sending" :failedText="ml.savefailed" @click="saveBusinessInfo"></sendButton>
+              <!-- <Button type="primary" @click="saveBusinessInfo">{{ml.save}}</Button> -->
           </div>
         </Drawer>
     </div>
 </template>
 <script>
-  export default {
-    props: {
-      ml: {},
-      data: {}
-    },
-    data () {
-      return {
-        styles: {
-          height: 'calc(100% - 55px)',
-          overflow: 'auto',
-          paddingBottom: '53px',
-          position: 'static'
-        },
-        show: this.visible,
-        formSeller: {
-          name: '',
-          description: '',
-          bulletin: '',
-          avatar: '',
-          openingHour: '',
-          address: '',
-          telephone: '',
-          supportOnlineOrder: true
-        },
-        ruleValidate: {
-          name: [
-              { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-          ]
-        },
-        // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
-        avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
-      }
-    },
-    computed: {
-      uploadImageUrl() {
-        let url = 'http://localhost:44337/'
-        // let url = data.options.baseUrl
-        return url + 'RequestHandler.ashx?method=selleravatar'
-      }
-    },
-    created() {
-      this.$root.eventHub.$on('signalr.onSaveBusinessInfo', this.onSaveBusinessInfo)
-      this.$root.eventHub.$on('signalr.onDownLoadBusinessInfo', this.onDownLoadBusinessInfo)
-    },
-    mounted() {
+import sendButton from 'components/common/sendButton/sendButton'
 
+export default {
+  components: {
+    sendButton
+  },
+  props: {
+    ml: {},
+    data: {}
+  },
+  data () {
+    return {
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      show: this.visible,
+      formSeller: {
+        name: '',
+        description: '',
+        bulletin: '',
+        avatar: '',
+        openingHour: '',
+        address: '',
+        telephone: '',
+        supportOnlineOrder: true
+      },
+      ruleValidate: {
+        name: [
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' }
+        ]
+      },
+      // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
+      avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
+    }
+  },
+  computed: {
+    uploadImageUrl() {
+      let url = 'http://localhost:44337/'
+      // let url = data.options.baseUrl
+      return url + 'RequestHandler.ashx?method=selleravatar'
+    }
+  },
+  created() {
+    this.$root.eventHub.$on('signalr.onSaveBusinessInfo', this.onSaveBusinessInfo)
+    this.$root.eventHub.$on('signalr.onDownLoadBusinessInfo', this.onDownLoadBusinessInfo)
+  },
+  mounted() {
+
+  },
+  methods: {
+    showDraw() {
+      // alert(this.uploadImageUrl)
+      this.show = true
+      this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'downLoadBusinessInfo'})
     },
-    methods: {
-      showDraw() {
-        alert(this.uploadImageUrl)
-        this.show = true
-        this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'downLoadBusinessInfo'})
-      },
-      close() {
-        this.show = false
-      },
-      saveBusinessInfo() {
-        this.$refs.formSeller.validate((valid) => {
-          if (valid) {
-            this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveBusinessInfo', 'messageBody': this.formSeller})
-          } else {
-            this.$Message.error('{{ml.formvalidationerror}}');
-          }
-        })
-      },
-      onSaveBusinessInfo() {
-        // alert('onSaveBusinessInfo')
-        this.$Message.success('{{ml.savesuccessfully}}');
-      },
-      onDownLoadBusinessInfo(messageBody) {
-        console.log('onDownloadBusinessInfo in businessinfo')
-        // alert('onDownloadBusinessInfo')
-        console.log(messageBody)
-        console.log(typeof messageBody)
-        console.log(messageBody.name)
-
-        this.formSeller = messageBody
-
-        this.$Message.success('{{ml.success}}');
-      },
-      handleUploadImageSuccess(res, file) {
-        console.log('uploadimage success')
-        file.url = this.avatarUrl
-        let avatarUrlTemp = this.avatarUrl
-        this.avatarUrl = ''
-        setTimeout(() => {
-          this.avatarUrl = avatarUrlTemp
-        }, 1000);
-        this.$nextTick(() => {
-          // this.avatarUrl = avatarUrlTemp
+    close() {
+      this.show = false
+    },
+    saveBusinessInfo() {
+      this.$refs.formSeller.validate((valid) => {
+        if (valid) {
+          this.$refs.mySendButton.start()
+          this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'saveBusinessInfo', 'messageBody': this.formSeller})
+        } else {
+          this.$Message.error(this.ml.formvalidationerror);
         }
-        )
+      })
+    },
+    onSaveBusinessInfo() {
+      // alert('onSaveBusinessInfo')
+      this.$refs.mySendButton.stop()
+      this.$Message.success(this.ml.savesuccessfully);
+    },
+    onDownLoadBusinessInfo(messageBody) {
+      console.log('onDownloadBusinessInfo in businessinfo')
+      // alert('onDownloadBusinessInfo')
+      console.log(messageBody)
+      console.log(typeof messageBody)
+      console.log(messageBody.name)
+
+      this.formSeller = messageBody
+
+      this.$Message.success(this.ml.success);
+    },
+    handleUploadImageSuccess(res, file) {
+      console.log('uploadimage success')
+      file.url = this.avatarUrl
+      let avatarUrlTemp = this.avatarUrl
+      this.avatarUrl = ''
+      setTimeout(() => {
         this.avatarUrl = avatarUrlTemp
-      },
-      handleFormatError(file) {
-        this.$Notice.warning({
-          title: '',
-          desc: '{{ml.fileformatnotcorrect}}'
-        });
-      },
-      handleMaxSize(file) {
-        this.$Notice.warning({
-          title: '',
-          desc: '{{ml.filesizetoolarge}}'
-        });
+      }, 1000);
+      this.$nextTick(() => {
+        // this.avatarUrl = avatarUrlTemp
       }
+      )
+      this.avatarUrl = avatarUrlTemp
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: '',
+        desc: this.ml.fileformatnotcorrect
+      });
+    },
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: '',
+        desc: this.ml.filesizetoolarge
+      });
     }
   }
+}
 </script>
 <style>
   .demo-drawer-footer{
