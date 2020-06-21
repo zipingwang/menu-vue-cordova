@@ -22,7 +22,7 @@
           </form-item>
 
           <form-item :label="ml.avatar">
-             <uploadFile :ml="ml" params = "method=selleravatar"></uploadFile>
+             <uploadFile :ml="ml" :data="data" params = "method=selleravatar"></uploadFile>
           </form-item>
 
           <form-item :label="ml.openinghour">

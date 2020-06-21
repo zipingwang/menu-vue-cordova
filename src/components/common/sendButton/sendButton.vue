@@ -12,7 +12,7 @@ export default {
     ml: {},
     text: '',
     sendingText: {
-      default: ml.sending,
+      default: '',
       type: String
     },
     failedTitle: '',

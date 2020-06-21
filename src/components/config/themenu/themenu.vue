@@ -41,7 +41,7 @@
                   <i-input v-model="formMenu.name2"></i-input>
           </form-item>
           <form-item :label="ml.menuimage" prop="menuImage">
-              <uploadFile :ml="ml" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile>
+              <uploadFile :ml="ml" :data="data" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile>
           </form-item>
           <form-item :label="ml.description" prop="description">
                   <i-input v-model="formMenu.description"></i-input>
@@ -119,16 +119,7 @@
           name1: [
               { required: true, message: '*', trigger: 'blur' }
           ]
-        },
-        // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
-        avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
-      }
-    },
-    computed: {
-      uploadImageUrl() {
-        let url = 'http://localhost:44337/'
-        // let url = data.options.baseUrl
-        return url + 'RequestHandler.ashx?method=selleravatar'
+        }
       }
     },
     created() {

@@ -74,23 +74,19 @@ export default {
   data() {
     return {
       show: false,
-      url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
       connectionId: '',
-      // busyWithSending: false,
-      // startTime: {},
-      // mySendingTimer: {},
       formInline: {
         user: '',
         password: ''
       },
       ruleInline: {
         user: [
-          { required: true, message: this.ml.requiedfield, trigger: 'blur' }
+          { required: true, message: this.ml.requiredfield, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: this.ml.requiedfield, trigger: 'blur' }
+          { required: true, message: this.ml.requiredfield, trigger: 'blur' }
           // { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
         ]
       }
@@ -101,9 +97,6 @@ export default {
       let requestString = ''
       requestString = JSON.stringify(this.formInline)
       return requestString
-    },
-    testmethod() {
-      return 'hello'
     }
   },
   created() {
@@ -162,7 +155,7 @@ export default {
           this.$root.eventHub.$emit('signalr.signin', this.signinString);
         } else {
           this.busyWithSending = false
-          this.$Message.error('{{ml.formvalidationerror}}');
+          this.$Message.error(this.ml.formvalidationerror);
         }
       })
     },
@@ -187,8 +180,8 @@ export default {
       this.$refs.myLoginButton.stop()
       if (user.rid !== '-1') {
         this.show = false
-        data.options.cusId = user.rid
-        data.options.isAdmin = user.isAdmin
+        // this.data.options.cusId = user.rid /* don't change parent data */
+        // this.data.options.isAdmin = user.isAdmin
         this.$root.eventHub.$emit('login.loggedin', user)
         // this.$root.eventHub.$emit('signalr.downloadOrder')
         // this.$Modal.success({

@@ -49,7 +49,7 @@
         <form-item>
             <sendButton ref="mySendButton" :text="ml.register" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
-            <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button>
+            <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
             <i-button @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
         </form-item>
     </i-form>
@@ -85,7 +85,7 @@ export default {
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error(this.ml.requiedfield));
+        callback(new Error(this.ml.requiredfield));
       } else {
         if (this.formItem.passwordconfirm !== '') {
           // 对第二个密码框单独验证
@@ -96,7 +96,7 @@ export default {
     };
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error(this.ml.requiedfield));
+        callback(new Error(this.ml.requiredfield));
       } else if (value !== this.formItem.password) {
         callback(new Error(this.ml.passwordmismatch));
       } else {
@@ -108,7 +108,7 @@ export default {
     //   var result = validateEmail(value)
     //   alert(result);
     //   if (value === '' && this.formItem.telephone === '') {
-    //     callback(new Error(this.ml.requiedfield));
+    //     callback(new Error(this.ml.requiredfield));
     //   } else if (value !== '') {
     //     callback(new Error(this.ml.invalid));
     //   } else {
@@ -117,7 +117,7 @@ export default {
     // };
     // const validateTelephone = (rule, value, callback) => {
     //   if (value === '' && this.formItem.email === '') {
-    //     callback(new Error(this.ml.requiedfield));
+    //     callback(new Error(this.ml.requiredfield));
     //   } else if (value !== '' && value.length <= 8) {
     //     callback(new Error(this.ml.minimumlength));
     //   } else {
@@ -144,7 +144,6 @@ export default {
     // };
     return {
       show: false,
-      url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
       connectionId: '',
@@ -181,20 +180,20 @@ export default {
       },
       ruleValidate: {
         firstname: [
-            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
-            { type: 'string', min: 2, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
         ],
         lastname: [
-            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
-            { type: 'string', min: 2, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
         ],
         telephone: [
-            { required: true, message: '{{ml.requiedfield}}', trigger: 'blur' },
-            { type: 'string', min: 8, message: '{{ml.minimumlengthrequired}}', trigger: 'blur' }
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 8, message: this.ml.minimumlengthrequired, trigger: 'blur' }
         ],
         email: [
-            { required: false, message: '{{ml.requiedfield}}', trigger: 'blur' },
-            { type: 'email', message: '{{ml.incorrectemailformat}}', trigger: 'blur' }
+            { required: false, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'email', message: this.ml.incorrectemailformat, trigger: 'blur' }
         ]
       }
     }
@@ -251,7 +250,7 @@ export default {
         this.$refs.mySendButton.start()
         this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
       } else {
-        this.$Message.error('{{ml.formvalidationerror}}');
+        this.$Message.error(this.ml.formvalidationerror);
       }
       // this.$refs[name].validate((valid) => {
       //   if (valid) {
@@ -275,13 +274,13 @@ export default {
       this.$refs.mySendButton.stop()
       if (userId === '-1') {
         this.$Modal.success({
-          title: '{{ml.failed}}',
-          content: '<p>{{ml.userregisterationfailed}}</p>'
+          title: 'ml.failed',
+          content: 'ml.userregisterationfailed'
         });
       } else {
         this.$Modal.success({
-          title: '{{ml.success}}',
-          content: '<p>{{ml.userregisterationsuccess}}</p>'
+          title: this.ml.success,
+          content: this.ml.userregisterationsuccess
         });
       }
     }

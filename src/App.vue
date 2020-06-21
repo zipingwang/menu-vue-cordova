@@ -66,7 +66,7 @@ export default {
       trans: ml.trans,
       lns: data.seller.lns,
       visibletabs: ml.visibletabs,
-      activetab: ml.activetab,
+      // activetab: ml.activetab,
       dataReday: false
     }
   },
@@ -74,6 +74,7 @@ export default {
     this.data.currentlnindex = 0
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
+    this.$root.eventHub.$on('login.loggedin', this.onLoggedIn)
   },
   computed: {
     urlVars() {
@@ -99,6 +100,10 @@ export default {
       // alert('menudownloaded')
       var obj = JSON.parse(data)
       console.log(data)
+    },
+    onLoggedIn(user) {
+      this.data.options.cusId = user.rid
+      this.data.options.isAdmin = user.isAdmin
     }
   }
 }

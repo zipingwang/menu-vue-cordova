@@ -16,13 +16,13 @@
 export default {
   props: {
     ml: {},
+    data: {},
     params: ''
   },
   computed: {
     uploadImageUrl() {
-      let url = 'http://localhost:44337/'
-      // let url = data.options.baseUrl
-      return url + 'RequestHandler.ashx?' + this.params
+      let url = data.options.uploadUrl
+      return url + this.params
     }
   },
   methods: {

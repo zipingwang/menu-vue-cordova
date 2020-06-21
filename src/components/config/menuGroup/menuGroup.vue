@@ -99,16 +99,7 @@
           name1: [
             { required: true, message: '*', trigger: 'blur' }
           ]
-        },
-        // avatarUrl: data.options.baseUrl + '/static/img/avarta.jpg'
-        avatarUrl: 'http://localhost:44337/' + '/static/img/avatar.jpg'
-      }
-    },
-    computed: {
-      uploadImageUrl() {
-        let url = 'http://localhost:44337/'
-        // let url = data.options.baseUrl
-        return url + 'RequestHandler.ashx?method=selleravatar'
+        }
       }
     },
     created() {

@@ -349,7 +349,7 @@ export default {
         this.$root.eventHub.$emit('signalr.downloadOrder')
       }
     },
-    orderDownloaded(orders) {
+    onOrderDownloaded(orders) {
       // alert('orderDownloaded in admin')
       // console.log(typeof orders);
       this.orders = orders.orders

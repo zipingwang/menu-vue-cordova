@@ -27,14 +27,14 @@
           </div>
           <div class="shopCart">
             <transition name="fade">
-              <div class="text" @click="addCart($event)" v-show="!food.count">{{trans.addtoshoppingcart}}</div>
+              <div class="text" @click="addCart($event)" v-show="!food.count">{{ml.addtoshoppingcart}}</div>
             </transition>
           </div>
           <cartcontrol :food="food" v-show="food.count"></cartcontrol>
         </div>
         <div class="divider"></div>
         <div class="desc">
-          <div class="title">{{trans.description}}</div>
+          <div class="title">{{ml.description}}</div>
           <div class="content">{{food.info}}</div>
         </div>
         <!-- <div class="divider"></div>
@@ -88,7 +88,8 @@ export default {
   },
   props: {
     food: Object,
-    data: {}
+    data: {},
+    ml: {}
   },
   data() {
     return {
@@ -110,8 +111,7 @@ export default {
         commmentCatetory: 2,
         active: false
       }],
-      evelflag: true,
-      trans: ml.trans
+      evelflag: true
     }
   },
   computed: {

@@ -15,8 +15,7 @@ export default {
   },
   data() {
     return {
-      url: this.seller.sellerurl,
-      // userName: 'vue app',
+      url: this.data.options.signalrUrl,
       simpleHubProxy: null,
       connectionId: ''
     }
@@ -43,17 +42,9 @@ export default {
       this.sendOrder()
     },
     connectToSignalRServer() {
-      // alert('click 2');
       let url = 'http://localhost:44337/signalr';
-      // let url = '/signalr';
-      // let url = 'http://www.freeobject.com/signalr';
+      url = this.data.options.signalrUrl
 
-      // let url = this.url + '/signalr';
-      // if (this.url === '') {
-      //   url = data.options.baseUrl + '/signalr'
-      // }
-      // url = 'http://localhost:44337/signalr'
-      alert(data.options.baseUrl)
       console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog

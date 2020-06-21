@@ -72,7 +72,7 @@ export default {
       console.log(messageBody)
       console.log(typeof messageBody)
       this.menuGroups = messageBody
-      this.$Message.success('{{ml.success}}');
+      this.$Message.success(this.ml.success);
     },
     onDeleteMenuGroup(messageBody) {
       console.log('onDeleteMenuGroup in menugroups')

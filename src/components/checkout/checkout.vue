@@ -92,7 +92,6 @@ export default {
     return {
       show: false,
       // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
-      url: this.seller.sellerurl,
       userName: 'vue app',
       simpleHubProxy: null,
       connectionId: '',

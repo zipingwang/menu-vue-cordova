@@ -93,6 +93,13 @@ new Vue({
     data.options.isAdmin = '0'
     let baseUrl = this.getBaseUrl()
     data.options.baseUrl = baseUrl
+    if (data.seller.sellerurl !== '' && data.seller.sellerurl.length > 0) {
+      data.options.signalrUrl = data.seller.sellerurl + '/signalr'
+      data.options.uploadUrl = data.seller.sellerurl + '/RequestHandler.ashx?'
+    } else {
+      data.options.signalrUrl = baseUrl + '/signalr'
+      data.options.uploadUrl = baseUrl + '/RequestHandler.ashx?'
+    }
     if ('table' in urlVars) {
       data.options.table = urlVars['table']
     }
