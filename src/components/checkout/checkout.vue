@@ -201,7 +201,7 @@ export default {
           this.$router.push('admin')
           setTimeout(() => {
             this.$root.eventHub.$emit('checkout.onOrderConfirmedFromServerToWeb', order, addremove)
-          }, 200)
+          }, 1000)
         }
       });
     },

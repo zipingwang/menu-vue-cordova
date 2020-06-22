@@ -234,6 +234,7 @@ export default {
       }
     },
     onOrderConfirmedFromServerToWeb(webClientConnectionId, order, addremove) {
+      console.log('onOrderConfirmedFromServerToWeb in signalr')
       if (this.connectionId === webClientConnectionId) {
         this.$root.eventHub.$emit('signalr.onOrderConfirmedFromServerToWeb', order, addremove)
         // alert('onOrderConfirmedFromServerToWeb:' + webClientConnectionId)

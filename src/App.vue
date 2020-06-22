@@ -102,8 +102,11 @@ export default {
       console.log(data)
     },
     onLoggedIn(user) {
+      console.log('onLoggedIn')
       this.data.options.cusId = user.rid
       this.data.options.isAdmin = user.isAdmin
+      console.log(this.data.options.cusId)
+      console.log(this.data.options.isAdmin)
     }
   }
 }

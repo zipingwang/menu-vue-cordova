@@ -15,9 +15,7 @@ import VueLazyload from 'vue-lazyload'
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 // import VueI18n from 'vue-i18n';
-import en from 'view-design/dist/locale/en-US';
-import nl from 'view-design/dist/locale/nl-NL';
-import zh from 'view-design/dist/locale/zh-CN';
+
 
 Vue.use(vueTap)
 Vue.use(VueRouter)

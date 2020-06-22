@@ -251,7 +251,7 @@ export default {
       return this.data.options.cusId !== '' && this.data.options.cusId !== '-1' && this.data.options.cusId !== '-2'
     },
     isAdmin() {
-      this.data.options.isAdmin === '1' && this.data.options.cusId !== ''
+      return this.data.options.isAdmin === '1' && this.data.options.cusId !== ''
     },
     visibleOrders() {
       return this.orders.filter(
@@ -362,10 +362,50 @@ export default {
       // this.downloadOrder()
     },
     onBroadcastOrder(messageBody) {
+      console.log('onBroadcastOrder in admin.vue')
       // alert('onOrderConfirmedFromServerToWeb in admin')
-      console.log(messageBody)
-      let orderString = messageBody.order
-      let addremove = messageBody.addOrRemove
+      // console.log(messageBody)
+      // let orderString = messageBody.order
+      // let addremove = messageBody.addOrRemove
+      this.doAddRemoveOrder(messageBody.order, messageBody.addOrRemove)
+      // // debugger
+      // if (addremove === '1') {
+      //   let flag = false
+      //   let order = JSON.parse(orderString)
+      //   for (let index = 0; index < this.orders.length; index++) {
+      //     if (this.orders[index].orderId === order.orderId) {
+      //       flag = true
+      //       this.$set(this.orders, index, order) /* replace existing order */
+      //       // this.orders[index] = order /* not update by vue */
+      //       break
+      //     }
+      //   }
+      //   if (!flag) {
+      //     this.orders.push(order)
+      //     // downloadOrder()
+      //   }
+      // } else if (addremove === '-1' || addremove === '-2') { /* -1 close, -2 delete order */
+      //   let flag = false
+      //   let orderId = orderString
+      //   for (let index = 0; index < this.orders.length; index++) {
+      //     if (this.orders[index].orderId === orderId) {
+      //       this.orders.splice(index, 1);
+      //       // alert('found')
+      //       break
+      //     }
+      //   }
+      // }
+      // this.$nextTick(() => {
+      //   this.foodsScroll.refresh()
+      //   // this._initScroll(); // 初始化scroll
+      // })
+    },
+    onOrderConfirmedFromServerToWeb(orderString, addremove) {
+      console.log('onOrderConfirmedFromServerToWeb')
+      this.doAddRemoveOrder(orderString, addremove)
+    },
+    doAddRemoveOrder(orderString, addremove) {
+      console.log('doAddRemoveOrder')
       // debugger
       if (addremove === '1') {
         let flag = false
@@ -397,9 +437,6 @@ export default {
         this.foodsScroll.refresh()
         // this._initScroll(); // 初始化scroll
       })
-    },
-    onOrderConfirmedFromServerToWeb() {
-
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
