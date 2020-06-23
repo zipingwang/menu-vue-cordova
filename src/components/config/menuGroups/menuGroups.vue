@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="root">
         <Drawer
             :title="ml.menugroup"
             v-model="show"
@@ -107,6 +107,9 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+.root {
+    z-index: 100;
+}
 /* Container for flexboxes */
 .row {
   display: flex;

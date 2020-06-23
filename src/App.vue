@@ -71,6 +71,7 @@ export default {
     }
   },
   created() {
+    document.title = this.seller.name
     this.data.currentlnindex = 0
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)

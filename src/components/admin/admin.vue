@@ -230,7 +230,8 @@ export default {
       restaurantButtonType: 'default',
       takeawayButtonType: 'default',
       allButtonType: 'primary',
-      currentOrderType: 'all'
+      currentOrderType: 'all',
+      firstDownLoaded: true
     }
   },
   created() {
@@ -293,11 +294,9 @@ export default {
       // console.log(from)
       // console.log(this.data.options)
       if (to.path === '/admin') {
-        if (this.data.options.isAdmin === '1') {
-          // this.downloadOrder()
-          // this.$refs.myLogin.hidelogin()
-          // this._initScroll(); // 初始化scroll
-          this.foodsScroll.refresh()
+        if (this.data.options.isAdmin === '1' && this.firstDownLoaded) {
+          this.downloadOrder()
+          this.firstDownLoaded = false
         } else {
           // this.$refs.myLogin.showlogin()
         }

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="root">
         <Drawer
             :title="ml.businessinfo"
             v-model="show"
@@ -101,8 +101,8 @@ export default {
   },
   methods: {
     showDraw() {
-      this.show = true
       this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'downLoadBusinessInfo'})
+      this.show = true
     },
     close() {
       this.show = false
@@ -136,6 +136,9 @@ export default {
 }
 </script>
 <style>
+  .root {
+    z-index: 100;
+  }
   .demo-drawer-footer{
     width: 100%;
     position: absolute;

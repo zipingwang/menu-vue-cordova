@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="root">
         <Drawer
             :title="ml.menugroup"
             v-model="show"
@@ -189,6 +189,9 @@
   }
 </script>
 <style>
+  .root {
+    z-index: 101;
+  }
   .demo-drawer-footer{
     width: 100%;
     position: absolute;
