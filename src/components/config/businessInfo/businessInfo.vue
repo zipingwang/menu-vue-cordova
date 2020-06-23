@@ -137,7 +137,7 @@ export default {
 </script>
 <style>
   .root {
-    z-index: 100;
+    z-index: 1001;
   }
   .demo-drawer-footer{
     width: 100%;

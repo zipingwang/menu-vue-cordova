@@ -118,6 +118,10 @@
           <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
       </div>
   <div class="divider"></div>
+  <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="contextMenuVisible">
+      <p class="drawbutton"><i-button @click="closeOrder" type="primary">{{ml.close}}</i-button></p>
+      <p class="drawbutton"><i-button @click="deleteOrder" type="primary">{{ml.delete}}</i-button></p>
+  </drawer>
   <div class="ratingsWrapper" ref="ratingsWrapper">
 <!--
     <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
@@ -140,13 +144,13 @@
                     <div>{{order.totalPrice}}€</div>
                 </i-col>
                 <i-col span="6" v-if="isAdmin">
-                    <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
+                    <i-button size="small" @click= "changeOrder(order)" icon="ios-menu"></i-button>
+                    <!-- <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
                     <i-button type="primary" icon="ios-menu"></i-button>
                     <dropdown-menu slot="list">
                         <dropdown-item name="closeOrder">{{ml.close}}</dropdown-item>
                         <dropdown-item divided name="deleteOrder">{{ml.delete}}</dropdown-item>
-                        <!-- <dropdown-item name="closeOrder2">{{ml.close}}</dropdown-item> -->
-                    </dropdown-menu>
+                    </dropdown-menu> -->
                 </dropdown>
                      <!-- <i-button type="primary" size="small" shape="circle" icon="ios-menu" @click="closeOrder(order)"></i-button> -->
                 </i-col>
@@ -166,11 +170,12 @@
                 <modal
                   ref="dialog"
                   v-model="modalCloseOrder"
+                  :closable="false"
                   :ok-text="ml.ok"
                   :cancel-text="ml.cancel"
                   @on-ok="ConfirmCloseOrder"
                   @on-cancel="CancelCloseOrder">
-                   <p style="color:#f60;text-align:center">
+                   <p>
                     <icon type="md-information-circle"></icon>
                     <span>{{ml.askconfirmcloseorder}}</span>
                   </p>
@@ -178,11 +183,12 @@
                 <modal
                   ref="dialog"
                   v-model="modalDeleteOrder"
+                  :closable="false"
                   :ok-text="ml.ok"
                   :cancel-text="ml.cancel"
                   @on-ok="ConfirmDeleteOrder"
                   @on-cancel="CancelDeleteOrder">
-                   <p style="color:#f60;text-align:center">
+                   <p>
                     <icon type="md-information-circle"></icon>
                     <span>{{ml.askconfirmdeleteorder}}</span>
                   </p>
@@ -231,7 +237,8 @@ export default {
       takeawayButtonType: 'default',
       allButtonType: 'primary',
       currentOrderType: 'all',
-      firstDownLoaded: true
+      firstDownLoaded: true,
+      contextMenuVisible: false
     }
   },
   created() {
@@ -304,6 +311,11 @@ export default {
       // this.$nextTick(() => {
       //   this._initScroll(); // 初始化scroll
       // })
+    },
+    contextMenuVisible(newValue, oldValue) {
+      if (newValue === false) {
+        this.selectedOrder = {}
+      }
     }
   },
   methods: {
@@ -325,21 +337,20 @@ export default {
         }
       });
     },
-    closeOrder(order) {
+    closeOrder() {
       this.modalCloseOrder = true
-      this.selectedOrder = order
       // this.$root.eventHub.$emit('signalr.closeOrder', order.orderId)
       // alert('close order' + JSON.stringify(order))
     },
     ConfirmCloseOrder() {
       // this.$Message.info(JSON.stringify(this.selectedOrder));
       this.$root.eventHub.$emit('signalr.closeOrder', this.selectedOrder.orderId)
-      this.selectedOrder = {}
+      // this.selectedOrder = {}
       this.modalCloseOrder = false
     },
     CancelCloseOrder() {
       // this.$Message.info('Clicked cancel');
-      this.selectedOrder = {}
+      // this.selectedOrder = {}
       this.modalCloseOrder = false
     },
     downloadOrder() {
@@ -362,42 +373,7 @@ export default {
     },
     onBroadcastOrder(messageBody) {
       console.log('onBroadcastOrder in admin.vue')
-      // alert('onOrderConfirmedFromServerToWeb in admin')
-      // console.log(messageBody)
-      // let orderString = messageBody.order
-      // let addremove = messageBody.addOrRemove
       this.doAddRemoveOrder(messageBody.order, messageBody.addOrRemove)
-      // // debugger
-      // if (addremove === '1') {
-      //   let flag = false
-      //   let order = JSON.parse(orderString)
-      //   for (let index = 0; index < this.orders.length; index++) {
-      //     if (this.orders[index].orderId === order.orderId) {
-      //       flag = true
-      //       this.$set(this.orders, index, order) /* replace existing order */
-      //       // this.orders[index] = order /* not update by vue */
-      //       break
-      //     }
-      //   }
-      //   if (!flag) {
-      //     this.orders.push(order)
-      //     // downloadOrder()
-      //   }
-      // } else if (addremove === '-1' || addremove === '-2') { /* -1 close, -2 delete order */
-      //   let flag = false
-      //   let orderId = orderString
-      //   for (let index = 0; index < this.orders.length; index++) {
-      //     if (this.orders[index].orderId === orderId) {
-      //       this.orders.splice(index, 1);
-      //       // alert('found')
-      //       break
-      //     }
-      //   }
-      // }
-      // this.$nextTick(() => {
-      //   this.foodsScroll.refresh()
-      //   // this._initScroll(); // 初始化scroll
-      // })
     },
     onOrderConfirmedFromServerToWeb(orderString, addremove) {
       console.log('onOrderConfirmedFromServerToWeb')
@@ -436,6 +412,7 @@ export default {
         this.foodsScroll.refresh()
         // this._initScroll(); // 初始化scroll
       })
+      this.playSound()
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
@@ -469,31 +446,29 @@ export default {
       this.allButtonType = 'primary'
       this.currentOrderType = 'all'
     },
-    deleteOrder(order) {
+    deleteOrder() {
       this.modalDeleteOrder = true
-      this.selectedOrder = order
     },
     ConfirmDeleteOrder() {
       // this.$Message.info(JSON.stringify(this.selectedOrder));
       this.$root.eventHub.$emit('signalr.deleteOrder', this.selectedOrder.orderId)
-      this.selectedOrder = {}
       this.modalDeleteOrder = false
+      this.contextMenuVisible = false
     },
     CancelDeleteOrder() {
-      // this.$Message.info('Clicked cancel');
-      this.selectedOrder = {}
       this.modalDeleteOrder = false
     },
-    changeOrder(item, order) {
-      // TODO: call two times when click once
-      if (item === 'closeOrder') {
-        // alert('closeorder')
-        this.closeOrder(order)
-      } else if (item === 'deleteOrder') {
-        this.deleteOrder(order)
+    changeOrder(order) {
+      console.log('change order')
+      this.contextMenuVisible = true
+      this.selectedOrder = order
+    },
+    playSound() {
+      if (this.isAdmin) {
+        console.log('playsound')
+        var audio = new Audio('static/sound/sound.mp3');
+        audio.play();
       }
-      console.log(order)
-      console.log(item)
     }
   }
 }
