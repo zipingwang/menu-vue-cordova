@@ -27,7 +27,7 @@
         <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img>
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
             <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
-            <span class="count">{{seller.supports.length+'...'}}</span>
+            <span class="count">{{sellerDetailButtonSamllText}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
         <icon type="ios-keypad" size="20" class="config" v-if="data.options.isAdmin === '1'" @click="showConfig" />
@@ -47,12 +47,14 @@
             shop
         </drawer> -->
   </div>
-  <div class="bulletin-wrapper" @click="showDetails()" v-if="seller.supports.length>0">
+  <div class="bulletin-wrapper" >
+    <div @click="showDetails()" v-if="seller.supports.length>0">
     <span class="bulletin-title"></span>
     <!-- <i class="fa fa-bullhorn"></i> -->
     <!-- <span class="bulletin-text">{{seller.bulletin}}</span> -->
     <span class="bulletin-text">{{seller.supports[0].description}}</span>
     <i class="icon-keyboard_arrow_right"></i>
+    </div>
   </div>
   <div class="background">
     <img :src="seller.avatar" width="100%" height="100%"/>
@@ -146,6 +148,15 @@ export default {
       detailShow: false,
       languageShow: false,
       configVisible: false
+    }
+  },
+  computed: {
+    sellerDetailButtonSamllText() {
+      if (this.seller.supports.length === 0) {
+        return '...'
+      } else {
+        return seller.supports.length + '...'
+      }
     }
   },
   methods: {

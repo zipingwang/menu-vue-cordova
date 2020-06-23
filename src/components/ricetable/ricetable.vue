@@ -143,10 +143,17 @@ export default {
       ricetables: this.data.ricetables
     }
   },
-  created() {
+  mounted() {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.path === '/ricetable') {
+        this.foodsScroll.refresh()
+      }
+    }
   },
   methods: {
     _initScroll() {

@@ -139,10 +139,17 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
     })
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.path === '/info') {
+        this.foodsScroll.refresh()
+      }
+    }
   },
   methods: {
     _initScroll() {

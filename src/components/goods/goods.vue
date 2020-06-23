@@ -5,8 +5,8 @@
       <ul>
         <li v-for="(item,index) in goods" @click="menuClick(index,$event)" :class="index==menuCurrentIndex?'menu-item-selected':'menu-item'">
           <span class="text">
-            <iconMap v-show="item.type>0" :iconType="item.type"></iconMap>
-            {{item.name}}
+            <!-- <iconMap v-show="item.type>0" :iconType="item.type"></iconMap> -->
+            {{item.name[data.currentlnindex]}}
           </span>
         </li>
       </ul>
@@ -14,7 +14,7 @@
     <div class="foods-wrapper" id="wrapper" ref="foodsWrapper">
       <ul>
         <li v-for="item in goods" class="food-list food-list-hook">
-          <h1>{{item.name}}</h1>
+          <h1>{{item.name[data.currentlnindex]}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item" @click="goDetail(food)">
               <div class="icon">
@@ -24,7 +24,7 @@
                 <!-- <span class="food">{{food.name}}</span> <span class="nr">nr. {{food.menunr}}</span>  -->
                 <h2>{{food.name[data.currentlnindex]}}</h2>
                 <!-- <p class="description" v-show="food.description">{{food.description}}</p>                  -->
-                <p class="description" v-show="food.menunr">Nr. {{food.menunr}}</p>
+                <!-- <p class="description" v-show="food.menunr">Nr. {{food.menunr}}</p> -->
                 <div class="sell-info">
                   <div class="star-wrapper" v-if="food.rating">
                     <star :size="24" :score="food.rating"></star>
@@ -35,6 +35,7 @@
                 <div class="price">
                   <span class="newPrice"><span class="unit">€ </span>{{food.price}}</span>
                   <span v-show="food.oldPrice" class="oldPrice">€{{food.oldPrice}}</span>
+                  <span class="menunr" v-show="food.menunr">Nr. {{food.menunr}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food"></cartcontrol>
@@ -70,11 +71,29 @@ export default {
     data: {}
   },
   created() {
+    console.log('created in goods.vue')
+    // setTimeout(() => {
+    //   this._initScroll(); // 初始化scroll
+    //   this._calculateHeight(); // 初始化列表高度列表
+    // }, 500)
+    // this.$nextTick(() => {
+    //   this._initScroll(); // 初始化scroll
+    //   this._calculateHeight(); // 初始化列表高度列表
+    // })
+    this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+  },
+  mounted() {
     this.$nextTick(() => {
       this._initScroll(); // 初始化scroll
       this._calculateHeight(); // 初始化列表高度列表
     })
-    this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.path === '/goods') {
+        this.foodsScroll.refresh()
+      }
+    }
   },
   data() {
     return {
@@ -186,7 +205,7 @@ export default {
   .goods
     display flex
     position absolute
-    top 174px
+    top 180px
     bottom 46px
     width 100%
     overflow hidden
@@ -195,6 +214,7 @@ export default {
       width 80px
       background #f3f5f7
       margin-top: 2px;
+      color rgb(74,62,52)
       .menu-item-selected
         background white
         font-weight 700
@@ -204,7 +224,7 @@ export default {
         display table
         height 54px
         line-height 14px
-        width 56px
+        width 80px
         padding 0 12px
         &:last-child:after
           content none
@@ -233,9 +253,11 @@ export default {
           line-height 26px
           padding-left 12px
           font-size 12px
-          color rgb(147,153,159)
+          color rgb(74,62,52)
+          // color rgb(147,153,159)
           background #f3f5f7
           border-left 2px solid #d9dde1
+          text-align center
       .food-item
         position relative
         display flex
@@ -284,6 +306,7 @@ export default {
             margin-bottom 8px
             line-height: 12px
           .price
+            margin-top 20px
             font-size 10px
             font-weight 700
             line-height 24px
@@ -297,10 +320,12 @@ export default {
               text-decoration line-through
               color rgb(147,153,159)
               padding-left 4px
+            .menunr
+              margin-left 10px
           .cartcontrol-wrapper
             position: absolute
             right: 0
-            bottom 12px
+            bottom 20px
             z-index 20
 
 </style>
