@@ -58,6 +58,10 @@
         box-sizing border-box
         .orderheader
           font-size 24px
+          .orderNotViewed
+            background-color green
+          .orderViewed
+            background-color  red
         .title
           font-size 24px
           line-height 24px
@@ -114,7 +118,9 @@
       <div class="buttonarea"  v-if="isAdmin" >
           <i-button size="small" type="primary"  @click= "downloadOrder()" icon="ios-download-outline">{{ml.checkorder}}</i-button>
           <i-button size="small" :type="restaurantButtonType" @click= "getRestaurant()">{{ml.restaurant}} {{restaurantCount}}</i-button>
+          <i-button size="small" :type="restaurantButtonType" @click= "getRestaurant()" type="warning" shape="circle" v-if="restauranNotViewedtCount > 0">{{restauranNotViewedtCount}}</i-button>
           <i-button size="small" :type="takeawayButtonType"  @click= "getTakeaway()">{{ml.takeaway}} {{takeawayCount}}</i-button>
+          <i-button size="small" :type="takeawayButtonType" @click= "getTakeaway()" type="warning" shape="circle" v-if="takeawayNotViewedCount > 0">{{takeawayNotViewedCount}}</i-button>
           <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
       </div>
   <div class="divider"></div>
@@ -144,7 +150,7 @@
                     <div>{{order.totalPrice}}€</div>
                 </i-col>
                 <i-col span="6" v-if="isAdmin">
-                    <i-button size="small" @click= "changeOrder(order)" icon="ios-menu"></i-button>
+                    <i-button size="small" @click= "changeOrder(order)" :type="order.orderViewed === false ? 'warning' : 'default'" icon="ios-menu" ></i-button>
                     <!-- <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
                     <i-button type="primary" icon="ios-menu"></i-button>
                     <dropdown-menu slot="list">
@@ -281,10 +287,24 @@ export default {
         }
       ).length
     },
+    takeawayNotViewedCount() {
+      return this.orders.filter(
+        (order) => {
+          return order.isTakeaway === '1' && order.orderViewed === false
+        }
+      ).length
+    },
     restaurantCount() {
       return this.orders.filter(
         (order) => {
           return order.isTakeaway === '0'
+        }
+      ).length
+    },
+    restauranNotViewedtCount() {
+      return this.orders.filter(
+        (order) => {
+          return order.isTakeaway === '0' && order.orderViewed === false
         }
       ).length
     },
@@ -385,6 +405,8 @@ export default {
       if (addremove === '1') {
         let flag = false
         let order = JSON.parse(orderString)
+        console.log(order)
+        order.orderViewed = false
         for (let index = 0; index < this.orders.length; index++) {
           if (this.orders[index].orderId === order.orderId) {
             flag = true
@@ -413,6 +435,12 @@ export default {
         // this._initScroll(); // 初始化scroll
       })
       this.playSound()
+      console.log('takeaway not viewed count')
+      console.log(this.takeawayNotViewedCount)
+      console.log(this.takeawayNotViewedCount > 0)
+      console.log('restarurant not viewed count')
+      console.log(this.restauranNotViewedtCount)
+      console.log(this.restauranNotViewedtCount > 0)
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
@@ -460,6 +488,7 @@ export default {
     },
     changeOrder(order) {
       console.log('change order')
+      order.orderViewed = true
       this.contextMenuVisible = true
       this.selectedOrder = order
     },
