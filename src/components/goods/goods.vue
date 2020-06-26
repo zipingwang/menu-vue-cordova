@@ -214,10 +214,14 @@ export default {
       width 80px
       background #f3f5f7
       margin-top: 2px;
-      color rgb(74,62,52)
+      color rgb(74, 62, 52)
+      font-weight 100
+      overflow hidden
       .menu-item-selected
-        background white
-        font-weight 700
+        // background rgb(86, 77, 71)
+        background rgb(96, 80, 69)
+        // background rgb(117, 120, 113)
+        color white
         margin-top -1px
       .menu-item,.menu-item-selected
         position relative
@@ -239,7 +243,7 @@ export default {
           display table-cell
           vertical-align middle
           font-size 12px
-          font-weight 200
+          font-weight 500
           white-space normal
           line-height 14px
           .iconMap
@@ -253,7 +257,7 @@ export default {
           line-height 26px
           padding-left 12px
           font-size 12px
-          color rgb(74,62,52)
+          color rgb(74, 62, 52)
           // color rgb(147,153,159)
           background #f3f5f7
           border-left 2px solid #d9dde1

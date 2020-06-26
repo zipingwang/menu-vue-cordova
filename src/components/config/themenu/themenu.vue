@@ -41,7 +41,9 @@
                   <i-input v-model="formMenu.name2"></i-input>
           </form-item>
           <form-item :label="ml.menuimage" prop="menuImage">
-              <uploadFile :ml="ml" :data="data" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile>
+            <img class="avatar" :src="imgUrl" > </img>
+            <uploadFile :ml="ml" :data="data" :params = "uploadParam" @uploadSuccessed="onUploadSuccessed"></uploadFile>
+            <!-- <uploadFile :ml="ml" :data="data" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile> -->
           </form-item>
           <form-item :label="ml.description" prop="description">
                   <i-input v-model="formMenu.description"></i-input>
@@ -119,7 +121,9 @@
           name1: [
               { required: true, message: '*', trigger: 'blur' }
           ]
-        }
+        },
+        uploadCounter: 1,
+        imgUploaded: false
       }
     },
     created() {
@@ -127,8 +131,24 @@
       this.$root.eventHub.$on('signalr.onDeleteMenu', this.onDeleteMenu)
       // this.$root.eventHub.$on('signalr.onDownLoadMenu', this.onDownLoadMenu)
     },
-    mounted() {
-
+    computed: {
+      uploadParam() {
+        return 'method=menuimage&rid=' + formMenu.rid + '&datetag=' + this.dateTag + '&count=' + this.uploadCounter
+      },
+      imgUrl() {
+        if (this.imgUploaded === false) {
+          return this.seller.avatar
+        } else {
+          return 'static/img/selleravatar' + this.dateTag + this.uploadCounter.toString() + '.jpg'
+        }
+      },
+      dateTag() {
+        let dt = new Date()
+        let date = dt.getFullYear() + '.' + (dt.getMonth() + 1) + '.' + dt.getDate()
+        console.log('dateTag')
+        console.log(date)
+        return date
+      }
     },
     methods: {
       showDraw(menu, menuGroupIdsWeb) {
@@ -206,6 +226,11 @@
           title: '',
           desc: this.ml.filesizetoolarge
         });
+      },
+      onUploadSuccessed() {
+        this.imgUploaded = true
+        console.log('onUploadSuccessed')
+        this.uploadCounter++
       }
     }
   }
@@ -213,6 +238,10 @@
 <style>
   .root {
     z-index: 101;
+  }
+  .avatar{
+    width: 57px;
+    height: 57px;
   }
   .demo-drawer-footer{
     width: 100%;

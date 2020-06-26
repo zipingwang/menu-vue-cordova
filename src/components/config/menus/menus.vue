@@ -1,8 +1,9 @@
 <template>
-    <div class="root">
+    <div>
         <Drawer
             :title="ml.menu"
             v-model="show"
+            :closable = "false"
             width="100%"
             :mask-closable="false"
             :styles="styles"
@@ -108,14 +109,12 @@ export default {
     },
     close() {
       this.show = false
+      this.$emit('closed')
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-.root {
-    z-index: 100;
-}
 /* Container for flexboxes */
 .row {
   display: flex;

@@ -1,9 +1,10 @@
 <template>
-    <div class="root">
-        <Drawer
+    <div>
+        <Drawer class="root"
             :title="ml.businessinfo"
             v-model="show"
             width="100%"
+            :closable="false"
             :mask-closable="false"
             :styles="styles"
         >
@@ -22,7 +23,8 @@
           </form-item>
 
           <form-item :label="ml.avatar">
-             <uploadFile :ml="ml" :data="data" params = "method=selleravatar"></uploadFile>
+             <img class="avatar" :src="imgUrl" > </img>
+             <uploadFile :ml="ml" :data="data" :params = "uploadParam" @uploadSuccessed="onUploadSuccessed"></uploadFile>
           </form-item>
 
           <form-item :label="ml.openinghour">
@@ -64,7 +66,8 @@ export default {
   },
   props: {
     ml: {},
-    data: {}
+    data: {},
+    seller: {}
   },
   data () {
     return {
@@ -76,6 +79,7 @@ export default {
       },
       show: this.visible,
       formSeller: {
+        rid: 0,
         name: '',
         description: '',
         bulletin: '',
@@ -83,21 +87,40 @@ export default {
         openingHour: '',
         address: '',
         telephone: '',
-        supportOnlineOrder: true
+        supportOnlineOrder: true,
+        counter: 1
       },
       ruleValidate: {
         name: [
             { required: true, message: this.ml.requiredfield, trigger: 'blur' }
         ]
-      }
+      },
+      uploadCounter: 1,
+      imgUploaded: false
     }
   },
   created() {
     this.$root.eventHub.$on('signalr.onSaveBusinessInfo', this.onSaveBusinessInfo)
     this.$root.eventHub.$on('signalr.onDownLoadBusinessInfo', this.onDownLoadBusinessInfo)
   },
-  mounted() {
-
+  computed: {
+    uploadParam() {
+      return 'method=selleravatar&datetag=' + this.dateTag + '&count=' + this.uploadCounter
+    },
+    imgUrl() {
+      if (this.imgUploaded === false) {
+        return this.seller.avatar
+      } else {
+        return 'static/img/selleravatar' + this.dateTag + this.uploadCounter.toString() + '.jpg'
+      }
+    },
+    dateTag() {
+      let dt = new Date()
+      let date = dt.getFullYear() + '.' + (dt.getMonth() + 1) + '.' + dt.getDate()
+      console.log('dateTag')
+      console.log(date)
+      return date
+    }
   },
   methods: {
     showDraw() {
@@ -105,7 +128,9 @@ export default {
       this.show = true
     },
     close() {
+      this.$emit('closed')
       this.show = false
+      console.log('emit closed')
     },
     saveBusinessInfo() {
       this.$refs.formSeller.validate((valid) => {
@@ -130,14 +155,22 @@ export default {
       // console.log(messageBody.name)
 
       this.formSeller = messageBody
+      console.log(this.formSeller.counter)
+      this.uploadCounter = this.formSeller.counter
       this.$Message.success(this.ml.success);
+    },
+    onUploadSuccessed() {
+      this.imgUploaded = true
+      console.log('onUploadSuccessed')
+      this.uploadCounter++
     }
   }
 }
 </script>
 <style>
-  .root {
-    z-index: 1001;
+  .avatar{
+    width: 57px;
+    height: 57px;
   }
   .demo-drawer-footer{
     width: 100%;

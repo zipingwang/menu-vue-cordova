@@ -28,6 +28,7 @@ export default {
   methods: {
     handleUploadImageSuccess(res, file) {
       console.log('uploadimage success')
+      this.$emit('uploadSuccessed')
       this.$Message.success(this.ml.success);
       // file.url = this.avatarUrl
       // let avatarUrlTemp = this.avatarUrl

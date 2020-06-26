@@ -39,9 +39,9 @@
           <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
           <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p>
         </drawer>
-        <businessInfo ref="businessInfo" :ml="ml" :data="data"></businessInfo>
-        <menuGroups ref="menuGroups" :ml="ml" :data="data"></menuGroups>
-        <menus ref="menus" :ml="ml" :data="data"></menus>
+        <businessInfo ref="businessInfo" :ml="ml" :data="data" :seller="seller" @closed="childDrawClosed"></businessInfo>
+        <menuGroups ref="menuGroups" :ml="ml" :data="data" @closed="childDrawClosed"></menuGroups>
+        <menus ref="menus" :ml="ml" :data="data" @closed="childDrawClosed"></menus>
 
         <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
             shop
@@ -200,16 +200,23 @@ export default {
     configSeller() {
       // alert('config selelr visiable')
       // this.sellerVisible = true
+      this.configVisible = false
       this.$refs.businessInfo.showDraw()
     },
     configMenuGroups() {
+      this.configVisible = false
       this.$refs.menuGroups.showDraw()
     },
     configMenus() {
+      this.configVisible = false
       this.$refs.menus.showDraw()
     },
     configRiceTable() {
 
+    },
+    childDrawClosed() {
+      console.log('childDrawClosed')
+      this.configVisible = true
     }
   }
 }
