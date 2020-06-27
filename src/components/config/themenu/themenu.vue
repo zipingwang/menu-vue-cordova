@@ -43,6 +43,7 @@
           <form-item :label="ml.menuimage" prop="menuImage">
             <img class="avatar" :src="imgUrl" > </img>
             <uploadFile :ml="ml" :data="data" :params = "uploadParam" @uploadSuccessed="onUploadSuccessed"></uploadFile>
+            <Button shape="circle" icon="ios-close" @click="deleteImage"></Button>
             <!-- <uploadFile :ml="ml" :data="data" :params = "'method=menuimage&rid=' + formMenu.rid"></uploadFile> -->
           </form-item>
           <form-item :label="ml.description" prop="description">
@@ -64,6 +65,20 @@
             :mask-closable="false"
             @on-ok="confirmDeleteMenu"
             @on-cancel="cancelDeleteMenu">
+              <p style="color:#f60;text-align:center">
+              <icon type="md-information-circle"></icon>
+              <span>{{ml.askconfirmdelete}}</span>
+            </p>
+          </modal>
+           <modal
+            ref="dialog"
+            v-model="modalDeleteMenuImage"
+            :ok-text="ml.ok"
+            :cancel-text="ml.cancel"
+            :closable="false"
+            :mask-closable="false"
+            @on-ok="confirmDeleteMenuImage"
+            @on-cancel="cancelDeleteMenuImage">
               <p style="color:#f60;text-align:center">
               <icon type="md-information-circle"></icon>
               <span>{{ml.askconfirmdelete}}</span>
@@ -102,7 +117,9 @@
         },
         show: this.visible,
         modalDeleteMenu: false,
+        modalDeleteMenuImage: false,
         formMenu: {},
+        menuInDataJs: {},
         menuGroupIdsWeb: [],
         // formMenu: {
         //   rid: 0,
@@ -123,23 +140,29 @@
           ]
         },
         uploadCounter: 1,
-        imgUploaded: false
+        imgUploaded: false,
+        imgDeleted: false
       }
     },
     created() {
       this.$root.eventHub.$on('signalr.onSaveMenu', this.onSaveMenu)
       this.$root.eventHub.$on('signalr.onDeleteMenu', this.onDeleteMenu)
+      this.$root.eventHub.$on('signalr.onDeleteMenuImage', this.onDeleteMenuImage)
       // this.$root.eventHub.$on('signalr.onDownLoadMenu', this.onDownLoadMenu)
     },
     computed: {
       uploadParam() {
-        return 'method=menuimage&rid=' + formMenu.rid + '&datetag=' + this.dateTag + '&count=' + this.uploadCounter
+        return 'method=menuimage&rid=' + this.formMenu.rid + '&datetag=' + this.dateTag + '&count=' + this.uploadCounter
       },
       imgUrl() {
+        if (this.imgDeleted) {
+          return ''
+        }
+
         if (this.imgUploaded === false) {
-          return this.seller.avatar
+          return this.menuInDataJs.image
         } else {
-          return 'static/img/selleravatar' + this.dateTag + this.uploadCounter.toString() + '.jpg'
+          return 'static/gen/img/menu' + this.formMenu.rid + '' + this.dateTag + this.uploadCounter.toString() + '.jpg'
         }
       },
       dateTag() {
@@ -151,11 +174,15 @@
       }
     },
     methods: {
-      showDraw(menu, menuGroupIdsWeb) {
+      showDraw(menu, menuGroupIdsWeb, menuInDataJs) {
         console.log('show draw')
         this.show = true
         this.menuGroupIdsWeb = menuGroupIdsWeb
-        console.log(menu.menuGroupRid)
+        this.uploadCounter = menu.counter
+        this.menuInDataJs = menuInDataJs
+        console.log('menuInDataJs')
+        console.log(this.menuInDataJs)
+        console.log(menu)
         this.formMenu = menu
       },
       close() {
@@ -199,13 +226,17 @@
         console.log(messageBody)
         console.log(typeof messageBody)
         // this.formMenu.name1 = messageBody.name1
-
         this.$Message.success(this.ml.success);
       },
       onDeleteMenu(messageBody) {
         console.log('onDeleteMenu in menu')
         this.$Message.success(this.ml.deletesuccessfully);
         this.close()
+      },
+      onDeleteMenuImage(messageBody) {
+        console.log('onDeleteMenuImage in menu')
+        this.$Message.success(this.ml.deletesuccessfully);
+        this.imgDeleted = true
       },
       deleteMenu() {
         this.modalDeleteMenu = true
@@ -228,9 +259,21 @@
         });
       },
       onUploadSuccessed() {
+        this.imgDeleted = false
         this.imgUploaded = true
+        this.formMenu.counter++
         console.log('onUploadSuccessed')
         this.uploadCounter++
+      },
+      deleteImage() {
+        this.modalDeleteMenuImage = true
+      },
+      confirmDeleteMenuImage() {
+        this.$root.eventHub.$emit('signalr.sendMessageFromWebToServer', {'messageType': 'deleteMenuImage', 'messageBody': this.formMenu})
+        this.modalDeleteMenuImage = false
+      },
+      cancelDeleteMenuImage() {
+        this.modalDeleteMenuImage = false
       }
     }
   }

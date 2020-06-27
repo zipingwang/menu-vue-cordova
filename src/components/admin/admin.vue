@@ -256,7 +256,9 @@ export default {
     this.$root.eventHub.$on('signalr.onBroadcastOrder', this.onBroadcastOrder)
     this.$root.eventHub.$on('checkout.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     console.log('admin vue created')
-    this.downloadOrder()
+
+
+    // this.downloadOrder()
     // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
   },
   computed: {

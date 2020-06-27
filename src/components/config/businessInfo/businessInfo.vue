@@ -111,7 +111,7 @@ export default {
       if (this.imgUploaded === false) {
         return this.seller.avatar
       } else {
-        return 'static/img/selleravatar' + this.dateTag + this.uploadCounter.toString() + '.jpg'
+        return 'static/gen/img/selleravatar' + this.dateTag + this.uploadCounter.toString() + '.jpg'
       }
     },
     dateTag() {

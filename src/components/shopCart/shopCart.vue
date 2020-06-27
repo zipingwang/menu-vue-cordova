@@ -124,7 +124,7 @@ export default {
           total += food.price * food.count
         }
       })
-      return total
+      return total.toFixed(2)
     },
     totalCount() {
       let count = 0

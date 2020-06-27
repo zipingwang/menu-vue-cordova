@@ -32,6 +32,8 @@ export default {
     this.$root.eventHub.$on('signalr.deleteOrder', this.deleteOrder)
     this.$root.eventHub.$on('signalr.getTakeawayTimeSlots', this.getTakeawayTimeSlots)
     this.$root.eventHub.$on('signalr.sendMessageFromWebToServer', this.sendMessageFromWebToServer)
+    this.$root.eventHub.$on('signalr.checkConnect', this.checkConnect)
+    this.$root.eventHub.$on('signalr.publishMenu', this.publishMenu)
   },
   methods: {
     connect() {
@@ -111,6 +113,7 @@ export default {
           // tempWriteLog('messagereceived' + name + ':' + message);
           temponMessageReceived(webClientConnectionId, message)
         };
+        console.log('starting')
         // Connect to hub
         $.connection.hub.start().done(function() {
           // this.writeToLog('Connected.');
@@ -121,7 +124,7 @@ export default {
           //   alert('null')
           // }
           // alert(tempSimpleHubProxy)
-
+          console.log('started')
           tempSimpleHubProxy.server.connect('vue');
           // tempDownloadMenu();
         });
@@ -307,6 +310,12 @@ export default {
           case 'addMenu':
             this.$root.eventHub.$emit('signalr.onAddMenu', message.messageBody)
             break;
+          case 'deleteMenuImage':
+            this.$root.eventHub.$emit('signalr.onDeleteMenuImage', message.messageBody)
+            break;
+          case 'publishMenu':
+            this.$root.eventHub.$emit('signalr.onPublishMenu', message.messageBody)
+            break;
           default:
             // code block
         }
@@ -320,6 +329,24 @@ export default {
     },
     setSimpleHubProxy(proxy) {
       this.simpleHubProxy = proxy;
+    },
+    checkConnect() {
+      try {
+        console.log('checkConnect')
+        this.simpleHubProxy.server.connect('vue');
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
+    },
+    publishMenu() {
+      try {
+        console.log('publishMenu')
+        this.simpleHubProxy.server.publishMenu(this.getDataOptionsString())
+      } catch (ex) {
+        console.log(ex)
+        this.connectToSignalRServer()
+      }
     }
   }
 }

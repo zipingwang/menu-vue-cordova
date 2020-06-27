@@ -76,6 +76,12 @@ export default {
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
     this.$root.eventHub.$on('login.loggedin', this.onLoggedIn)
+
+    console.log('app created')
+     // Active
+    window.addEventListener('focus', this.onFocus);
+    // Inactive
+    window.addEventListener('blur', this.onBlur);
   },
   computed: {
     urlVars() {
@@ -84,6 +90,18 @@ export default {
         vars[key] = value;
       });
       return vars;
+    },
+    windowFocused() {
+      return !document.hidden
+    }
+  },
+  watch: {
+    windowFocused(newValue, oldValue) {
+      log('windowFocused')
+      log(newValue)
+      if (newValue) {
+        this.$refs.mysignalr.connectToSignalRServer()
+      }
     }
   },
   components: {
@@ -108,6 +126,13 @@ export default {
       this.data.options.isAdmin = user.isAdmin
       console.log(this.data.options.cusId)
       console.log(this.data.options.isAdmin)
+    },
+    onFocus() {
+      console.log('onFocus')
+      this.$refs.mysignalr.checkConnect()
+    },
+    onBlur() {
+      console.log('onBlur')
     }
   }
 }

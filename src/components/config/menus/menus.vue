@@ -95,7 +95,21 @@ export default {
       this.selectedMenu = menu
       console.log(this.selectedMenu)
       console.log(this.$refs.themenu)
-      this.$refs.themenu.showDraw(menu, this.menuGroupIdsWeb)
+      // menu image url in data.js
+      let menuInDataJs = {}
+      console.log(data.goods)
+      console.log(menu)
+      data.goods.forEach(menuGroup => {
+        menuGroup.foods.forEach(menuItem => {
+          if (menuItem.menunr === menu.menuNr) {
+            menuInDataJs = menuItem
+          }
+        });
+      });
+      console.log(menuInDataJs)
+      this.menuInDataJs = menuInDataJs
+      console.log('end open menu')
+      this.$refs.themenu.showDraw(menu, this.menuGroupIdsWeb, menuInDataJs)
     },
     addNewMenu() {
       var menu = {}

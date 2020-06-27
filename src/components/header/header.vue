@@ -38,6 +38,8 @@
           <p class="drawbutton"><i-button @click="configMenuGroups" type="primary">{{ml.menugroup}}</i-button></p>
           <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
           <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p>
+          <!-- <p class="drawbutton"><i-button @click="publishNewMenu" type="primary">{{ml.publish}}</i-button></p> -->
+          <sendButton ref="mySendButton" :text="ml.publish" :sendingText="ml.sending" :failedText="ml.savefailed" @click="publishNewMenu"></sendButton>
         </drawer>
         <businessInfo ref="businessInfo" :ml="ml" :data="data" :seller="seller" @closed="childDrawClosed"></businessInfo>
         <menuGroups ref="menuGroups" :ml="ml" :data="data" @closed="childDrawClosed"></menuGroups>
@@ -126,6 +128,7 @@ import BScroll from 'better-scroll'
 import businessInfo from 'components/config/businessInfo/businessInfo'
 import menuGroups from 'components/config/menuGroups/menuGroups'
 import menus from 'components/config/menus/menus'
+import sendButton from 'components/common/sendButton/sendButton'
 
 export default {
   props: {
@@ -135,13 +138,15 @@ export default {
     data: {}
   },
   created() {
+    this.$root.eventHub.$on('signalr.onPublishMenu', this.menuPublished)
     this.iconClassMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   },
   components: {
     star,
     businessInfo,
     menuGroups,
-    menus
+    menus,
+    sendButton
   },
   data() {
     return {
@@ -214,9 +219,18 @@ export default {
     configRiceTable() {
 
     },
+    publishNewMenu() {
+      this.$root.eventHub.$emit('signalr.publishMenu')
+    },
     childDrawClosed() {
       console.log('childDrawClosed')
       this.configVisible = true
+    },
+    menuPublished() {
+      this.$Modal.success({
+        title: this.ml.success,
+        content: this.ml.ordersendsuccess
+      });
     }
   }
 }

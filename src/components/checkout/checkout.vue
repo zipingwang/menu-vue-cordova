@@ -26,7 +26,7 @@
                 <span class="columncount">{{food.count}}</span>
                 <span class="columnname">{{food.name[data.currentlnindex]}}</span>
                 <span class="columnunitprice">{{food.price}} </span>
-                <span class="columnprice">{{food.price * food.count}} </span>
+                <span class="columnprice">{{(food.price * food.count).toFixed(2)}} </span>
               </li>
               <li class="footline">
                 <span class="columncount">{{totalCount}}</span>
@@ -141,8 +141,8 @@ export default {
     console.log(JSON.stringify(this.trans))
   },
   watch: {
-    show() {
-      if (this.show) {
+    show(newVaue, oldValue) {
+      if (newVaue) {
         this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
       }
     }
