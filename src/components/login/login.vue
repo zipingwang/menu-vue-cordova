@@ -50,7 +50,7 @@
 
     </div>
   </transition>
-  <register ref="myregister" :seller="seller" :data="data" :ml="ml"></register>
+  <register ref="myregister" :seller="seller" :data="data" :ml="ml" @close="onRegisterClose"></register>
   </div>
 </template>
 
@@ -143,6 +143,9 @@ export default {
     hidelogin() {
       this.show = false;
     },
+    onRegisterClose() {
+      this.show = true
+    },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -178,7 +181,8 @@ export default {
       // this.busyWithSending = false
       // clearInterval(this.mySendingTimer)
       this.$refs.myLoginButton.stop()
-      if (user.rid !== '-1') {
+      /* -1: user not exist, -2 user exists, but connection not same as connet */
+      if (user.rid !== '-1' && user.rid !== '-2') {
         this.show = false
         // this.data.options.cusId = user.rid /* don't change parent data */
         // this.data.options.isAdmin = user.isAdmin
@@ -191,7 +195,8 @@ export default {
       } else {
         this.$Modal.success({
           title: this.ml.failed,
-          content: this.ml.loginfailed
+          content: this.ml.loginfailed,
+          okText: this.ml.ok
         });
       }
     }

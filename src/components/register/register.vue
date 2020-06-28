@@ -12,8 +12,8 @@
           <div class="billcontent">
             <card class="customer">
                 <p slot="title">{{ml.register}}</p>
-                 <!-- <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="80"> -->
-                 <i-form ref="formItem1" :model="formItem" :label-width="80">
+                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="100">
+                 <!-- <i-form ref="formItem1" :model="formItem" :label-width="80"> -->
                       <FormItem :label="ml.createuserfirstname" prop="firstname">
                         <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
                     </FormItem>
@@ -27,7 +27,7 @@
                         <i-input v-model="formItem.email"></i-input>
                     </FormItem>
     </i-form>
-                 <i-form ref="formItem2" :model="formItem" :rules="ruleCustom" :label-width="80">
+                 <i-form ref="formItem2" :model="formItem" :rules="ruleCustom" :label-width="100">
                       <!-- <FormItem :label="ml.createuserfirstname">
                         <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
                     </FormItem>
@@ -50,7 +50,7 @@
             <sendButton ref="mySendButton" :text="ml.register" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
             <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
-            <i-button @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
+            <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
         </form-item>
     </i-form>
             </card>
@@ -263,6 +263,7 @@ export default {
     },
     cancel() {
       this.show = false
+      this.$emit('close')
     },
     handleReset(name) {
       console.log(this.$refs[name]);
@@ -275,13 +276,22 @@ export default {
       if (userId === '-1') {
         this.$Modal.success({
           title: 'ml.failed',
-          content: 'ml.userregisterationfailed'
+          content: 'ml.userregisterationfailed',
+          okText: this.ml.ok
+        });
+      } else if (userId === '-2') { /* user already exsits */
+        this.$Modal.warning({
+          content: this.ml.useralreadyexists,
+          okText: this.ml.ok
         });
       } else {
         this.$Modal.success({
           title: this.ml.success,
-          content: this.ml.userregisterationsuccess
+          content: this.ml.userregisterationsuccess,
+          okText: this.ml.ok
         });
+        this.show = false
+        this.$emit('close')
       }
     }
   }

@@ -89,6 +89,7 @@ new Vue({
     data.options.cusId = '' /* 202 is admin */
     data.options.shopId = ''
     data.options.isAdmin = '0'
+    data.options.loggedIn = false
     let baseUrl = this.getBaseUrl()
     data.options.baseUrl = baseUrl
     if (data.seller.sellerurl !== '' && data.seller.sellerurl.length > 0) {

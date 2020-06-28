@@ -99,9 +99,10 @@ export default {
       showWaiting: false,
       mySendingTimer: {},
       startTime: {},
-      takeawayTimeSlot: '1200',
+      takeawayTimeSlot: '12:00', /* give some value, otherwise order string will not correct and crash server */
       takeawayTimeSlots: [],
-      busyWithSending: false
+      busyWithSending: false,
+      shopClosed: false
     }
   },
   computed: {
@@ -185,6 +186,9 @@ export default {
       this.takeawayTimeSlots = mySlots.timeSlots
       if (mySlots.timeSlots.length > 0) {
         this.takeawayTimeSlot = mySlots.timeSlots[0]
+      } else {
+        this.shopClosed = true
+        this.takeawayTimeSlot = this.ml.shopclosed
       }
     },
     onOrderConfirmedFromServerToWeb(order, addremove) {
@@ -196,6 +200,7 @@ export default {
       this.$Modal.success({
         title: this.ml.success,
         content: this.ml.ordersendsuccess,
+        okText: this.ml.ok,
         onOk: () => {
           this.hidecheckout()
           this.$router.push('admin')
@@ -210,8 +215,15 @@ export default {
       // this.busyWithSending = true
       // this.startTime = new Date()
       // this.mySendingTimer = setInterval(this.checkSending, 1000)
-      this.$refs.mySendButton.start()
-      this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
+      if (this.shopClosed) {
+        this.$Modal.success({
+          content: this.ml.restaurantisalreadyclosed,
+          okText: this.ml.ok
+        });
+      } else {
+        this.$refs.mySendButton.start()
+        this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
+      }
     },
     timeSlotSelected(timeSlot) {
       console.log(timeSlot)

@@ -25,25 +25,48 @@
         </div>
 
         <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img>
+        <i-button shape="circle" icon="md-contact" class="user" @click="showUserDraw"></i-button>
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
             <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
             <span class="count">{{sellerDetailButtonSamllText}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
-        <icon type="ios-keypad" size="20" class="config" v-if="data.options.isAdmin === '1'" @click="showConfig" />
+        <!-- <icon type="ios-keypad" size="20" class="config" v-if="data.options.isAdmin === '1'" @click="showConfig" /> -->
         <!-- <icon type="ios-keypad" size="20" class="config" @click="showConfig" /> -->
+        <!-- <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true"  v-model="configVisible"> -->
         <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="configVisible">
-        <!-- <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-model="configVisible"> -->
           <p class="drawbutton"><i-button @click="configSeller" type="primary">{{ml.seller}}</i-button></p>
           <p class="drawbutton"><i-button @click="configMenuGroups" type="primary">{{ml.menugroup}}</i-button></p>
           <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
-          <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p>
-          <!-- <p class="drawbutton"><i-button @click="publishNewMenu" type="primary">{{ml.publish}}</i-button></p> -->
-          <sendButton ref="mySendButton" :text="ml.publish" :sendingText="ml.sending" :failedText="ml.savefailed" @click="publishNewMenu"></sendButton>
+          <!-- <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p> -->
+          <p class="drawbutton"><i-button @click="configOpeninghour" type="primary">{{ml.openinghour}}</i-button></p>
+          <!-- <sendButton ref="mySendButton" :text="ml.publish" :sendingText="ml.sending" :failedText="ml.savefailed" @click="publishNewMenu"></sendButton> -->
+          <i-button type="primary" @click="publishNewMenu">{{ml.publish}}</i-button>
         </drawer>
+        <drawer ref="userDrawer" :title="ml.user" placement="right" :closable="true" v-model="userVisible">
+          <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
+          <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
+          <p class="drawbutton"><i-button @click="showConfig" type="primary" v-if="data.options.isAdmin === '1'">{{ml.cofig}}</i-button></p>
+        </drawer>
+        <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
+        <modal
+            ref="dialog"
+            v-model="modalPublishNewMenu"
+            :ok-text="ml.ok"
+            :cancel-text="ml.cancel"
+            :closable="false"
+            :mask-closable="false"
+            @on-ok="confirmPublishNewMenu"
+            @on-cancel="cancelPublishNewMenu">
+              <p style="color:#f60;text-align:center">
+              <icon type="md-information-circle"></icon>
+              <span>{{ml.askconfirmpublishnewmenu}}</span>
+            </p>
+          </modal>
         <businessInfo ref="businessInfo" :ml="ml" :data="data" :seller="seller" @closed="childDrawClosed"></businessInfo>
         <menuGroups ref="menuGroups" :ml="ml" :data="data" @closed="childDrawClosed"></menuGroups>
         <menus ref="menus" :ml="ml" :data="data" @closed="childDrawClosed"></menus>
+        <openinghour ref="myOpeninghour" :ml="ml" :data="data" @closed="childDrawClosed"></openinghour>
 
         <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
             shop
@@ -129,6 +152,8 @@ import businessInfo from 'components/config/businessInfo/businessInfo'
 import menuGroups from 'components/config/menuGroups/menuGroups'
 import menus from 'components/config/menus/menus'
 import sendButton from 'components/common/sendButton/sendButton'
+import openinghour from 'components/config/openinghour/openinghour'
+import login from 'components/login/login'
 
 export default {
   props: {
@@ -146,13 +171,17 @@ export default {
     businessInfo,
     menuGroups,
     menus,
-    sendButton
+    sendButton,
+    openinghour,
+    login
   },
   data() {
     return {
       detailShow: false,
       languageShow: false,
-      configVisible: false
+      configVisible: false,
+      modalPublishNewMenu: false,
+      userVisible: false
     }
   },
   computed: {
@@ -197,6 +226,7 @@ export default {
     },
     showConfig() {
       // alert('showConfig')
+      this.userVisible = false
       this.configVisible = true
       // setTimeout(() => {
       //   this._initScroll()
@@ -219,8 +249,12 @@ export default {
     configRiceTable() {
 
     },
+    configOpeninghour() {
+      this.configVisible = false
+      this.$refs.myOpeninghour.showDraw()
+    },
     publishNewMenu() {
-      this.$root.eventHub.$emit('signalr.publishMenu')
+      this.modalPublishNewMenu = true
     },
     childDrawClosed() {
       console.log('childDrawClosed')
@@ -229,8 +263,31 @@ export default {
     menuPublished() {
       this.$Modal.success({
         title: this.ml.success,
-        content: this.ml.ordersendsuccess
+        content: this.ml.menupublished,
+        okText: this.ml.ok
       });
+    },
+    confirmPublishNewMenu() {
+      this.modalPublishNewMenu = false
+      this.$root.eventHub.$emit('signalr.publishMenu')
+    },
+    cancelPublishNewMenu() {
+      this.modalPublishNewMenu = false
+    },
+    logout() {
+      this.userVisible = false
+      this.$root.eventHub.$emit('login.loggedOut')
+    },
+    login() {
+      this.$refs.myLogin.showlogin()
+      this.userVisible = false
+    },
+    onlogin() {
+      console.log('onlogin in header')
+      this.$refs.myLogin.hideLogin()
+    },
+    showUserDraw() {
+      this.userVisible = true
     }
   }
 }
@@ -320,9 +377,16 @@ export default {
         font-size 10px
         margin-left 2px
         line-height 24px
-    .language
+    .user
       position absolute
       right 12px
+      top 10px
+      height 24px
+      width 24px
+      background-color rgb(131, 136, 141)
+    .language
+      position absolute
+      right 48px
       top 10px
       height 24px
       width 24px
@@ -448,7 +512,6 @@ export default {
           color rgb(255,255,255)
           line-height 60px
           text-align center
-
     .detail-close
       position relative
       width 32px

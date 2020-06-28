@@ -40,9 +40,9 @@
         <div class="list-content" ref="foodlist">
           <ul>
             <li class="food" v-for="food in selectFoods">
-              <span class="name">{{food.name}}</span>
+              <span class="name">{{food.name[data.currentlnindex]}}</span>
               <div class="price">
-                <span>€{{food.price * food.count}}</span>
+                <span>€{{(food.price * food.count).toFixed(2)}}</span>
               </div>
               <div class="cartcontrol-wrapper">
                 <cartcontrol :food="food"></cartcontrol>
@@ -107,7 +107,7 @@ export default {
   },
   created() {
     this.$root.eventHub.$on('cart.add', this.drop)
-    this.$root.eventHub.$on('login.loggedin', this.onlogin)
+    // this.$root.eventHub.$on('login.loggedin', this.onlogin)
   },
   computed: {
     showBackdrop() {
@@ -245,12 +245,10 @@ export default {
       // })
     },
     onlogin(cus) {
-      // alert('logincondition')
-      // alert(logincondition)
-      // if (logincondition === 'guest') {
-      //  this.$refs.mycheckout.showcheckout()
-      // }
-      this.$refs.mycheckout.showcheckout()
+      console.log('onlogin in shopcart')
+      if (this.selectFoods.length > 0) {
+        this.$refs.mycheckout.showcheckout()
+      }
     }
   },
   components: {

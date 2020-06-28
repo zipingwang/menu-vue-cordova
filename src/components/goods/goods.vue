@@ -14,7 +14,7 @@
     <div class="foods-wrapper" id="wrapper" ref="foodsWrapper">
       <ul>
         <li v-for="item in goods" class="food-list food-list-hook">
-          <h1>{{item.name[data.currentlnindex]}}</h1>
+          <h1>{{item.name[data.currentlnindex].replace("- ", "")}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item" @click="goDetail(food)">
               <div class="icon">

@@ -54,7 +54,8 @@ export default {
         // this.showWaiting = false
         this.$Modal.success({
           title: this.failedTitle,
-          content: this.failedText
+          content: this.failedText,
+          okText: this.ml.ok
         });
       } else {
         this.startTime.setSeconds(this.startTime.getSeconds() - this.timeout) /* set to its original time */

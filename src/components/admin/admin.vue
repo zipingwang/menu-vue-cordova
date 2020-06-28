@@ -446,9 +446,9 @@ export default {
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
-        return ''
+        return 'In'
       } else {
-        return '外卖'
+        return 'Out'
       }
     },
     getOrderTimeString(order) {

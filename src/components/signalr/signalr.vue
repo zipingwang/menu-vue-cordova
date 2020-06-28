@@ -316,6 +316,14 @@ export default {
           case 'publishMenu':
             this.$root.eventHub.$emit('signalr.onPublishMenu', message.messageBody)
             break;
+          case 'saveOpeninghour':
+            this.$root.eventHub.$emit('signalr.onSaveOpeninghour', message.messageBody)
+            break;
+          case 'downLoadOpeninghour':
+            console.log('call back downLoadOpeninghour in signalr')
+            // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onDownLoadOpeninghour', message.messageBody)
+            break;
           default:
             // code block
         }

@@ -76,6 +76,7 @@ export default {
     this.$root.eventHub.$on('ml.change', this.changeLanguage)
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
     this.$root.eventHub.$on('login.loggedin', this.onLoggedIn)
+    this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
 
     console.log('app created')
      // Active
@@ -121,11 +122,18 @@ export default {
       console.log(data)
     },
     onLoggedIn(user) {
-      console.log('onLoggedIn')
+      console.log('onLoggedIn in app')
+      this.data.options.loggedIn = true
       this.data.options.cusId = user.rid
       this.data.options.isAdmin = user.isAdmin
       console.log(this.data.options.cusId)
       console.log(this.data.options.isAdmin)
+    },
+    onLoggedOut() {
+      console.log('onLoggedOut in app')
+      this.data.options.loggedIn = false
+      this.data.options.cusId = ''
+      this.data.options.isAdmin = false
     },
     onFocus() {
       console.log('onFocus')
