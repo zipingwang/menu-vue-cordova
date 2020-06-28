@@ -24,50 +24,37 @@
             </div> -->
         </div>
 
-        <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img>
-        <i-button shape="circle" icon="md-contact" class="user" @click="showUserDraw"></i-button>
+        <!-- <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img> -->
+
+        <i-button shape="circle" icon="md-contact" class="user" @click="showSideDraw"></i-button>
+        <drawer ref="sideDrawer" :title="ml.user" placement="right" :closable="true" v-model="sideDrawVisible">
+          <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
+          <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
+           <Divider />
+          <p class="drawbutton"><i-button @click="showConfig" type="primary" v-if="data.options.isAdmin === '1'">{{ml.config}}</i-button></p>
+
+           <div class="language-wrapper">
+            <radio-group :vertical="true"  v-model="selectedLanguage" @on-change="changeLanguage">
+                <radio v-for="(ln, index) in lns" :label="ln['name']"  @click="choseLanguage(ln, index)">
+
+                </radio>
+            </radio-group>
+              <!-- <ul>
+                <li v-for="(ln, index) in lns" class="language-item" @click="choseLanguage(ln, index)">
+                  <h2 class="language">{{ln["name"]}}</h2>
+                </li>
+              </ul> -->
+            </div>
+        </drawer>
+        <configDraw ref="myConfigDraw" :ml="ml" :data="data" :seller="seller"></configDraw>
+
+        <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
+
         <div class="support-count" v-if="seller.supports" @click="showDetails()">
             <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
             <span class="count">{{sellerDetailButtonSamllText}}</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
-        <!-- <icon type="ios-keypad" size="20" class="config" v-if="data.options.isAdmin === '1'" @click="showConfig" /> -->
-        <!-- <icon type="ios-keypad" size="20" class="config" @click="showConfig" /> -->
-        <!-- <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true"  v-model="configVisible"> -->
-        <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="configVisible">
-          <p class="drawbutton"><i-button @click="configSeller" type="primary">{{ml.seller}}</i-button></p>
-          <p class="drawbutton"><i-button @click="configMenuGroups" type="primary">{{ml.menugroup}}</i-button></p>
-          <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
-          <!-- <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p> -->
-          <p class="drawbutton"><i-button @click="configOpeninghour" type="primary">{{ml.openinghour}}</i-button></p>
-          <!-- <sendButton ref="mySendButton" :text="ml.publish" :sendingText="ml.sending" :failedText="ml.savefailed" @click="publishNewMenu"></sendButton> -->
-          <i-button type="primary" @click="publishNewMenu">{{ml.publish}}</i-button>
-        </drawer>
-        <drawer ref="userDrawer" :title="ml.user" placement="right" :closable="true" v-model="userVisible">
-          <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
-          <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
-          <p class="drawbutton"><i-button @click="showConfig" type="primary" v-if="data.options.isAdmin === '1'">{{ml.cofig}}</i-button></p>
-        </drawer>
-        <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
-        <modal
-            ref="dialog"
-            v-model="modalPublishNewMenu"
-            :ok-text="ml.ok"
-            :cancel-text="ml.cancel"
-            :closable="false"
-            :mask-closable="false"
-            @on-ok="confirmPublishNewMenu"
-            @on-cancel="cancelPublishNewMenu">
-              <p style="color:#f60;text-align:center">
-              <icon type="md-information-circle"></icon>
-              <span>{{ml.askconfirmpublishnewmenu}}</span>
-            </p>
-          </modal>
-        <businessInfo ref="businessInfo" :ml="ml" :data="data" :seller="seller" @closed="childDrawClosed"></businessInfo>
-        <menuGroups ref="menuGroups" :ml="ml" :data="data" @closed="childDrawClosed"></menuGroups>
-        <menus ref="menus" :ml="ml" :data="data" @closed="childDrawClosed"></menus>
-        <openinghour ref="myOpeninghour" :ml="ml" :data="data" @closed="childDrawClosed"></openinghour>
-
         <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
             shop
         </drawer> -->
@@ -128,7 +115,7 @@
             </div>
             <div class="language-wrapper">
               <ul>
-                <li v-for="(ln, index) in lns" class="language-item" @click="hideLanguages(ln, index)">
+                <li v-for="(ln, index) in lns" class="language-item" @click="choseLanguage(ln, index)">
                   <!-- <span class="icon" :class="iconClassMap[item.type]"></span> -->
                   <h1 class="language">{{ln["name"]}}</h1>
                 </li>
@@ -148,11 +135,7 @@
 <script>
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
-import businessInfo from 'components/config/businessInfo/businessInfo'
-import menuGroups from 'components/config/menuGroups/menuGroups'
-import menus from 'components/config/menus/menus'
-import sendButton from 'components/common/sendButton/sendButton'
-import openinghour from 'components/config/openinghour/openinghour'
+import configDraw from 'components/config/configDraw/configDraw'
 import login from 'components/login/login'
 
 export default {
@@ -163,25 +146,19 @@ export default {
     data: {}
   },
   created() {
-    this.$root.eventHub.$on('signalr.onPublishMenu', this.menuPublished)
     this.iconClassMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   },
   components: {
     star,
-    businessInfo,
-    menuGroups,
-    menus,
-    sendButton,
-    openinghour,
+    configDraw,
     login
   },
   data() {
     return {
       detailShow: false,
       languageShow: false,
-      configVisible: false,
-      modalPublishNewMenu: false,
-      userVisible: false
+      sideDrawVisible: false,
+      selectedLanguage: ''
     }
   },
   computed: {
@@ -219,75 +196,47 @@ export default {
     showLanguages() {
       this.languageShow = true;
     },
-    hideLanguages(ln, index) {
+    hideLanguages() {
+      // alealert(index)
+      this.languageShow = false;
+    },
+    choseLanguage(ln, index) {
       // alealert(index)
       this.languageShow = false;
       this.$root.eventHub.$emit('ml.change', ln['code'], index)
     },
+    showSideDraw() {
+      this.sideDrawVisible = true
+      this.selectedLanguage = this.lns[this.data.currentlnindex]['name']
+      console.log(this.selectedLanguage)
+    },
     showConfig() {
-      // alert('showConfig')
-      this.userVisible = false
-      this.configVisible = true
-      // setTimeout(() => {
-      //   this._initScroll()
-      // }, 1000);
-    },
-    configSeller() {
-      // alert('config selelr visiable')
-      // this.sellerVisible = true
-      this.configVisible = false
-      this.$refs.businessInfo.showDraw()
-    },
-    configMenuGroups() {
-      this.configVisible = false
-      this.$refs.menuGroups.showDraw()
-    },
-    configMenus() {
-      this.configVisible = false
-      this.$refs.menus.showDraw()
-    },
-    configRiceTable() {
-
-    },
-    configOpeninghour() {
-      this.configVisible = false
-      this.$refs.myOpeninghour.showDraw()
-    },
-    publishNewMenu() {
-      this.modalPublishNewMenu = true
-    },
-    childDrawClosed() {
-      console.log('childDrawClosed')
-      this.configVisible = true
-    },
-    menuPublished() {
-      this.$Modal.success({
-        title: this.ml.success,
-        content: this.ml.menupublished,
-        okText: this.ml.ok
-      });
-    },
-    confirmPublishNewMenu() {
-      this.modalPublishNewMenu = false
-      this.$root.eventHub.$emit('signalr.publishMenu')
-    },
-    cancelPublishNewMenu() {
-      this.modalPublishNewMenu = false
+      // this.sideDrawVisible = false
+      this.$refs.myConfigDraw.showDraw()
     },
     logout() {
-      this.userVisible = false
+      this.sideDrawVisible = false
       this.$root.eventHub.$emit('login.loggedOut')
     },
     login() {
       this.$refs.myLogin.showlogin()
-      this.userVisible = false
+      this.sideDrawVisible = false
     },
     onlogin() {
       console.log('onlogin in header')
       this.$refs.myLogin.hideLogin()
+      this.sideDrawVisible = false
     },
-    showUserDraw() {
-      this.userVisible = true
+    changeLanguage(value) {
+      console.log(value)
+      console.log(this.lns)
+      let count = 0
+      this.lns.forEach((ln) => {
+        if (ln['name'] === value) {
+          this.$root.eventHub.$emit('ml.change', ln['code'], count)
+        }
+        count++
+      })
     }
   }
 }

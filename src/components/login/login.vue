@@ -180,7 +180,11 @@ export default {
       // alert(userId)
       // this.busyWithSending = false
       // clearInterval(this.mySendingTimer)
-      this.$refs.myLoginButton.stop()
+      if (this.$refs.myLoginButton === undefined) {
+        console.log('this.$refs.myLoginButton === undefined')
+      } else {
+        this.$refs.myLoginButton.stop()
+      }
       /* -1: user not exist, -2 user exists, but connection not same as connet */
       if (user.rid !== '-1' && user.rid !== '-2') {
         this.show = false
