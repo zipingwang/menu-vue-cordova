@@ -107,7 +107,7 @@ export default {
   },
   created() {
     this.$root.eventHub.$on('cart.add', this.drop)
-    // this.$root.eventHub.$on('login.loggedin', this.onlogin)
+    this.$root.eventHub.$on('login.loggedin', this.onlogin)
   },
   computed: {
     showBackdrop() {
@@ -226,6 +226,30 @@ export default {
       }
     },
     checkout() {
+      /* valication */
+      let isValid = true
+
+      if (this.selectFoods.length === 0) {
+        return
+      }
+
+      console.log(this.selectFoods)
+      this.selectFoods.forEach((food) => {
+        console.log(food.count)
+        console.log(food.minCount)
+        if (food.minCount > food.count) {
+          isValid = false
+          this.$Modal.success({
+            title: this.ml.info,
+            content: this.ml.orderminimumrequiredmsg.replace('{0}', food.name[data.currentlnindex]).replace('{1}', food.minCount),
+            okText: this.ml.ok
+          });
+        }
+      })
+      if (isValid === false) {
+        return
+      }
+
       if (this.data.options.table !== '') { /* restaurant */
         this.data.options.cusId = 'guest'
         this.$refs.mycheckout.showcheckout()
@@ -234,15 +258,6 @@ export default {
       } else {
         this.$refs.mycheckout.showcheckout()
       }
-      // alert(data.options.tableNr)
-      // this.$refs.mycheckout.showcheckout()
-      // this.$modal.show(checkout, {
-      //   text: 'This text is passed as a property'
-      // }, {
-      //   overlayTransition: 'overtransition'
-      // }, {
-      //   draggable: true
-      // })
     },
     onlogin(cus) {
       console.log('onlogin in shopcart')

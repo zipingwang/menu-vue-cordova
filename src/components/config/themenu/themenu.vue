@@ -55,6 +55,9 @@
           <form-item :label="ml.name4" prop="name4">
                   <i-input v-model="formMenu.name4"></i-input>
           </form-item>
+          <form-item :label="ml.mincount" prop="minCount">
+              <input-number :max="200" :min="0" :step="1" v-model="formMenu.minCount"></input-number>
+          </form-item>
         </i-form>
           <modal
             ref="dialog"
@@ -160,7 +163,11 @@
         }
 
         if (this.imgUploaded === false) {
-          return this.menuInDataJs.image
+          if (this.menuInDataJs !== undefined) {
+            return this.menuInDataJs.image
+          } else {
+            return ''
+          }
         } else {
           return 'static/gen/img/menu' + this.formMenu.rid + '' + this.dateTag + this.uploadCounter.toString() + '.jpg'
         }

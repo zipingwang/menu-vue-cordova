@@ -195,6 +195,8 @@ export default {
       if (addremove !== '1') {
         return
       }
+      console.log('before this.$refs.mySendButton.stop()')
+      console.log(this.$refs.mySendButton)
       this.$refs.mySendButton.stop()
       this.showWaiting = false
       this.$Modal.success({

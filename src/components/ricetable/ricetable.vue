@@ -33,7 +33,7 @@
 .ratingsWrapper
   position: absolute
   top: 174px
-  bottom: 0
+  bottom: 48px
   left: 0
   width: 100%
   overflow: hidden
@@ -77,6 +77,32 @@
             padding-bottom 20px
         .endfilling
             height 20px
+        .shopCart
+          position absolute
+          right 18px
+          bottom 18px
+          height 24px
+          text-align center
+          z-index 2
+          .text
+            box-sizing border-box
+            height 100%
+            line-height 24px
+            color white
+            font-size 10px
+            padding 0 12px
+            border-radius 12px
+            background rgb(0,160,220)
+            &.fade-enter-active,&.fade-leave-active{
+              transition opacity .2s
+            }
+            &.fade-enter,&.fade-leave-active{
+              opacity 0
+            }
+        .cartcontrol
+          position absolute
+          right 12px
+          bottom 12px
   .map
     text-align center
     margin-top 20px
@@ -117,10 +143,20 @@
                     </ul>
                 </div>
                 <div class="endfilling"></div>
-            </div>
+                <div class="shopCart">
+                  <transition name="fade">
+                    <div class="text" @click="addCart($event, ricetable)" v-show="!(getRiceTableMenu(ricetable).count)">{{ml.addtoshoppingcart}}</div>
+                  </transition>
+                </div>
+                <cartcontrol :food="getRiceTableMenu(ricetable)" v-show="getRiceTableMenu(ricetable).count"></cartcontrol>
+                <!-- <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="getRiceTableMenu(ricetable)"></cartcontrol>
+                </div> -->
+                </div>
         </div>
       </div>
     </div>
+    <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml" :data="data"></shopCart>
   </div>
 </template>
 
@@ -128,10 +164,14 @@
 import axios from 'axios'
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
+import cartcontrol from 'components/cartcontrol/cartcontrol'
+import shopCart from 'components/shopCart/shopCart'
 
 export default {
   components: {
-    star: star
+    star: star,
+    cartcontrol,
+    shopCart
   },
   props: {
     data: {},
@@ -140,7 +180,8 @@ export default {
   },
   data() {
     return {
-      ricetables: this.data.ricetables
+      ricetables: this.data.ricetables,
+      food: {}
     }
   },
   mounted() {
@@ -153,6 +194,19 @@ export default {
       if (to.path === '/ricetable') {
         this.foodsScroll.refresh()
       }
+    }
+  },
+  computed: {
+    selectFoods() {
+      let foods = []
+      this.data.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   methods: {
@@ -173,6 +227,25 @@ export default {
           invert: false
         }
       });
+    },
+    addCart(event, riceTable) {
+      if (!event._constructed) {
+        return
+      }
+      this.$set(this.getRiceTableMenu(riceTable), 'count', 1)
+      this.$root.eventHub.$emit('cart.add', event.target)
+    },
+    getRiceTableMenu(riceTable) {
+      let menuInDataJs = {}
+      data.goods.forEach(menuGroup => {
+        menuGroup.foods.forEach(menuItem => {
+          if (menuItem.menunr === riceTable.menuNr) {
+            menuInDataJs = menuItem
+          }
+        });
+      });
+      console.log(menuInDataJs)
+      return menuInDataJs
     }
   }
 }

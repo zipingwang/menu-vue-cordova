@@ -350,6 +350,7 @@ export default {
     publishMenu() {
       try {
         console.log('publishMenu')
+        console.log(this.getDataOptionsString())
         this.simpleHubProxy.server.publishMenu(this.getDataOptionsString())
       } catch (ex) {
         console.log(ex)

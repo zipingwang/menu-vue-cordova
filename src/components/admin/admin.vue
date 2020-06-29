@@ -140,8 +140,9 @@
                 <i-col span="3">
                     <div>{{order.tableNr}}</div>
                 </i-col>
-                <i-col span="6">
-                    <div>{{getTakeawayString(order)}}</div>
+                <i-col span="3">
+                    <Icon type="md-briefcase" v-if = "order.isTakeaway === '1'" />
+                    <Icon type="ios-restaurant" v-if = "order.isTakeaway === '0'" />
                 </i-col>
                 <i-col span="5">
                     <div>{{getOrderTimeString(order)}}</div>
@@ -437,23 +438,25 @@ export default {
         // this._initScroll(); // 初始化scroll
       })
       this.playSound()
-      console.log('takeaway not viewed count')
-      console.log(this.takeawayNotViewedCount)
-      console.log(this.takeawayNotViewedCount > 0)
-      console.log('restarurant not viewed count')
-      console.log(this.restauranNotViewedtCount)
-      console.log(this.restauranNotViewedtCount > 0)
     },
     getTakeawayString(order) {
       if (order.isTakeaway === '0') {
-        return 'In'
+        return this.ml.in
       } else {
-        return 'Out'
+        return this.ml.out
       }
     },
     getOrderTimeString(order) {
       if (order.isTakeaway === '0') {
-        return order.orderTime
+        console.log(order.orderTime)
+        console.log(order.orderTime.length)
+        if (order.orderTime.length === 14) {
+          console.log(order.orderTime.substring(10, 12))
+          console.log(order.orderTime.substring(12, 14))
+          return order.orderTime.substring(10, 12) + ':' + order.orderTime.substring(12, 14)
+        } else {
+          return order.orderTime
+        }
       } else {
         return order.takeawayTime
       }

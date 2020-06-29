@@ -86,6 +86,8 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error(this.ml.requiredfield));
+      } else if (value.length < 6) {
+        callback(new Error(this.ml.minimumlengthrequired));
       } else {
         if (this.formItem.passwordconfirm !== '') {
           // 对第二个密码框单独验证
