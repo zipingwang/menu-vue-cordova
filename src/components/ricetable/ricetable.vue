@@ -43,6 +43,7 @@
       text-align center
       color rgb(77,85,93)
       .ricetableblock
+        position relative
         border 1px solid #f3f5f7
         border-radius: 10px;
         height: 100%
@@ -244,7 +245,7 @@ export default {
           }
         });
       });
-      console.log(menuInDataJs)
+      // console.log(menuInDataJs)
       return menuInDataJs
     }
   }

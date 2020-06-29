@@ -23,17 +23,32 @@ export default {
   props: {
     food: Object
   },
+  data() {
+    return {
+      prevClick: {}
+    }
+  },
+  created() {
+    this.prevClick = new Date()
+  },
   methods: {
     addCart(event) {
-      console.log(event.target);
+      if (this.prevClick.setMilliseconds(this.prevClick.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
+        this.prevClick = new Date()
+        return
+      }
       if (!event._constructed) {
         return
       }
+
       if (!this.food.count) {
         Vue.set(this.food, 'count', 0)
       }
+      console.log(this.food.count)
       this.food.count++;
       this.$root.eventHub.$emit('cart.add', event.target)
+      this.prevClick = new Date()
     },
     decreaseCart() {
       if (!event._constructed || !this.food.count) {

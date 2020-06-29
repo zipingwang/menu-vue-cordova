@@ -166,7 +166,7 @@ export default {
       if (this.seller.supports.length === 0) {
         return '...'
       } else {
-        return seller.supports.length + '...'
+        return this.seller.supports.length + '...'
       }
     }
   },

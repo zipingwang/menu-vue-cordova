@@ -124,7 +124,7 @@
           <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
       </div>
   <div class="divider"></div>
-  <drawer ref="menuDrawer" :title="ml.config" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="contextMenuVisible">
+  <drawer ref="menuDrawer" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="contextMenuVisible">
       <p class="drawbutton"><i-button @click="closeOrder" type="primary">{{ml.close}}</i-button></p>
       <p class="drawbutton"><i-button @click="deleteOrder" type="primary">{{ml.delete}}</i-button></p>
   </drawer>

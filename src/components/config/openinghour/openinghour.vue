@@ -31,7 +31,7 @@
               </div>
             </div>
             <div class="dayBlock">
-              <p>{{ml.wensday}} wensday</p>
+              <p>{{ml.wensday}}</p>
               <div class="row">
                 <span class="lable">Part1:</span>
                 <time-picker format="HH:mm" :value="openinghour.wensdayPart1"  @on-change="handleChangeWensdayPart1" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="dayBlock">
-              <p>{{ml.thursday}} thursday</p>
+              <p>{{ml.thursday}}</p>
               <div class="row">
                 <span class="lable">Part1:</span>
                 <time-picker format="HH:mm" :value="openinghour.thursdayPart1"  @on-change="handleChangeThursdayPart1" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
