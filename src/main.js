@@ -85,7 +85,7 @@ new Vue({
     data.options.client = 'vue'
     data.options.table = ''
     data.options.ln = ''
-    data.options.takeaway = '0'
+    data.options.takeaway = '1'
     data.options.cusId = '' /* 202 is admin */
     data.options.shopId = ''
     data.options.isAdmin = '0'
@@ -101,6 +101,8 @@ new Vue({
     }
     if ('table' in urlVars) {
       data.options.table = urlVars['table']
+      data.options.takeaway = '0'
+      console.log('table')
     }
     if ('ln' in urlVars) {
       data.options.ln = urlVars['ln']
@@ -108,9 +110,23 @@ new Vue({
     }
     if ('takeaway' in urlVars) {
       data.options.takeaway = urlVars['takeaway']
+      data.options.takeaway = '1'
     }
     if ('shopid' in urlVars) {
       data.options.shopId = urlVars['shopid']
+    }
+    if (data.options.takeaway === '1') {
+      data.goods.forEach(menuGroup => {
+        menuGroup.foods.forEach(menuItem => {
+          menuItem.price = menuItem.takeawayPrice
+        });
+      })
+    } else {
+      data.goods.forEach(menuGroup => {
+        menuGroup.foods.forEach(menuItem => {
+          menuItem.price = menuItem.restaurantPrice
+        });
+      })
     }
     console.log(this.getUrlVars())
     console.log(urlVars)

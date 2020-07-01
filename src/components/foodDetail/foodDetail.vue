@@ -1,13 +1,13 @@
 <template lang="html">
   <div>
   <transition name="fade">
-    <div v-show="showDetail" class="detail" @click="showToggle()">
+    <div v-show="showDetail" class="detail" @click="hide()">
     </div>
   </transition>
   <transition name="move">
     <div class="detailWrapper" ref="detailWrapper" v-show="showDetail">
       <div class="foodDetail">
-        <div class="back" @click="showToggle()">
+        <div class="back" @click="hide()">
           <i class="icon-arrow_lift"></i>
         </div>
         <img :src="food.image" :height="imgHeight" width="100%">
@@ -27,7 +27,7 @@
           </div>
           <div class="shopCart">
             <transition name="fade">
-              <div class="text" @click="addCart($event)" v-show="!food.count">{{ml.addtoshoppingcart}}</div>
+              <div class="text" @click="addCart($event)" v-show="!food.count"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
             </transition>
           </div>
           <cartcontrol :food="food" v-show="food.count"></cartcontrol>
@@ -132,14 +132,23 @@ export default {
     }
   },
   methods: {
-    showToggle() {
-      this.showDetail = !this.showDetail
-      if (this.showDetail) {
-        this.$nextTick(() => {
-          this._initScroll()
-        })
-      }
+    show() {
+      this.showDetail = true
+      this.$nextTick(() => {
+        this._initScroll()
+      })
     },
+    hide() {
+      this.showDetail = false
+    },
+    // showToggle() {
+    //   this.showDetail = !this.showDetail
+    //   if (this.showDetail) {
+    //     this.$nextTick(() => {
+    //       this._initScroll()
+    //     })
+    //   }
+    // },
     _initScroll() {
       if (!this.detailWrapper) {
         this.detailWrapper = new BScroll(this.$refs.detailWrapper, {
@@ -169,7 +178,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@media screen and (min-width: 800px)
+// @media screen and (min-width: 800px)
   .detail
       position fixed
       left 0

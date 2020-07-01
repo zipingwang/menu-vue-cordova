@@ -77,7 +77,7 @@
             margin-bottom 20px
             padding-bottom 20px
         .endfilling
-            height 20px
+            height 50px
         .shopCart
           position absolute
           right 18px
@@ -146,7 +146,7 @@
                 <div class="endfilling"></div>
                 <div class="shopCart">
                   <transition name="fade">
-                    <div class="text" @click="addCart($event, ricetable)" v-show="!(getRiceTableMenu(ricetable).count)">{{ml.addtoshoppingcart}}</div>
+                    <div class="text" @click="addCart($event, ricetable)" v-show="!(getRiceTableMenu(ricetable).count)"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
                   </transition>
                 </div>
                 <cartcontrol :food="getRiceTableMenu(ricetable)" v-show="getRiceTableMenu(ricetable).count"></cartcontrol>
@@ -238,7 +238,7 @@ export default {
     },
     getRiceTableMenu(riceTable) {
       let menuInDataJs = {}
-      data.goods.forEach(menuGroup => {
+      this.data.goods.forEach(menuGroup => {
         menuGroup.foods.forEach(menuItem => {
           if (menuItem.menunr === riceTable.menuNr) {
             menuInDataJs = menuItem

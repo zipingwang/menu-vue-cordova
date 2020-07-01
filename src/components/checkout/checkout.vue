@@ -36,7 +36,7 @@
               </li>
             </ul>
             <div class="totalline">{{ml.ordertotal}}        €{{totalPrice}}</div>
-            <div class="timeSlotWrapper" @click="showTakeawayTimeSlots">
+            <div class="timeSlotWrapper" @click="showTakeawayTimeSlots" v-if="this.data.options.takeaway === '1'">
               <div class = "timeSlotContainer">
               {{ml.takeawaytime}}: <span>{{takeawayTimeSlot}}</span>
               <Icon type="ios-time-outline" />
@@ -142,9 +142,18 @@ export default {
     console.log(JSON.stringify(this.trans))
   },
   watch: {
-    show(newVaue, oldValue) {
-      if (newVaue) {
-        this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+    show(newValue, oldValue) {
+      console.log('checkout show')
+      console.log(newValue)
+      if (newValue) {
+        if (this.selectFoods.length > 0) {
+          if (this.data.options.takeaway === '1') {
+            this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+          }
+        } else {
+          console.log('this.$refs.mySendButton')
+          this.hidecheckout()
+        }
       }
     }
   },
@@ -179,10 +188,10 @@ export default {
       this.$refs.takeawayTimeSlots.showTimeSlots()
     },
     onGetTakeawayTimeSlots(slots) {
-      console.log(slots)
+      // console.log(slots)
       let mySlots = slots // JSON.parse(slots)
-      console.log(mySlots)
-      console.log(typeof mySlots.timeSlots)
+      // console.log(mySlots)
+      // console.log(typeof mySlots.timeSlots)
       this.takeawayTimeSlots = mySlots.timeSlots
       if (mySlots.timeSlots.length > 0) {
         this.takeawayTimeSlot = mySlots.timeSlots[0]
@@ -195,17 +204,20 @@ export default {
       if (addremove !== '1') {
         return
       }
-      console.log('before this.$refs.mySendButton.stop()')
-      console.log(this.$refs.mySendButton)
-      this.$refs.mySendButton.stop()
+      if (this.$refs.mySendButton !== undefined) {
+        this.$refs.mySendButton.stop()
+      }
       this.showWaiting = false
+      // this.hidecheckout() /* sometime click on menu tab, show checkout, hide checkout here */
       this.$Modal.success({
         title: this.ml.success,
         content: this.ml.ordersendsuccess,
         okText: this.ml.ok,
         onOk: () => {
           this.hidecheckout()
-          this.$router.push('admin')
+          setTimeout(() => {
+            this.$router.push('admin')
+          }, 300)
           setTimeout(() => {
             this.$root.eventHub.$emit('checkout.onOrderConfirmedFromServerToWeb', order, addremove)
           }, 1000)
@@ -213,6 +225,9 @@ export default {
       });
     },
     sendOrder() {
+      if (this.selectFoods.length === 0) {
+        return
+      }
       // this.showWaiting = true
       // this.busyWithSending = true
       // this.startTime = new Date()

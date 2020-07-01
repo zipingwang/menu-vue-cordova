@@ -50,17 +50,17 @@
 
         <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
 
-        <div class="support-count" v-if="seller.supports" @click="showDetails()">
-            <!-- <span class="count">{{seller.supports.length+'个'}}</span> -->
+        <!-- <div class="support-count" v-if="seller.supports && seller.supports.length > 0" @click="showDetails()">
             <span class="count">{{sellerDetailButtonSamllText}}</span>
             <i class="icon-keyboard_arrow_right"></i>
-        </div>
+        </div> -->
         <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
             shop
         </drawer> -->
   </div>
   <div class="bulletin-wrapper" >
     <div @click="showDetails()" v-if="seller.supports.length>0">
+      <Icon type="ios-thumbs-up" />
     <span class="bulletin-title"></span>
     <!-- <i class="fa fa-bullhorn"></i> -->
     <!-- <span class="bulletin-text">{{seller.bulletin}}</span> -->
@@ -86,16 +86,16 @@
             </div>
             <ul v-if="seller.supports" class="supports">
               <li class="support-item" v-for="item in seller.supports">
-                <span class="icon" :class="iconClassMap[item.type]"></span>
+                <!-- <span class="icon" :class="iconClassMap[item.type]"></span> -->
                 <span class="text">{{item.description}}</span>
               </li>
             </ul>
-            <div class="title">
+            <!-- <div class="title">
               <div class="line"> </div>
               <div class="text">{{ml.shopannouncement}}</div>
               <div class="line"></div>
-            </div>
-            <div class="bulletin">{{seller.bulletin}}</div>
+            </div> -->
+            <!-- <div class="bulletin">{{seller.bulletin}}</div> -->
           </div>
       </div>
       <div class="detail-close">
@@ -354,19 +354,19 @@ export default {
     overflow hidden
     text-overflow ellipsis
     background rgba(7,17,27,0.2)
-    .bulletin-title
-      display inline-block
-      vertical-align top
-      margin-top 8px
-      width 22px
-      height 12px
-      bg-image('bulletin')
-      background-size 100% 100%
-      background-repeat no-repeat
+    // .bulletin-title
+    //   display inline-block
+    //   vertical-align top
+    //   margin-top 8px
+    //   width 22px
+    //   height 12px
+      // bg-image('bulletin')
+      // background-size 100% 100%
+      // background-repeat no-repeat
     .bulletin-text
       font-size 10px
       vertical-align middle
-      margin 0 4px
+      margin 0 0px
     .icon-keyboard_arrow_right
       position absolute
       font-size 10px

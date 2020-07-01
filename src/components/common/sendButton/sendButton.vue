@@ -26,7 +26,7 @@ export default {
     return {
       busyWithSending: false,
       startTime: {},
-      mySendingTimer: {}
+      mySendingTimer: 0
     }
   },
   methods: {
@@ -36,18 +36,23 @@ export default {
     start() {
       this.busyWithSending = true
       this.startTime = new Date()
+      if (this.mySendingTimer) { /* prevent double click, clear previous one */
+        clearInterval(this.mySendingTimer)
+      }
       this.mySendingTimer = setInterval(this.checkSending, 1000)
     },
     stop() {
       this.busyWithSending = false
-      if (this.mySendingTimer) {
-        clearInterval(this.mySendingTimer)
-      }
+      clearInterval(this.mySendingTimer)
+      this.startTime = null
     },
     checkSending() {
-      console.log('checkSending')
-      console.log(this.timeout)
-      console.log(this.sendingText)
+      if (this.busyWithSending === false) {
+        clearInterval(this.mySendingTimer)
+        console.log('return')
+        return
+      }
+
       if (this.startTime.setSeconds(this.startTime.getSeconds() + this.timeout) < new Date()) {
         this.busyWithSending = false
         clearInterval(this.mySendingTimer)

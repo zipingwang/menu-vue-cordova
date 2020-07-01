@@ -170,7 +170,7 @@
                 <table class="foodlineblock">
                   <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
-                    <td class="foodlinename">{{orderline.name}}</td>
+                    <td class="foodlinename">{{getMenuName(orderline.nr)}}</td>
                   </tr>
                 </table>
                 <!-- <span class="button" @click="closeOrder(order)">close</span> -->
@@ -503,6 +503,19 @@ export default {
         var audio = new Audio('static/sound/sound.mp3');
         audio.play();
       }
+    },
+    getMenuName(menuNr) {
+      console.log(menuNr)
+      let menuInDataJs = {}
+      this.data.goods.forEach(menuGroup => {
+        menuGroup.foods.forEach(menuItem => {
+          if (menuItem.menunr === menuNr) {
+            menuInDataJs = menuItem
+          }
+        });
+      });
+      console.log(menuInDataJs)
+      return menuInDataJs.name[data.currentlnindex]
     }
   }
 }

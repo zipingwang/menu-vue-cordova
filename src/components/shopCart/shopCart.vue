@@ -264,6 +264,12 @@ export default {
       if (this.selectFoods.length > 0) {
         this.$refs.mycheckout.showcheckout()
       }
+    },
+    closeChild() {
+      this.$refs.mycheckout.hidecheckout()
+      this.$refs.mylogin.hidelogin()
+      this.hideBackdrop()
+      this.listShow = false
     }
   },
   components: {
@@ -415,14 +421,16 @@ export default {
       .food
         position relative
         display flex
-        height 48px
+        align-items center
+        // min-height 48px
         margin 0 18px
         border-bottom 1px solid rgba(7,17,27,0.1)
+        text
         .name
           flex 1
           font-size 14px
           color rgb(7,17,27)
-          line-height 48px
+          // line-height 48px
           font-weight 700
         .price
           font-size 14px

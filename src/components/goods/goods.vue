@@ -25,17 +25,17 @@
                 <h2>{{food.name[data.currentlnindex]}}</h2>
                 <!-- <p class="description" v-show="food.description">{{food.description}}</p>                  -->
                 <!-- <p class="description" v-show="food.menunr">Nr. {{food.menunr}}</p> -->
+                <div class="price">
+                  <span class="newPrice"><span class="unit">€ </span>{{food.price}}</span>
+                  <span v-show="food.oldPrice" class="oldPrice">€{{food.oldPrice}}</span>
+                  <span class="menunr" v-show="food.menunr">Nr. {{food.menunr}}</span>
+                </div>
                 <div class="sell-info">
                   <div class="star-wrapper" v-if="food.rating">
                     <star :size="24" :score="food.rating"></star>
                   </div>
                   <!-- <span class="sellCount">月售{{food.sellCount}}份</span> -->
                   <!-- <span class="rating">好评率{{food.rating}}%</span> -->
-                </div>
-                <div class="price">
-                  <span class="newPrice"><span class="unit">€ </span>{{food.price}}</span>
-                  <span v-show="food.oldPrice" class="oldPrice">€{{food.oldPrice}}</span>
-                  <span class="menunr" v-show="food.menunr">Nr. {{food.menunr}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food"></cartcontrol>
@@ -46,7 +46,7 @@
         </li>
       </ul>
     </div>
-    <shopCart :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml" :data="data"></shopCart>
+    <shopCart ref="myShopCart" :seller="seller" :deliveryPrice="seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" :ml="ml" :data="data"></shopCart>
     <foodDetail :food="selectedFood" :data="data" v-if="selectedFood" :ml="ml" ref="myFood"></foodDetail>
   </div>
 
@@ -92,6 +92,10 @@ export default {
     '$route' (to, from) {
       if (to.path === '/goods') {
         this.foodsScroll.refresh()
+        this.$refs.myShopCart.closeChild()
+        if (this.$refs.myFood !== undefined) {
+          this.$refs.myFood.hide()
+        }
       }
     }
   },
@@ -171,7 +175,7 @@ export default {
       this.selectedFood = food
       if (food.image) {
         this.$nextTick(() => {
-          this.$refs.myFood.showToggle()
+          this.$refs.myFood.show()
         })
       }
     },

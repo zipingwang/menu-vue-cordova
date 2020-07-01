@@ -77,7 +77,7 @@
           <div class="block">
             <h1>{{ml.telephone}}</h1>
             <ul class="list">
-              <li class="item" v-for="tel in seller.telefoon">{{tel}}</li>
+              <li class="item" v-for="tel in seller.telefoon"><Icon type="ios-call" />  {{tel}}</li>
             </ul>
           </div>
         </div>

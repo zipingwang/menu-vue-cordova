@@ -47,7 +47,7 @@ export default {
       let url = 'http://localhost:44337/signalr';
       url = this.data.options.signalrUrl
 
-      console.log(url)
+      // console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
       var tempWriteLog = this.writeToLog
@@ -209,7 +209,7 @@ export default {
     },
     sendMessageFromWebToServer(message) {
       try {
-        this.simpleHubProxy.server.sendMessageFromWebToServer(message);
+        this.simpleHubProxy.server.sendMessageFromWebToServer(this.getDataOptionsString(), message);
       } catch (ex) {
         console.log(ex)
         this.connectToSignalRServer()
