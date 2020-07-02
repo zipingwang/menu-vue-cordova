@@ -95,9 +95,11 @@ new Vue({
     if (data.seller.sellerurl !== '' && data.seller.sellerurl.length > 0) {
       data.options.signalrUrl = data.seller.sellerurl + '/signalr'
       data.options.uploadUrl = data.seller.sellerurl + '/RequestHandler.ashx?'
+      data.options.dataUrl = data.seller.sellerurl + '/data.ashx'
     } else {
       data.options.signalrUrl = baseUrl + '/signalr'
       data.options.uploadUrl = baseUrl + '/RequestHandler.ashx?'
+      data.options.dataUrl = data.seller.sellerurl + '/data.ashx'
     }
     if ('table' in urlVars) {
       data.options.table = urlVars['table']
@@ -114,19 +116,6 @@ new Vue({
     }
     if ('shopid' in urlVars) {
       data.options.shopId = urlVars['shopid']
-    }
-    if (data.options.takeaway === '1') {
-      data.goods.forEach(menuGroup => {
-        menuGroup.foods.forEach(menuItem => {
-          menuItem.price = menuItem.takeawayPrice
-        });
-      })
-    } else {
-      data.goods.forEach(menuGroup => {
-        menuGroup.foods.forEach(menuItem => {
-          menuItem.price = menuItem.restaurantPrice
-        });
-      })
     }
     console.log(this.getUrlVars())
     console.log(urlVars)

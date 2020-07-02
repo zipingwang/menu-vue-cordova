@@ -3,7 +3,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" @click="menuClick(index,$event)" :class="index==menuCurrentIndex?'menu-item-selected':'menu-item'">
+        <li v-for="(item,index) in data.goods" @click="menuClick(index,$event)" :class="index==menuCurrentIndex?'menu-item-selected':'menu-item'">
           <span class="text">
             <!-- <iconMap v-show="item.type>0" :iconType="item.type"></iconMap> -->
             {{item.name[data.currentlnindex]}}
@@ -13,7 +13,7 @@
     </div>
     <div class="foods-wrapper" id="wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="item in goods" class="food-list food-list-hook">
+        <li v-for="item in data.goods" class="food-list food-list-hook">
           <h1>{{item.name[data.currentlnindex].replace("- ", "")}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item" @click="goDetail(food)">
@@ -81,12 +81,13 @@ export default {
     //   this._calculateHeight(); // 初始化列表高度列表
     // })
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    this.$root.eventHub.$on('signalr.dataDownloaded', this.onDatDownLoaded)
   },
   mounted() {
-    this.$nextTick(() => {
-      this._initScroll(); // 初始化scroll
-      this._calculateHeight(); // 初始化列表高度列表
-    })
+    // this.$nextTick(() => {
+    //   this._initScroll(); // 初始化scroll
+    //   this._calculateHeight(); // 初始化列表高度列表
+    // })
   },
   watch: {
     '$route' (to, from) {
@@ -102,7 +103,7 @@ export default {
   data() {
     return {
       // data: data,
-      goods: data.goods,
+      // goods: data.goods, /* don't create own property, it will breke the change change. change in parant data.goods will not go through child */
       listHeight: [],
       foodsScrollY: 0,
       selectedFood: ''
@@ -121,7 +122,7 @@ export default {
     },
     selectFoods() {
       let foods = []
-      this.goods.forEach((good) => {
+      this.data.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {
             foods.push(food)
@@ -184,12 +185,19 @@ export default {
         return
       }
       this.selectFoods.length = 0
-      this.goods.forEach((good) => {
+      this.data.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {
             food.count = 0
           }
         })
+      })
+    },
+    onDatDownLoaded() {
+      console.log('onDataDownLoaded')
+      this.$nextTick(() => {
+        this._initScroll(); // 初始化scroll
+        this._calculateHeight(); // 初始化列表高度列表
       })
     }
   },

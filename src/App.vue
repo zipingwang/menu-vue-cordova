@@ -55,6 +55,8 @@
 <script>
 import header from 'components/header/header'
 import signalr from 'components/signalr/signalr'
+import axios from 'axios'
+import registerVue from './components/register/register.vue'
 
 const ERR_OK = 0
 
@@ -83,6 +85,9 @@ export default {
     window.addEventListener('focus', this.onFocus);
     // Inactive
     window.addEventListener('blur', this.onBlur);
+    this.downloadData()
+  },
+  mounted() {
   },
   computed: {
     urlVars() {
@@ -94,6 +99,13 @@ export default {
     },
     windowFocused() {
       return !document.hidden
+    },
+    shopDataUrl() {
+      if (this.data.options.shopId) {
+        return this.data.options.dataUrl + '?siteid=' + this.data.options.shopId
+      } else {
+        return this.data.options.dataUrl
+      }
     }
   },
   watch: {
@@ -141,6 +153,38 @@ export default {
     },
     onBlur() {
       console.log('onBlur')
+    },
+    downloadData() {
+      axios.get(this.shopDataUrl).then((res) => {
+        console.log('get from customerdaga.json')
+        console.log(res)
+
+        // res.data.options = {}
+        // this.seller = res.data.seller
+        console.log(this.data.options)
+        this.lns = res.data.seller.lns
+        this.seller = res.data.seller
+        this.data.goods = res.data.goods
+        this.data.ricetables = res.data.ricetables
+
+        document.title = this.seller.name
+
+        if (this.data.options.takeaway === '1') {
+          this.data.goods.forEach(menuGroup => {
+            menuGroup.foods.forEach(menuItem => {
+              menuItem.price = menuItem.takeawayPrice
+            });
+          })
+        } else {
+          this.data.goods.forEach(menuGroup => {
+            menuGroup.foods.forEach(menuItem => {
+              menuItem.price = menuItem.restaurantPrice
+            });
+          })
+        }
+
+        this.$root.eventHub.$emit('signalr.dataDownloaded')
+      });
     }
   }
 }

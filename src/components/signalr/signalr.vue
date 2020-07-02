@@ -23,7 +23,7 @@ export default {
   computed: {
   },
   created() {
-    this.connectToSignalRServer()
+    // this.connectToSignalRServer()
     this.$root.eventHub.$on('signalr.sendOrder', this.sendOrder)
     this.$root.eventHub.$on('signalr.registerUser', this.registerUser)
     this.$root.eventHub.$on('signalr.signin', this.signin)
@@ -34,6 +34,7 @@ export default {
     this.$root.eventHub.$on('signalr.sendMessageFromWebToServer', this.sendMessageFromWebToServer)
     this.$root.eventHub.$on('signalr.checkConnect', this.checkConnect)
     this.$root.eventHub.$on('signalr.publishMenu', this.publishMenu)
+    this.$root.eventHub.$on('signalr.dataDownloaded', this.connectToSignalRServer)
   },
   methods: {
     connect() {
@@ -46,7 +47,8 @@ export default {
     connectToSignalRServer() {
       let url = 'http://localhost:44337/signalr';
       url = this.data.options.signalrUrl
-
+      console.log('connectToSignalRServer')
+      console.log(url)
       // console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
