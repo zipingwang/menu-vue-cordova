@@ -104,7 +104,7 @@ export default {
       if (this.data.options.shopId) {
         return this.data.options.dataUrl + '?siteid=' + this.data.options.shopId
       } else {
-        return this.data.options.dataUrl
+        return this.data.options.dataUrl + '?siteid=root'
       }
     }
   },
