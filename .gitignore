@@ -24,3 +24,4 @@ npm-debug.log
 /cordova/plugins
 /public/cordova.js
 static/gen/
+static/cus/

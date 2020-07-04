@@ -166,6 +166,7 @@ export default {
         this.seller = res.data.seller
         this.data.goods = res.data.goods
         this.data.ricetables = res.data.ricetables
+        this.data.options.shopRid = res.data.seller.sellerRid
 
         document.title = this.seller.name
 
