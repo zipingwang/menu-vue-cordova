@@ -114,7 +114,10 @@ export default {
       for (let i = 0, l = this.listHeight.length; i < l; i++) {
         let topHeight = this.listHeight[i]
         let bottomHeight = this.listHeight[i + 1]
-        if (!bottomHeight || (this.foodsScrollY >= topHeight && this.foodsScrollY < bottomHeight)) {
+        if ((this.foodsScrollY + this.$refs.menuWrapper.clientHeight) > this.listHeight[this.listHeight.length - 2]) {
+          console.log(this.listHeight.length - 1)
+          return this.listHeight.length - 2
+        } else if (!bottomHeight || (this.foodsScrollY >= topHeight && this.foodsScrollY < bottomHeight)) {
           return i
         }
       }
@@ -136,7 +139,7 @@ export default {
     _initScroll() {
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
-      this.menuWrapper = new BScroll(this.$refs.menuWrapper, {
+      this.menuGroupScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
       });
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
@@ -154,6 +157,17 @@ export default {
       // 监控滚动事件
       this.foodsScroll.on('scroll', (pos) => {
         this.foodsScrollY = Math.abs(Math.round(pos.y))
+        let menuGroupHeight = 54
+        let offset = this.$refs.menuWrapper.clientHeight - (this.menuCurrentIndex + 1) * menuGroupHeight
+        if (offset < 0) {
+          if ((this.foodsScrollY + this.$refs.menuWrapper.clientHeight) > this.listHeight[this.listHeight.length - 2]) {
+            this.menuGroupScroll.scrollTo(0, this.$refs.menuWrapper.clientHeight - (this.data.goods.length * menuGroupHeight), 300)
+          } else {
+            this.menuGroupScroll.scrollTo(0, offset, 300)
+          }
+        } else {
+          this.menuGroupScroll.scrollTo(0, 0, 300)
+        }
       })
     },
     _calculateHeight() {

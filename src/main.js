@@ -99,7 +99,7 @@ new Vue({
     } else {
       data.options.signalrUrl = baseUrl + '/signalr'
       data.options.uploadUrl = baseUrl + '/RequestHandler.ashx?'
-      data.options.dataUrl = data.seller.sellerurl + '/data.ashx'
+      data.options.dataUrl = baseUrl + '/data.ashx'
     }
     if ('table' in urlVars) {
       data.options.table = urlVars['table']

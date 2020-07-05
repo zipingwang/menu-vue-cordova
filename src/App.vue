@@ -23,7 +23,7 @@
   <signalr ref="mysignalr" :seller="seller" :ml="trans" :data="data"></signalr>
   <v-header :seller="seller" :lns="lns" :ml="trans" :data="data"></v-header>
   <div class="tab">
-    <div class="tab-item" v-if="visibletabs.includes('goods')">
+    <div class="tab-item" v-if="visibletabs.includes('goods') && data.goods.length>0">
       <router-link to="/goods">{{trans.product}}</router-link>
     </div>
     <div class="tab-item"  v-if="visibletabs.includes('rating')">
