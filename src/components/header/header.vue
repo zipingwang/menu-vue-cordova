@@ -203,6 +203,7 @@ export default {
     choseLanguage(ln, index) {
       // alealert(index)
       this.languageShow = false;
+      console.log('language code' + ln['code']);
       this.$root.eventHub.$emit('ml.change', ln['code'], index)
     },
     showSideDraw() {

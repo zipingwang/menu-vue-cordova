@@ -142,6 +142,15 @@ export default {
     },
     hidelogin() {
       this.show = false;
+      this.data.ruleInline = {
+        user: [
+          { required: true, message: this.ml.requiredfield, trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: this.ml.requiredfield, trigger: 'blur' }
+          // { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+        ]
+      }
     },
     onRegisterClose() {
       this.show = true
@@ -309,7 +318,8 @@ export default {
   position fixed
   left 0
   top 0
-  bottom 48px
+  // bottom 48px
+  bottom 0
   width 100%
   z-index 130
   background white
@@ -334,7 +344,8 @@ export default {
     top 0
     left 20%
     margin-right -20%
-    bottom 48px
+    // bottom 48px
+    bottom 0
     width 100%
     max-width: 800px
     background white

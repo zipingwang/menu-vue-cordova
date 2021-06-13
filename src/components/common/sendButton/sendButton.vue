@@ -1,5 +1,5 @@
 <template lang="html">
-    <i-button type="primary" :loading="busyWithSending" @click="click">
+    <i-button type="primary" :disabled="disabled" :loading="busyWithSending" @click="click">
         <span v-if="!busyWithSending">{{this.text}}</span>
         <span v-else>{{this.sendingText}}...</span>
     </i-button>
@@ -20,6 +20,10 @@ export default {
     timeout: { /* if want to set default value, need to assign object */
       default: 9, /* in seconds */
       type: Number
+    },
+    disabled: {
+      default: false,
+      type: Boolean
     }
   },
   data() {

@@ -42,10 +42,10 @@ export default {
         // alert('simpleHubProxy is null')
         this.connectToSignalRServer();
       }
-      this.sendOrder()
+      // this.sendOrder()
     },
     connectToSignalRServer() {
-      let url = 'http://localhost:44337/signalr';
+      let url = '' // 'http://localhost:44337/signalr';
       url = this.data.options.signalrUrl
       console.log('connectToSignalRServer')
       console.log(url)
@@ -346,6 +346,7 @@ export default {
         this.simpleHubProxy.server.connect('vue');
       } catch (ex) {
         console.log(ex)
+        this.simpleHubProxy = null
         this.connectToSignalRServer()
       }
     },

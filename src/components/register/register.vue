@@ -40,14 +40,15 @@
                      <FormItem :label="ml.createuseremail" prop="email">
                         <i-input v-model="formItem.email"></i-input>
                     </FormItem> -->
-        <form-item label="Password" prop="password">
+        <form-item :label="ml.password" prop="password">
             <i-input type="password" v-model="formItem.password"></i-input>
         </form-item>
-        <form-item label="Confirm" prop="passwordconfirm">
+        <form-item :label="ml.confirm" prop="passwordconfirm">
             <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
         </form-item>
+        <Checkbox v-model="formItem.agreeWithPrivacyPolicy"><span @click="openPrivacyPolicy">{{ml.privacypolicy}}</span></Checkbox>
         <form-item>
-            <sendButton ref="mySendButton" :text="ml.register" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
+            <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
             <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
             <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
@@ -63,6 +64,7 @@
 
     </div>
   </transition>
+   <privacyPolicy ref="myPrivacyPolicy" :seller="seller" :data="data" :ml="ml"></privacyPolicy>
   </div>
 </template>
 
@@ -71,11 +73,13 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import sendButton from 'components/common/sendButton/sendButton'
+import privacyPolicy from 'components/privacyPolicy/privacyPolicy'
 
 
 export default {
   components: {
-    sendButton
+    sendButton,
+    privacyPolicy
   },
   props: {
     seller: {},
@@ -164,7 +168,8 @@ export default {
         mobile: '',
         email: '',
         password: '',
-        passwordconfirm: ''
+        passwordconfirm: '',
+        agreeWithPrivacyPolicy: false
       },
       ruleCustom: {
         password: [
@@ -195,7 +200,7 @@ export default {
         ],
         email: [
             { required: false, message: this.ml.requiredfield, trigger: 'blur' },
-            { type: 'email', message: this.ml.incorrectemailformat, trigger: 'blur' }
+            { type: 'email', message: this.invalidEailFormatString, trigger: 'blur' }
         ]
       }
     }
@@ -205,6 +210,9 @@ export default {
       let requestString = ''
       requestString = JSON.stringify(this.formItem)
       return requestString
+    },
+    invalidEailFormatString() {
+      return '1234' // this.ml.incorrectemailformat
     }
   },
   created() {
@@ -232,6 +240,25 @@ export default {
     },
     showregister() {
       this.show = true;
+      /* message is not changed if language changed. must assign again so that language change has effect  */
+      this.ruleValidate = {
+        firstname: [
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
+        ],
+        lastname: [
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
+        ],
+        telephone: [
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'string', min: 8, message: this.ml.minimumlengthrequired, trigger: 'blur' }
+        ],
+        email: [
+            { required: false, message: this.ml.requiredfield, trigger: 'blur' },
+            { type: 'email', message: this.ml.incorrectemailformat, trigger: 'blur' }
+        ]
+      }
       this.$nextTick(() => {
         this.foodsScroll.refresh(); // 初始化scroll
       })
@@ -266,6 +293,9 @@ export default {
     cancel() {
       this.show = false
       this.$emit('close')
+    },
+    openPrivacyPolicy() {
+      this.$refs.myPrivacyPolicy.showPrivacyPolicy()
     },
     handleReset(name) {
       console.log(this.$refs[name]);
@@ -404,7 +434,8 @@ export default {
   position fixed
   left 0
   top 0
-  bottom 48px
+  // bottom 48px
+  bottom 0
   width 100%
   z-index 130
   background white
@@ -429,7 +460,8 @@ export default {
     top 0
     left 20%
     margin-right -20%
-    bottom 48px
+    // bottom 48px
+    bottom 0
     width 100%
     max-width: 800px
     background white
