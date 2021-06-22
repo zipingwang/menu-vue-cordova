@@ -82,6 +82,12 @@ export default {
     // })
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     this.$root.eventHub.$on('signalr.dataDownloaded', this.onDatDownLoaded)
+    console.log('this.data.options.shopId')
+    console.log(this.data.options.shopId)
+    // single site
+    if (this.data.options.shopId === '') {
+      this.onDatDownLoaded()
+    }
   },
   mounted() {
     // this.$nextTick(() => {

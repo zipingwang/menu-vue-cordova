@@ -48,7 +48,7 @@
         </form-item>
         <Checkbox v-model="formItem.agreeWithPrivacyPolicy"><span @click="openPrivacyPolicy">{{ml.privacypolicy}}</span></Checkbox>
         <form-item>
-            <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregisterationfailed" @click="handleSubmit('formItem2')"></sendButton>
+            <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregistrationcommunicationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
             <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
             <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
@@ -199,7 +199,7 @@ export default {
             { type: 'string', min: 8, message: this.ml.minimumlengthrequired, trigger: 'blur' }
         ],
         email: [
-            { required: false, message: this.ml.requiredfield, trigger: 'blur' },
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
             { type: 'email', message: this.invalidEailFormatString, trigger: 'blur' }
         ]
       }
@@ -255,7 +255,7 @@ export default {
             { type: 'string', min: 8, message: this.ml.minimumlengthrequired, trigger: 'blur' }
         ],
         email: [
-            { required: false, message: this.ml.requiredfield, trigger: 'blur' },
+            { required: true, message: this.ml.requiredfield, trigger: 'blur' },
             { type: 'email', message: this.ml.incorrectemailformat, trigger: 'blur' }
         ]
       }

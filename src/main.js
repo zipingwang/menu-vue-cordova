@@ -6,6 +6,7 @@ import ratings from 'components/ratings/ratings'
 import monthmenu from 'components/monthmenu/monthmenu'
 import info from 'components/info/info'
 import ricetable from 'components/ricetable/ricetable'
+import resetPassword from 'components/resetPassword/resetPassword'
 import seller from 'components/seller/seller'
 import admin from 'components/admin/admin'
 import vueTap from 'v-tap'
@@ -55,6 +56,9 @@ const router = new VueRouter({
     path: '/admin',
     component: admin
   }, {
+    path: '/resetPassword',
+    component: resetPassword
+  }, {
     path: '/seller',
     component: seller
   }],
@@ -90,15 +94,19 @@ new Vue({
     data.options.shopId = ''
     data.options.isAdmin = '0'
     data.options.loggedIn = false
+    data.options.changepasswordtoken = ''
     let baseUrl = this.getBaseUrl()
+    data.options.baseUrl = baseUrl
     data.options.baseUrl = baseUrl
     if (data.seller.sellerurl !== '' && data.seller.sellerurl.length > 0) {
       data.options.signalrUrl = data.seller.sellerurl + '/signalr'
       data.options.uploadUrl = data.seller.sellerurl + '/RequestHandler.ashx?'
+      data.options.requestUrl = data.seller.sellerurl + '/RequestHandler.ashx?'
       data.options.dataUrl = data.seller.sellerurl + '/data.ashx'
     } else {
       data.options.signalrUrl = baseUrl + '/signalr'
       data.options.uploadUrl = baseUrl + '/RequestHandler.ashx?'
+      data.options.requestUrl = baseUrl + '/RequestHandler.ashx?'
       data.options.dataUrl = baseUrl + '/data.ashx'
     }
     if ('table' in urlVars) {
@@ -117,6 +125,11 @@ new Vue({
     if ('shopid' in urlVars) {
       data.options.shopId = urlVars['shopid']
     }
+    if ('changepasswordtoken' in urlVars) {
+      data.options.changepasswordtoken = urlVars['changepasswordtoken']
+    }
+    data.options.shopRid = data.seller.sellerRid
+
     console.log(this.getUrlVars())
     console.log(urlVars)
     console.log(data.options)
@@ -154,5 +167,11 @@ new Vue({
 // router.push(`${ml.activetab}`)
 // console.log(JSON.stringify(data.seller))
 // alert('default tab' + data.seller.defaultTab)
-router.push(`${ml.visibletabs[data.seller.defaultTab]}`)
+// alert(data.options.changepasswordtoken)
+if (data.options.changepasswordtoken !== '') {
+  router.push('resetPassword')
+  // router.push('info')
+} else {
+  router.push(`${ml.visibletabs[data.seller.defaultTab]}`)
+}
 // router.push(`admin`)

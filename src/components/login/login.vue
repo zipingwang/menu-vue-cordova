@@ -24,14 +24,10 @@
                         </i-input>
                     </form-item>
                     <form-item>
-                      <sendButton ref="myLoginButton" :text="ml.login" :ml="ml" :sendingText="ml.sending" :failedText="ml.loginfailed" @click="handleSubmit('formInline')"></sendButton>
-                      <!-- <i-button type="primary" :loading="busyWithSending" @click="handleSubmit('formInline')">
-                          <span v-if="!busyWithSending">{{ml.login}}</span>
-                          <span v-else>{{ml.sending}}...</span>
-                      </i-button> -->
-                      <!-- <i-button type="success" @click="handleSubmit('formInline')">{{ml.login}}</i-button> -->
+                      <sendButton ref="myLoginButton" :text="ml.login" :ml="ml" :sendingText="ml.sending" :failedText="ml.logincommunicationfailed" @click="handleSubmit('formInline')"></sendButton>
                     </form-item>
                 </i-form>
+                <p><a @click="forgotPassword">forgot password?</a></P>
             </card>
             <div class="notcustomeryet">
             <card>
@@ -51,6 +47,7 @@
     </div>
   </transition>
   <register ref="myregister" :seller="seller" :data="data" :ml="ml" @close="onRegisterClose"></register>
+  <forgotPassword ref="myForgotPassword" :seller="seller" :data="data" :ml="ml" @close="onForgotPasswordClose"></forgotPassword>
   </div>
 </template>
 
@@ -60,11 +57,13 @@ import BScroll from 'better-scroll'
 import axios from 'axios'
 import register from 'components/register/register'
 import sendButton from 'components/common/sendButton/sendButton'
+import forgotPassword from 'components/forgotPassword/forgotPassword'
 
 export default {
   components: {
     register,
-    sendButton
+    sendButton,
+    forgotPassword
   },
   props: {
     seller: {},
@@ -155,6 +154,9 @@ export default {
     onRegisterClose() {
       this.show = true
     },
+    onForgotPasswordClose() {
+      this.show = true
+    },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -170,6 +172,10 @@ export default {
           this.$Message.error(this.ml.formvalidationerror);
         }
       })
+    },
+    forgotPassword() {
+      this.show = false
+      this.$refs.myForgotPassword.showForgotPassword()
     },
     // checkSending() {
     //   console.log('checkSending')

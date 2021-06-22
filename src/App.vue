@@ -44,6 +44,9 @@
     <div class="tab-item" v-if="data.options.cusId != ''">
       <router-link to="/admin">{{trans.mine}}</router-link>
     </div>
+    <!-- <div class="tab-item" v-if="data.options.changepasswordtoken !== ''">
+      <router-link to="/resetPassword">change password</router-link>
+    </div> -->
   </div>
   <keep-alive>
       <router-view :seller="seller" :data="data" :ml="trans"></router-view>
@@ -85,7 +88,9 @@ export default {
     window.addEventListener('focus', this.onFocus);
     // Inactive
     window.addEventListener('blur', this.onBlur);
-    this.downloadData()
+    if (data.options.shopId !== '') {
+      this.downloadData()
+    }
   },
   mounted() {
   },
@@ -104,7 +109,8 @@ export default {
       if (this.data.options.shopId) {
         return this.data.options.dataUrl + '?siteid=' + this.data.options.shopId
       } else {
-        return this.data.options.dataUrl + '?siteid=root'
+        return '' // single site
+        // return this.data.options.dataUrl + '?siteid=root'
       }
     }
   },
@@ -162,13 +168,14 @@ export default {
         // res.data.options = {}
         // this.seller = res.data.seller
         console.log(this.data.options)
+        // set it again to refresh data
         this.lns = res.data.seller.lns
         this.seller = res.data.seller
         this.data.goods = res.data.goods
         this.data.ricetables = res.data.ricetables
         this.data.options.shopRid = res.data.seller.sellerRid
 
-        document.title = this.seller.name
+        // document.title = this.seller.name
 
         if (this.data.options.takeaway === '1') {
           this.data.goods.forEach(menuGroup => {

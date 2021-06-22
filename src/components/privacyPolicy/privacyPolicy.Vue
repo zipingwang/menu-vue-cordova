@@ -50,7 +50,7 @@
         this.downLoadPrivacyPolicy()
       },
       downLoadPrivacyPolicy() {
-        let url = data.options.uploadUrl + 'method=privacypolicy&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid
+        let url = this.data.options.uploadUrl + 'method=privacypolicy&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid
         console.log(this.data)
         console.log(this.seller)
         console.log(this.ml)
