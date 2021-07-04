@@ -10,9 +10,10 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
+            <backButton @click="cancel()"></backButton>
             <card class="customer">
-                <p slot="title">{{ml.forgotpassword}}forgotpassword</p>
-                <p>{{ml.forgotpassword}}receiveemailtochangepassword</p>
+                <p slot="title">{{ml.forgotpassword}}</p>
+                <p>{{ml.receiveemailtochangepassword}}</p>
                 <br/>
 
                  <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="100">
@@ -25,7 +26,7 @@
                           @click="handleSubmit('formItem1')" :timeout="15"></sendButton>
                         <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
                         <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
-                        <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
+                        <!-- <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button> -->
                     </form-item>
                 </i-form>
             </card>
@@ -43,11 +44,12 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import sendButton from 'components/common/sendButton/sendButton'
-
+import backButton from 'components/common/backButton/backButton'
 
 export default {
   components: {
-    sendButton
+    sendButton,
+    backButton
   },
   props: {
     seller: {},
@@ -80,6 +82,8 @@ export default {
       let requestString = ''
       this.formItem['requesturl'] = this.data.options.requestUrl // dynamic insert, not put in url, in post body url auto encoded
       this.formItem['baseurl'] = this.data.options.baseUrl
+      this.formItem['lnindex'] = this.data.currentlnindex
+      this.formItem['siterid'] = this.data.options.shopRid
       requestString = JSON.stringify(this.formItem)
       return requestString
     },
@@ -149,7 +153,7 @@ export default {
     },
     requestChangePassword() {
       console.log('request change password')
-      axios.post(this.data.options.requestUrl + 'method=forgotpassword' + '&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid, this.registerString)
+      axios.post(this.data.options.requestUrl + 'method=forgotpassword', this.registerString)
         .then((res) => {
           console.log('stop send')
           console.log(this)
@@ -159,7 +163,8 @@ export default {
             this.$Modal.success({
               title: this.ml.success,
               content: this.ml.resetpasswordemailsent,
-              okText: this.ml.ok
+              okText: this.ml.ok,
+              onOk: () => { this.cancel() }
             });
           } else {
             this.$Modal.warning({
@@ -183,7 +188,7 @@ export default {
       if (userId === '-1') {
         this.$Modal.warning({
           title: 'ml.failed',
-          content: 'ml.userregisterationfailed',
+          content: 'ml.userregistrationfailed',
           okText: this.ml.ok
         });
       } else if (userId === '-2') { /* user already exsits */
@@ -194,7 +199,7 @@ export default {
       } else {
         this.$Modal.success({
           title: this.ml.success,
-          content: this.ml.userregisterationsuccess,
+          content: this.ml.userregistrationsuccess,
           okText: this.ml.ok
         });
         this.show = false

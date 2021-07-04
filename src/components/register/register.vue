@@ -10,6 +10,7 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
+            <backButton @click="cancel()"></backButton>
             <card class="customer">
                 <p slot="title">{{ml.register}}</p>
                  <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="100">
@@ -51,7 +52,7 @@
             <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregistrationcommunicationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
             <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
-            <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button>
+            <!-- <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button> -->
         </form-item>
     </i-form>
             </card>
@@ -74,12 +75,14 @@ import BScroll from 'better-scroll'
 import axios from 'axios'
 import sendButton from 'components/common/sendButton/sendButton'
 import privacyPolicy from 'components/privacyPolicy/privacyPolicy'
+import backButton from 'components/common/backButton/backButton'
 
 
 export default {
   components: {
     sendButton,
-    privacyPolicy
+    privacyPolicy,
+    backButton
   },
   props: {
     seller: {},
@@ -208,6 +211,10 @@ export default {
   computed: {
     registerString() {
       let requestString = ''
+      this.formItem['requesturl'] = this.data.options.requestUrl // dynamic insert, not put in url, in post body url auto encoded
+      this.formItem['baseurl'] = this.data.options.baseUrl
+      this.formItem['lnindex'] = this.data.currentlnindex
+      this.formItem['siterid'] = this.data.options.shopRid
       requestString = JSON.stringify(this.formItem)
       return requestString
     },
@@ -277,7 +284,8 @@ export default {
       })
       if (isvalid) {
         this.$refs.mySendButton.start()
-        this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
+        this.registerCustomer()
+        // this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
       } else {
         this.$Message.error(this.ml.formvalidationerror);
       }
@@ -303,12 +311,49 @@ export default {
       this.formItem.lastname = '';
       this.$refs[name].resetFields();
     },
+    registerCustomer() {
+      console.log('registerCustomer')
+      console.log(this.data.options.baseUrl)
+      axios.post(this.data.options.requestUrl + 'method=registercustomer', this.registerString)
+        .then((res) => {
+          console.log('stop send')
+          console.log(this)
+          this.$refs.mySendButton.stop();
+          console.log(res);
+          if (res.data === 'Ok') {
+            this.$Modal.success({
+              title: this.ml.userregistrationemailsenttitle,
+              content: this.ml.userregistrationemailsent,
+              okText: this.ml.ok
+            });
+          } else if (res.data === 'emailaddressalreadyused') {
+            this.$Modal.warning({
+              content: this.ml.emailaddressalreadyused,
+              okText: this.ml.ok
+            });
+          } else {
+            this.$Modal.warning({
+              title: this.ml.failed,
+              content: this.ml.servererror,
+              okText: this.ml.ok
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$Modal.warning({
+            title: 'ml.failed',
+            content: 'ml.userregistrationemailsentfailed',
+            okText: this.ml.ok
+          });
+        });
+    },
     onRegisterUserConfirmedFromServerToWeb(userId, sessionId) {
       this.$refs.mySendButton.stop()
       if (userId === '-1') {
         this.$Modal.success({
           title: 'ml.failed',
-          content: 'ml.userregisterationfailed',
+          content: 'ml.userregistrationfailed',
           okText: this.ml.ok
         });
       } else if (userId === '-2') { /* user already exsits */
@@ -319,7 +364,7 @@ export default {
       } else {
         this.$Modal.success({
           title: this.ml.success,
-          content: this.ml.userregisterationsuccess,
+          content: this.ml.userregistrationsuccess,
           okText: this.ml.ok
         });
         this.show = false

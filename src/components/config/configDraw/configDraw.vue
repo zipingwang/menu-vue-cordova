@@ -9,6 +9,7 @@
           <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
           <!-- <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p> -->
           <p class="drawbutton"><i-button @click="configOpeninghour" type="primary">{{ml.openinghour}}</i-button></p>
+          <p class="drawbutton"><i-button @click="configSpecialDays" type="primary">{{ml.openingspecialday}}configSpecialDays</i-button></p>
           <i-button type="primary" @click="publishNewMenu">{{ml.publish}}</i-button>
         </drawer>
 
@@ -30,6 +31,7 @@
         <menuGroups ref="menuGroups" :ml="ml" :data="data" @closed="childDrawClosed"></menuGroups>
         <menus ref="menus" :ml="ml" :data="data" @closed="childDrawClosed"></menus>
         <openinghour ref="myOpeninghour" :ml="ml" :data="data" @closed="childDrawClosed"></openinghour>
+        <specialdays ref="mySpecialDays" :ml="ml" :data="data" @closed="childDrawClosed"></specialdays>
     </div>
 </template>
 <script>
@@ -37,13 +39,15 @@ import businessInfo from 'components/config/businessInfo/businessInfo'
 import menuGroups from 'components/config/menuGroups/menuGroups'
 import menus from 'components/config/menus/menus'
 import openinghour from 'components/config/openinghour/openinghour'
+import specialdays from 'components/config/specialdays/specialdays'
 
 export default {
   components: {
     businessInfo,
     menuGroups,
     menus,
-    openinghour
+    openinghour,
+    specialdays
   },
   props: {
     ml: {},
@@ -96,6 +100,11 @@ export default {
     configOpeninghour() {
       this.configVisible = false
       this.$refs.myOpeninghour.showDraw()
+    },
+    configSpecialDays() {
+      this.configVisible = false
+      // alert(this.$refs.mySpecialDays)
+      this.$refs.mySpecialDays.showDraw()
     },
     publishNewMenu() {
       this.modalPublishNewMenu = true

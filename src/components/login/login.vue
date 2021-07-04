@@ -10,6 +10,7 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
+            <backButton @click="hidelogin()"></backButton>
             <card class="customer">
                 <p slot="title">{{ml.login}}</p>
                 <i-form ref="formInline" :model="formInline" :rules="ruleInline" inline>
@@ -19,22 +20,22 @@
                         </i-input>
                     </form-item>
                     <form-item prop="password">
+                        <!-- <i-input type="password" v-model="formInline.password" :placeholder="loginpasswordlaceholder" > -->
                         <i-input type="password" v-model="formInline.password" >
                             <icon type="ios-lock-outline" slot="prepend"></icon>
                         </i-input>
                     </form-item>
-                    <form-item>
-                      <sendButton ref="myLoginButton" :text="ml.login" :ml="ml" :sendingText="ml.sending" :failedText="ml.logincommunicationfailed" @click="handleSubmit('formInline')"></sendButton>
-                    </form-item>
                 </i-form>
-                <p><a @click="forgotPassword">forgot password?</a></P>
+                <sendButton ref="myLoginButton" :text="ml.login" :ml="ml" :sendingText="ml.sending" :failedText="ml.logincommunicationfailed" @click="handleSubmit('formInline')"></sendButton>
+                <span class="forgotPassword"><a @click="forgotPassword">{{ml.forgotpassword}}</a></span>
             </card>
             <div class="notcustomeryet">
             <card>
                 <p slot="title">{{ml.noggeenaccount}}</p>
                 <Button type="primary" class="register" @click="register()">{{ml.register}}</Button>
-                <Button type="primary" class="loginasgust" @click="loginasguest()">{{ml.loginasguest}}</Button>
-                <Button type="primary" class="close" @click="hidelogin()">{{ml.cancel}}</Button>            </card>
+                <!-- <Button type="primary" class="loginasgust" @click="loginasguest()">{{ml.loginasguest}}</Button> -->
+                <!-- <Button type="primary" class="close" @click="hidelogin()">{{ml.cancel}}</Button>             -->
+            </card>
 
             </div>
           </div>
@@ -58,12 +59,14 @@ import axios from 'axios'
 import register from 'components/register/register'
 import sendButton from 'components/common/sendButton/sendButton'
 import forgotPassword from 'components/forgotPassword/forgotPassword'
+import backButton from 'components/common/backButton/backButton'
 
 export default {
   components: {
     register,
     sendButton,
-    forgotPassword
+    forgotPassword,
+    backButton
   },
   props: {
     seller: {},
@@ -135,6 +138,7 @@ export default {
     },
     showlogin() {
       this.show = true;
+      this.$root.eventHub.$emit('signalr.connect')
       this.$nextTick(() => {
         this.foodsScroll.refresh(); // 初始化scroll
       })
@@ -205,6 +209,7 @@ export default {
         this.show = false
         // this.data.options.cusId = user.rid /* don't change parent data */
         // this.data.options.isAdmin = user.isAdmin
+        // alert('user logged in')
         this.$root.eventHub.$emit('login.loggedin', user)
         // this.$root.eventHub.$emit('signalr.downloadOrder')
         // this.$Modal.success({
@@ -298,6 +303,9 @@ export default {
 }
 .close {
   margin: 10px 20px
+}
+.forgotPassword {
+  margin-left: 30px
 }
 .detail
   position fixed

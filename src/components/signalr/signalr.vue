@@ -34,7 +34,8 @@ export default {
     this.$root.eventHub.$on('signalr.sendMessageFromWebToServer', this.sendMessageFromWebToServer)
     this.$root.eventHub.$on('signalr.checkConnect', this.checkConnect)
     this.$root.eventHub.$on('signalr.publishMenu', this.publishMenu)
-    this.$root.eventHub.$on('signalr.dataDownloaded', this.connectToSignalRServer)
+    // this.$root.eventHub.$on('signalr.dataDownloaded', this.connectToSignalRServer)
+    this.$root.eventHub.$on('signalr.connect', this.connect)
   },
   methods: {
     connect() {
@@ -129,7 +130,11 @@ export default {
           console.log('started')
           tempSimpleHubProxy.server.connect('vue');
           // tempDownloadMenu();
-        });
+        }).fail((err) => {
+          console.log('fail to connect signalr')
+          console.log(err)
+        }
+        );
       });
 
       // alert(tempSimpleHubProxy)
@@ -156,6 +161,7 @@ export default {
     },
     signin(user) {
       try {
+        this.connect();
         this.simpleHubProxy.server.signinFromWebToServer(this.connectionId, this.getDataOptionsString(), user);
       } catch (ex) {
         console.log(ex)
@@ -297,6 +303,20 @@ export default {
             break;
           case 'addMenuGroup':
             this.$root.eventHub.$emit('signalr.onAddMenuGroup', message.messageBody)
+            break;
+          case 'downLoadSpecialDays':
+            console.log('call back downLoadSpecialDays in signalr')
+            // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onDownLoadSpecialDays', message.messageBody)
+            break;
+          case 'saveSpecialDay':
+            this.$root.eventHub.$emit('signalr.onSaveSpecialDay', message.messageBody)
+            break;
+          case 'deleteSpecialDay':
+            this.$root.eventHub.$emit('signalr.onDeleteSpecialDay', message.messageBody)
+            break;
+          case 'addSpecialDay':
+            this.$root.eventHub.$emit('signalr.onAddSpecialDay', message.messageBody)
             break;
           case 'downLoadMenus':
             console.log('call back downLoadMenus in signalr')

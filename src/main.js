@@ -7,6 +7,7 @@ import monthmenu from 'components/monthmenu/monthmenu'
 import info from 'components/info/info'
 import ricetable from 'components/ricetable/ricetable'
 import resetPassword from 'components/resetPassword/resetPassword'
+import messageScreen from 'components/messageScreen/messageScreen'
 import seller from 'components/seller/seller'
 import admin from 'components/admin/admin'
 import vueTap from 'v-tap'
@@ -59,6 +60,9 @@ const router = new VueRouter({
     path: '/resetPassword',
     component: resetPassword
   }, {
+    path: '/messageScreen',
+    component: messageScreen
+  }, {
     path: '/seller',
     component: seller
   }],
@@ -88,15 +92,18 @@ new Vue({
     data.options = {}
     data.options.client = 'vue'
     data.options.table = ''
-    data.options.ln = ''
+    data.options.ln = ml.ln /* e.g. nl, zh, en */
+    console.log('data.options.ln')
+    console.log(data.options.ln)
+    data.options.lnIndex = 0
     data.options.takeaway = '1'
     data.options.cusId = '' /* 202 is admin */
     data.options.shopId = ''
     data.options.isAdmin = '0'
     data.options.loggedIn = false
     data.options.changepasswordtoken = ''
+    data.options.msg = {type: '', content: ''}
     let baseUrl = this.getBaseUrl()
-    data.options.baseUrl = baseUrl
     data.options.baseUrl = baseUrl
     if (data.seller.sellerurl !== '' && data.seller.sellerurl.length > 0) {
       data.options.signalrUrl = data.seller.sellerurl + '/signalr'
@@ -127,6 +134,22 @@ new Vue({
     }
     if ('changepasswordtoken' in urlVars) {
       data.options.changepasswordtoken = urlVars['changepasswordtoken']
+    }
+    if ('msgi' in urlVars) {
+      data.options.msg.type = 'info'
+      data.options.msg.content = urlVars['msgi']
+    }
+    if ('msgw' in urlVars) {
+      data.options.msg.type = 'warning'
+      data.options.msg.content = urlVars['msgw']
+    }
+    if ('msge' in urlVars) {
+      data.options.msg.type = 'error'
+      data.options.msg.content = urlVars['msge']
+    }
+    if ('msgs' in urlVars) {
+      data.options.msg.type = 'error'
+      data.options.msg.content = urlVars['msgs']
     }
     data.options.shopRid = data.seller.sellerRid
 
@@ -168,9 +191,13 @@ new Vue({
 // console.log(JSON.stringify(data.seller))
 // alert('default tab' + data.seller.defaultTab)
 // alert(data.options.changepasswordtoken)
+console.log(data.options)
 if (data.options.changepasswordtoken !== '') {
   router.push('resetPassword')
   // router.push('info')
+} else if (data.options.msg.type !== '') {
+  console.log('push msg')
+  router.push('messageScreen')
 } else {
   router.push(`${ml.visibletabs[data.seller.defaultTab]}`)
 }

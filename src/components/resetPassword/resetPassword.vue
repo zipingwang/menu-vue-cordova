@@ -15,18 +15,18 @@
   padding: 20px;
 }
 
-/* On screens that are 992px wide or less, go from four columns to two columns */
-@media screen and (max-width: 992px) {
-  .column {
-    flex: 50%;
-  }
+.billcontainer {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 50px auto
 }
 
-/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .row {
-    flex-direction: column;
-  }
+.billcontent {
+  flex: 80%
+}
+
+.columnpadding {
+  flex : 10%
 }
 
 .ratingsWrapper
@@ -36,66 +36,35 @@
   left: 0
   width: 100%
   overflow: hidden
-.ratings-content
-  .row
-    .column
-      .block
-        h1
-          // margin 0 18px
-          padding 0px 0 12px 0
-          border-bottom 1px solid rgba(7,17,27,0.1)
-        .list
-          .item
-            font-size 12px
-            // font-weight 200
-            color rgb(7,17,27)
-            line-height 10px
-            padding 10px 10px
-            border-bottom 1px solid rgba(7,17,27,0.1)
-            &:last-child
-              border none
-  .map
-    text-align center
-    margin-top 20px
 
 </style>
 
 <template lang="html">
   <div class="ratingsWrapper" ref="ratingsWrapper">
-    <div class="ratings-content">
-      <div class="divider"></div>
-      <div class="row">
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.openinghour}} sfs</h1>
-            <ul class="list">
-              <li class="item" v-for="line in seller.openinghour">{{line}}</li>
-            </ul>
+      <div class="billcontainer">
+          <div class="columnpadding"></div>
+          <div class="billcontent">
+            <card class="customer">
+                <p slot="title">{{ml.resetpassword}}reset password</p>
+                <br/>
+
+                 <i-form ref="formItem1" :model="formItem" :rules="ruleCustom" :label-width="100">
+                 <!-- <i-form ref="formItem1" :model="formItem" :label-width="80"> -->
+                    <form-item :label="ml.newpassword" prop="password">
+                        <i-input type="password" v-model="formItem.password"></i-input>
+                    </form-item>
+                    <form-item :label="ml.confirm" prop="passwordconfirm">
+                        <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
+                    </form-item>
+                    <form-item>
+                        <sendButton ref="mySendButton" :ml="ml" :text="ml.resetpassword" :sendingText="ml.sending" :failedText="ml.communicationfailed"
+                          @click="handleSubmit('formItem1')" :timeout="15"></sendButton>
+                    </form-item>
+                </i-form>
+            </card>
           </div>
-        </div>
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.telephone}}</h1>
-            <ul class="list">
-              <li class="item" v-for="tel in seller.telefoon"><Icon type="ios-call" />  {{tel}}</li>
-            </ul>
-          </div>
-        </div>
-        <div class="column">
-          <div class="block">
-            <h1>{{ml.address}}</h1>
-            <ul class="list">
-              <li class="item" v-for="line in seller.address">{{line}}</li>
-            </ul>
-          </div>
-        </div>
+          <div class="columnpadding"></div>
       </div>
-      <div class="divider"></div>
-      <div class="map" :height="mapheight + 10">
-        <iframe :src="seller.googlemapurl" :width="mapwidth" :height="mapheight" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-      </div>
-      <div height="10px"></div>
-    </div>
   </div>
 </template>
 
@@ -103,10 +72,11 @@
 import axios from 'axios'
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
+import sendButton from 'components/common/sendButton/sendButton'
 
 export default {
   components: {
-    star: star
+    sendButton
   },
   props: {
     data: {},
@@ -114,61 +84,110 @@ export default {
     seller: {}
   },
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(this.ml.requiredfield));
+      } else if (value.length < 6) {
+        callback(new Error(this.ml.minimumlengthrequired));
+      } else {
+        if (this.formItem.passwordconfirm !== '') {
+          // 对第二个密码框单独验证
+          this.$refs.formItem1.validateField('passwordconfirm');
+        }
+        callback();
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(this.ml.requiredfield));
+      } else if (value !== this.formItem.password) {
+        callback(new Error(this.ml.passwordmismatch));
+      } else {
+        callback();
+      }
+    };
     return {
       address: this.seller.address,
       telefoon: this.seller.telefoon,
-      openinghour: this.seller.openinghour
+      openinghour: this.seller.openinghour,
+      formItem: {
+        password: '',
+        passwordconfirm: ''
+      },
+      ruleCustom: {
+        password: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        passwordconfirm: [
+          { validator: validatePassCheck, trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
-    smallScreen() {
-      return screen.width <= 800;
-    },
-    mapwidth() {
-      if (screen.width <= 800) {
-        return 400;
-      } else {
-        return 600;
-      }
-    },
-    mapheight() {
-      if (screen.width <= 800) {
-        return 300;
-      } else {
-        return 450;
-      }
+    registerString() {
+      let requestString = ''
+      this.formItem['requesturl'] = this.data.options.requestUrl // dynamic insert, not put in url, in post body url auto encoded
+      this.formItem['baseurl'] = this.data.options.baseUrl
+      this.formItem['changepasswordtoken'] = this.data.options.changepasswordtoken
+      requestString = JSON.stringify(this.formItem)
+      return requestString
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this._initScroll(); // 初始化scroll
-    })
   },
   watch: {
-    '$route' (to, from) {
-      if (to.path === '/info') {
-        this.foodsScroll.refresh()
-      }
-    }
   },
   methods: {
-    _initScroll() {
-      // alert('ok')
-      // console.log(`_initScrollseller ${this.data.monthmenu.title},`)
-      // let smallScreen = screen.width <= 800;
-      // console.log(`screen width ${screen.width}, smallScreen ${this.smallScreen}`)
-      this.foodsScroll = new BScroll(this.$refs.ratingsWrapper, {
-        click: true,
-        probeType: 3,
-        scrollbar: {
-          fade: this.smallScreen,
-          interactive: !this.smallScreen // new in 1.8.0
-        },
-        mouseWheel: {
-          speed: 20,
-          invert: false
-        }
-      });
+    handleSubmit(name) {
+      var isvalid = false
+      this.$refs.formItem1.validate((valid) => {
+        isvalid = valid
+      })
+      if (isvalid) {
+        this.$refs.mySendButton.start()
+        // this.$root.eventHub.$emit('signalr.registerUser', this.registerString);
+        this.requestChangePassword()
+      } else {
+        this.$Message.error(this.ml.formvalidationerror);
+      }
+    },
+    requestChangePassword() {
+      console.log('request change password')
+      axios.post(this.data.options.requestUrl + 'method=changepassword' + '&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid, this.registerString)
+        .then((res) => {
+          console.log('stop send')
+          console.log(this)
+          this.$refs.mySendButton.stop();
+          console.log(res);
+          if (res.data === 'Ok') {
+            this.$Modal.success({
+              title: this.ml.success,
+              content: this.ml.resetpasswordsuccess,
+              okText: this.ml.ok
+            });
+          } else if (res.data === 'ChangePasswordLinkNoMoreValid') {
+            this.$Modal.warning({
+              title: 'ml.failed',
+              content: 'ml.changepasswordlinknomorevalid',
+              okText: this.ml.ok
+            });
+          } else {
+            this.$Modal.warning({
+              title: 'ml.failed',
+              content: 'ml.resetpasswordemailsentfailed',
+              okText: this.ml.ok
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$Modal.warning({
+            title: 'ml.failed',
+            content: 'ml.resetpasswordemailsentfailed',
+            okText: this.ml.ok
+          });
+        });
     }
   }
 }

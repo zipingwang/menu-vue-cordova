@@ -42,6 +42,7 @@
               <Icon type="ios-time-outline" />
               </div>
             </div>
+            <div class="openinghourcomment" v-if="openinghourComment !== ''">{{openinghourComment}}</div>
             <div class="ordercomment" v-if="seller.supportOnlineOrder">
               <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment"></textarea>
             </div>
@@ -99,10 +100,12 @@ export default {
       showWaiting: false,
       mySendingTimer: {},
       startTime: {},
-      takeawayTimeSlot: '12:00', /* give some value, otherwise order string will not correct and crash server */
+      // takeawayTimeSlot: '12:00', /* give some value, otherwise order string will not correct and crash server */
+      takeawayTimeSlot: this.ml.selecttime, /* give some value, otherwise order string will not correct and crash server */
       takeawayTimeSlots: [],
       busyWithSending: false,
-      shopClosed: false
+      shopClosed: false,
+      openinghourComment: ''
     }
   },
   computed: {
@@ -185,7 +188,9 @@ export default {
       this.show = false;
     },
     showTakeawayTimeSlots() {
-      this.$refs.takeawayTimeSlots.showTimeSlots()
+      if (this.allowPlaceOrder) {
+        this.$refs.takeawayTimeSlots.showTimeSlots()
+      }
     },
     onGetTakeawayTimeSlots(slots) {
       // console.log(slots)
@@ -193,6 +198,8 @@ export default {
       // console.log(mySlots)
       // console.log(typeof mySlots.timeSlots)
       this.takeawayTimeSlots = mySlots.timeSlots
+      this.openinghourComment = mySlots.openingStatus
+      this.allowPlaceOrder = mySlots.allowPlaceOrder
       if (mySlots.timeSlots.length > 0) {
         this.takeawayTimeSlot = mySlots.timeSlots[0]
       } else {
@@ -310,6 +317,11 @@ export default {
   margin-top: 40px
   text-align: center;
   font-size: 24px;
+}
+.openinghourcomment
+{
+  margin-top: 10px
+  text-align: center;
 }
 .ordercomment
 {

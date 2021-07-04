@@ -131,8 +131,12 @@ export default {
     changeLanguage(lan, index) {
       // alert('changeLanguage')
       // console.log(ml[lan])
+      console.log(lan)
+      console.log(this.data)
       this.trans = ml[lan]
       this.data.currentlnindex = index
+      this.data.options.ln = lan
+      this.data.options.lnIndex = index
     },
     menudownloaded(data) {
       // alert('menudownloaded')
