@@ -124,7 +124,7 @@ export default {
           // if (this) {
           //   alert('not null')
           // } else {
-          //   alert('null')
+          //   alert('null')orderConfirmedFromServerToWeb
           // }
           // alert(tempSimpleHubProxy)
           console.log('started')
@@ -345,6 +345,14 @@ export default {
             console.log('call back downLoadOpeninghour in signalr')
             // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
             this.$root.eventHub.$emit('signalr.onDownLoadOpeninghour', message.messageBody)
+            break;
+          case 'webOrder':
+            console.log('case webOrder')
+            this.$root.eventHub.$emit('signalr.onWebOrderConfirmed', message.messageBody)
+            break;
+          case 'sessionExpired':
+            console.log('sessionExpired')
+            this.$root.eventHub.$emit('signalr.onSessionExpired', message.messageBody)
             break;
           default:
             // code block

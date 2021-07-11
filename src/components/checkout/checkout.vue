@@ -50,7 +50,7 @@
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
             <div class="buttonarea">
-              <sendButton ref="mySendButton" :text="ml.confirm" :ml="ml" :sendingText="ml.sending" :failedText="ml.ordersendfailed + ' ' + seller.telefoon" @click="sendOrder"></sendButton>
+              <sendButton ref="mySendButton" :timeout="15" :text="ml.confirm" :ml="ml" :sendingText="ml.sending" :failedText="ml.ordersendfailed + ' ' + seller.telefoon" @click="sendOrder"></sendButton>
               <i-button type="primary" @click="hidecheckout">{{ml.cancel}}</i-button>
             </div>
           </div>
@@ -140,6 +140,7 @@ export default {
     // this.connectToSignalRServer()
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     this.$root.eventHub.$on('signalr.onGetTakeawayTimeSlots', this.onGetTakeawayTimeSlots)
+    this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
 
     console.log('checkout JSON.stringify(this.trans)')
     console.log(JSON.stringify(this.trans))
@@ -198,10 +199,12 @@ export default {
       // console.log(mySlots)
       // console.log(typeof mySlots.timeSlots)
       this.takeawayTimeSlots = mySlots.timeSlots
-      this.openinghourComment = mySlots.openingStatus
+      this.openinghourComment = mySlots.message
       this.allowPlaceOrder = mySlots.allowPlaceOrder
+
       if (mySlots.timeSlots.length > 0) {
         this.takeawayTimeSlot = mySlots.timeSlots[0]
+        this.shopclosed = false
       } else {
         this.shopClosed = true
         this.takeawayTimeSlot = this.ml.shopclosed
@@ -226,6 +229,7 @@ export default {
             this.$router.push('admin')
           }, 300)
           setTimeout(() => {
+            console.log('onOrderConfirmedFromServerToWeb')
             this.$root.eventHub.$emit('checkout.onOrderConfirmedFromServerToWeb', order, addremove)
           }, 1000)
         }
@@ -233,6 +237,13 @@ export default {
     },
     sendOrder() {
       if (this.selectFoods.length === 0) {
+        return
+      }
+      if (this.takeawayTimeSlot === this.ml.selecttime) {
+        this.$Modal.success({
+          content: this.ml.selecttime,
+          okText: this.ml.ok
+        });
         return
       }
       // this.showWaiting = true
@@ -252,6 +263,20 @@ export default {
     timeSlotSelected(timeSlot) {
       console.log(timeSlot)
       this.takeawayTimeSlot = timeSlot
+    },
+    onSessionExpired(obj) {
+      console.log('onSessionExpired in checkout')
+      if (this.$refs.mySendButton !== undefined) {
+        this.$refs.mySendButton.stop()
+      }
+      this.showWaiting = false
+      this.$Modal.warning({
+        content: this.ml.restaurantisalreadyclosed,
+        okText: this.ml.ok,
+        onOk: () => {
+          this.hidecheckout()
+        }
+      });
     }
   }
 }

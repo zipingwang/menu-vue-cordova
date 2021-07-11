@@ -98,6 +98,7 @@ new Vue({
     data.options.lnIndex = 0
     data.options.takeaway = '1'
     data.options.cusId = '' /* 202 is admin */
+    data.options.customerToken = ''
     data.options.shopId = ''
     data.options.isAdmin = '0'
     data.options.loggedIn = false

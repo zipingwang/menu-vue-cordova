@@ -82,6 +82,7 @@ export default {
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
     this.$root.eventHub.$on('login.loggedin', this.onLoggedIn)
     this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
+    this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
 
     console.log('app created')
      // Active
@@ -145,11 +146,18 @@ export default {
     },
     onLoggedIn(user) {
       console.log('onLoggedIn in app')
+      console.log(user)
       this.data.options.loggedIn = true
       this.data.options.cusId = user.rid
       this.data.options.isAdmin = user.isAdmin
-      console.log(this.data.options.cusId)
-      console.log(this.data.options.isAdmin)
+      this.data.options.customerToken = user.customerToken
+    },
+    onSessionExpired(obj) {
+      console.log('onSessionExpired in app')
+      this.data.options.loggedIn = false
+      this.data.options.cusId = ''
+      this.data.options.isAdmin = ''
+      this.data.options.customerToken = ''
     },
     onLoggedOut() {
       console.log('onLoggedOut in app')
