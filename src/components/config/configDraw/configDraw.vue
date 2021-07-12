@@ -9,7 +9,8 @@
           <p class="drawbutton"><i-button @click="configMenus" type="primary">{{ml.menu}}</i-button></p>
           <!-- <p class="drawbutton"><i-button @click="configRiceTable" type="primary">{{ml.ricetable}}</i-button></p> -->
           <p class="drawbutton"><i-button @click="configOpeninghour" type="primary">{{ml.openinghour}}</i-button></p>
-          <p class="drawbutton"><i-button @click="configSpecialDays" type="primary">{{ml.openingspecialday}}configSpecialDays</i-button></p>
+          <p class="drawbutton"><i-button @click="configSpecialDays" type="primary">{{ml.openingspecialday}}</i-button></p>
+          <p class="drawbutton"><i-button @click="configMonthMenu" type="primary">{{ml.monthmenu}}</i-button></p>
           <i-button type="primary" @click="publishNewMenu">{{ml.publish}}</i-button>
         </drawer>
 
@@ -32,6 +33,7 @@
         <menus ref="menus" :ml="ml" :data="data" @closed="childDrawClosed"></menus>
         <openinghour ref="myOpeninghour" :ml="ml" :data="data" @closed="childDrawClosed"></openinghour>
         <specialdays ref="mySpecialDays" :ml="ml" :data="data" @closed="childDrawClosed"></specialdays>
+        <monthMenu ref="myMonthMenu" :ml="ml" :data="data" @closed="childDrawClosed"></monthMenu>
     </div>
 </template>
 <script>
@@ -40,6 +42,7 @@ import menuGroups from 'components/config/menuGroups/menuGroups'
 import menus from 'components/config/menus/menus'
 import openinghour from 'components/config/openinghour/openinghour'
 import specialdays from 'components/config/specialdays/specialdays'
+import monthMenu from 'components/config/configMonthMenu/configMonthMenu'
 
 export default {
   components: {
@@ -47,7 +50,8 @@ export default {
     menuGroups,
     menus,
     openinghour,
-    specialdays
+    specialdays,
+    monthMenu
   },
   props: {
     ml: {},
@@ -105,6 +109,11 @@ export default {
       this.configVisible = false
       // alert(this.$refs.mySpecialDays)
       this.$refs.mySpecialDays.showDraw()
+    },
+    configMonthMenu() {
+      this.configVisible = false
+      // alert(this.$refs.mySpecialDays)
+      this.$refs.myMonthMenu.showDraw()
     },
     publishNewMenu() {
       this.modalPublishNewMenu = true

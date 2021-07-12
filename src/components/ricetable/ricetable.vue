@@ -114,7 +114,7 @@
 <template lang="html">
   <div class="ratingsWrapper" ref="ratingsWrapper">
     <div class="ratings-content">
-      <div class="divider"></div>
+      <!-- <div class="divider"></div> -->
       <div class="row">
         <div class="column" v-for="ricetable in ricetables">
            <div class="ricetableblock">
