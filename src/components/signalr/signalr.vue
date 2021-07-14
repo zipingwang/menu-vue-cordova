@@ -64,6 +64,7 @@ export default {
 
       var tempSimpleHubProxy = this.simpleHubProxy
       var tempSetSimpleHubProxy = this.setSimpleHubProxy
+      var tempSellerRid = this.data.options.shopRid
       // Handler.tempWriteLog = function (name) {
       //   console.log(name)
       // }
@@ -83,12 +84,12 @@ export default {
         tempSimpleHubProxy.client.addMessage = function (name, message) {
           this.writeToLog(name + ':' + message);
         };
-        tempSimpleHubProxy.client.onConnected = function (id, userName, connectedusers) {
+        tempSimpleHubProxy.client.onConnected = function (id, userName) {
           // this.writeToLog('onconneccted' + name + ':' + message);
           // alert('onconneccted' + name + ':' + message)
           // Handler['tempWriteLog']('onconnected' + name + ':' + message);
           // tempWriteLog('onconnected' + name + ':' + message);
-          tempOnConnnected(id, userName, connectedusers)
+          tempOnConnnected(id, userName)
         };
         tempSimpleHubProxy.client.orderConfirmedFromServerToWeb = function (webClientConnectionId, order, addremove) {
           // Handler['tempWriteLog']('messagereceived' + name + ':' + message);
@@ -128,7 +129,7 @@ export default {
           // }
           // alert(tempSimpleHubProxy)
           console.log('started')
-          tempSimpleHubProxy.server.connect('vue');
+          tempSimpleHubProxy.server.connect('vue', tempSellerRid);
           // tempDownloadMenu();
         }).fail((err) => {
           console.log('fail to connect signalr')
@@ -139,7 +140,7 @@ export default {
 
       // alert(tempSimpleHubProxy)
     },
-    onConnected(id, userName, allConnectedUsers) {
+    onConnected(id, userName) {
       this.connectionId = id
       // alert('onConnected:' + this.connectionId)
     },
@@ -371,7 +372,11 @@ export default {
     checkConnect() {
       try {
         console.log('checkConnect')
-        this.simpleHubProxy.server.connect('vue');
+        if (this.simpleHubProxy == null) {
+          this.connectToSignalRServer();
+        } else {
+          this.simpleHubProxy.server.connect('vue', this.data.options.shopRid);
+        }
       } catch (ex) {
         console.log(ex)
         this.simpleHubProxy = null

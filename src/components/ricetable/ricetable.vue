@@ -81,7 +81,7 @@
         .shopCart
           position absolute
           right 18px
-          bottom 18px
+          top 28px
           height 24px
           text-align center
           z-index 2
@@ -103,7 +103,7 @@
         .cartcontrol
           position absolute
           right 12px
-          bottom 12px
+          top 22px
   .map
     text-align center
     margin-top 20px
