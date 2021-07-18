@@ -10,7 +10,7 @@
         <div class="back" @click="hide()">
           <i class="icon-arrow_lift"></i>
         </div>
-        <img :src="food.image" :height="imgHeight" width="100%">
+        <img :src="food.image" :height="imgHeight" width="100%" onerror="this.onerror=null; this.src='static/img/nomenupicture.jpg'">
         <div class="info">
           <div class="title">{{food.name[data.currentlnindex]}}</div>
           <p class="desc" v-show="food.menunr">Nr. {{food.menunr}}</p>
@@ -229,6 +229,8 @@ export default {
     left 6px
     font-size 20px
     padding 10px
+    background-color rgba(7,17,27,0.2)
+    border-radius 5px
   .info
     position relative
     box-sizing border-box

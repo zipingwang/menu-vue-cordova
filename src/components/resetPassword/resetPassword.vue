@@ -53,7 +53,7 @@
                     <form-item :label="ml.newpassword" prop="password">
                         <i-input type="password" v-model="formItem.password"></i-input>
                     </form-item>
-                    <form-item :label="ml.confirm" prop="passwordconfirm">
+                    <form-item :label="ml.confirmpassword" prop="passwordconfirm">
                         <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
                     </form-item>
                     <form-item>
