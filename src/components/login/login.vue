@@ -138,7 +138,7 @@ export default {
     },
     showlogin() {
       this.show = true;
-      this.$root.eventHub.$emit('signalr.connect')
+      this.$root.eventHub.$emit('signalr.checkConnect')
       this.$nextTick(() => {
         this.foodsScroll.refresh(); // 初始化scroll
       })
