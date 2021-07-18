@@ -10,7 +10,7 @@
         <div class="back" @click="hide()">
           <i class="icon-arrow_lift"></i>
         </div>
-        <img :src="food.image" :height="imgHeight" width="100%" onerror="this.onerror=null; this.src='static/img/nomenupicture.jpg'">
+        <img :src="food.image?food.image:'static/img/nomenupicture.jpg'" :height="imgHeight" width="100%">
         <div class="info">
           <div class="title">{{food.name[data.currentlnindex]}}</div>
           <p class="desc" v-show="food.menunr">Nr. {{food.menunr}}</p>
