@@ -112,23 +112,11 @@ export default {
       // goods: data.goods, /* don't create own property, it will breke the change change. change in parant data.goods will not go through child */
       listHeight: [],
       foodsScrollY: 0,
-      selectedFood: ''
+      selectedFood: '',
+      menuCurrentIndex: 0
     }
   },
   computed: {
-    menuCurrentIndex() {
-      for (let i = 0, l = this.listHeight.length; i < l; i++) {
-        let topHeight = this.listHeight[i]
-        let bottomHeight = this.listHeight[i + 1]
-        if ((this.foodsScrollY + this.$refs.menuWrapper.clientHeight) > this.listHeight[this.listHeight.length - 2]) {
-          console.log(this.listHeight.length - 1)
-          return this.listHeight.length - 2
-        } else if (!bottomHeight || (this.foodsScrollY >= topHeight && this.foodsScrollY < bottomHeight)) {
-          return i
-        }
-      }
-      return 0
-    },
     selectFoods() {
       let foods = []
       this.data.goods.forEach((good) => {
@@ -162,18 +150,7 @@ export default {
       });
       // 监控滚动事件
       this.foodsScroll.on('scroll', (pos) => {
-        this.foodsScrollY = Math.abs(Math.round(pos.y))
-        let menuGroupHeight = 54
-        let offset = this.$refs.menuWrapper.clientHeight - (this.menuCurrentIndex + 1) * menuGroupHeight
-        if (offset < 0) {
-          if ((this.foodsScrollY + this.$refs.menuWrapper.clientHeight) > this.listHeight[this.listHeight.length - 2]) {
-            this.menuGroupScroll.scrollTo(0, this.$refs.menuWrapper.clientHeight - (this.data.goods.length * menuGroupHeight), 300)
-          } else {
-            this.menuGroupScroll.scrollTo(0, offset, 300)
-          }
-        } else {
-          this.menuGroupScroll.scrollTo(0, 0, 300)
-        }
+       // when scroll menu, also scroll its menugroup, may lag or freezing on some browsers(e.g. iphone, firefox), these code are removed.
       })
     },
     _calculateHeight() {
@@ -191,14 +168,13 @@ export default {
         return
       }
       this.foodsScroll.scrollTo(0, -this.listHeight[index], 300)
+      this.menuCurrentIndex = index
     },
     goDetail(food) {
       this.selectedFood = food
-      if (food.image) {
-        this.$nextTick(() => {
-          this.$refs.myFood.show()
-        })
-      }
+      this.$nextTick(() => {
+        this.$refs.myFood.show()
+      })
     },
     onOrderConfirmedFromServerToWeb(order, addremove) {
       if (addremove !== '1') {
