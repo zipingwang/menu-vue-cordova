@@ -35,9 +35,10 @@
       <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
           <h1 class="title">{{ml.shoppingcart}}</h1>
-          <span class="empty" @click="setEmpty()">{{ml.clearshoppingcart}}</span>
+          <span class="empty" @click="setEmpty()" v-show="!shoppingCartIsEmpty">{{ml.clearshoppingcart}}</span>
         </div>
-        <div class="list-content" ref="foodlist">
+        <div class="shoppingCartEmptyMessage" v-show="shoppingCartIsEmpty">{{ml.shoppingcartisempty}}</div>
+        <div class="list-content" ref="foodlist" v-show="!shoppingCartIsEmpty">
           <ul>
             <li class="food" v-for="food in selectFoods">
               <span class="name">{{food.name[data.currentlnindex]}}</span>
@@ -149,6 +150,9 @@ export default {
       // } else {
       //   return '去结算'
       // }
+    },
+    shoppingCartIsEmpty() {
+      return !this.selectFoods || this.selectFoods.length === 0
     }
   },
   watch: {
@@ -185,18 +189,17 @@ export default {
       });
     },
     listToggle() {
-      if (!this.selectFoods.length) {
-        return
-      }
       this.listShow = !this.listShow
-      if (this.listShow) {
-        this.$nextTick(() => {
-          if (!this.foodlistScroll) {
-            this._initScroll()
-          } else {
-            this.foodlistScroll.refresh()
-          }
-        })
+      if (!this.shoppingCartIsEmpty) {
+        if (this.listShow) {
+          this.$nextTick(() => {
+            if (!this.foodlistScroll) {
+              this._initScroll()
+            } else {
+              this.foodlistScroll.refresh()
+            }
+          })
+        }
       }
     },
     beforeEnter(el) {
@@ -423,6 +426,8 @@ export default {
         font-size 12px
         color rgb(0,160,220)
         padding 0 10px
+    .shoppingCartEmptyMessage
+      margin 18px
     .list-content
       max-height 217px
       overflow hidden
