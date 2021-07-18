@@ -21,7 +21,7 @@
                     </form-item>
                     <form-item prop="password">
                         <!-- <i-input type="password" v-model="formInline.password" :placeholder="loginpasswordlaceholder" > -->
-                        <i-input type="password" v-model="formInline.password" >
+                        <i-input type="password" v-model="formInline.password" :placeholder="ml.loginpasswordlaceholder">
                             <icon type="ios-lock-outline" slot="prepend"></icon>
                         </i-input>
                     </form-item>

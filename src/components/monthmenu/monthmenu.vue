@@ -51,7 +51,7 @@
         .title
           font-size 24px
           line-height 24px
-          margin-top 20px
+          margin-top 30px
         .pricelineblock
           .priceline
             font-size 16px
@@ -81,7 +81,7 @@
         .shopCart
           position absolute
           right 18px
-          top 26px
+          top 8px
           height 24px
           text-align center
           z-index 2
@@ -103,7 +103,7 @@
         .cartcontrol
           position absolute
           right 12px
-          top 20px
+          top 2px
   .map
     text-align center
     margin-top 20px

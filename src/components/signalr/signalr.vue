@@ -355,6 +355,16 @@ export default {
             console.log('sessionExpired')
             this.$root.eventHub.$emit('signalr.onSessionExpired', message.messageBody)
             break;
+          case 'downLoadCustomers':
+            console.log('call back downLoadCustomers in signalr')
+            this.$root.eventHub.$emit('signalr.onDownLoadCustomers', message.messageBody)
+            break;
+          case 'saveCustomer':
+            this.$root.eventHub.$emit('signalr.onSaveCustomer', message.messageBody)
+            break;
+          case 'deleteCustomer':
+            this.$root.eventHub.$emit('signalr.onDeleteCustomer', message.messageBody)
+            break;
           default:
             // code block
         }

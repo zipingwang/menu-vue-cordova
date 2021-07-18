@@ -151,6 +151,13 @@ export default {
       // }
     }
   },
+  watch: {
+    selectFoods(newValue, oldValue) {
+      if (newValue.length === 0) {
+        this.hideBackdrop()
+      }
+    }
+  },
   methods: {
     drop(el) {
       for (let i = 0, l = this.balls.length; i < l; i++) {
@@ -167,6 +174,7 @@ export default {
       this.selectFoods.forEach((food) => {
         food.count = 0
       })
+      this.hideBackdrop()
     },
     hideBackdrop() {
       this.listShow = false

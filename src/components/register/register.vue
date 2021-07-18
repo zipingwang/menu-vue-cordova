@@ -13,22 +13,23 @@
             <backButton @click="cancel()"></backButton>
             <card class="customer">
                 <p slot="title">{{ml.register}}</p>
-                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="100">
+                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="120">
                  <!-- <i-form ref="formItem1" :model="formItem" :label-width="80"> -->
                       <FormItem :label="ml.createuserfirstname" prop="firstname">
-                        <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
+                        <i-input v-model="formItem.firstname"></i-input>
                     </FormItem>
                     <FormItem :label="ml.createuserlastname" prop="lastname">
-                        <i-input v-model="formItem.lastname" :placeholder="ml.createuserlastname"></i-input>
+                        <i-input v-model="formItem.lastname"></i-input>
                     </FormItem>
                      <FormItem :label="ml.createusertelephone" prop="telephone">
-                        <i-input v-model="formItem.telephone" :placeholder="ml.createusertelephone"></i-input>
+                        <i-input v-model="formItem.telephone" ></i-input>
                     </FormItem>
                      <FormItem :label="ml.createuseremail" prop="email">
                         <i-input v-model="formItem.email"></i-input>
                     </FormItem>
     </i-form>
-                 <i-form ref="formItem2" :model="formItem" :rules="ruleCustom" :label-width="100">
+                 <i-form ref="formItem2" :model="formItem" :rules="ruleCustom" :label-width="120">
+                   <!-- <i-form ref="formItem2" :model="formItem" :label-width="100"> -->
                       <!-- <FormItem :label="ml.createuserfirstname">
                         <i-input v-model="formItem.firstname" :placeholder="ml.createuserfirstname"></i-input>
                     </FormItem>
@@ -44,7 +45,7 @@
         <form-item :label="ml.password" prop="password">
             <i-input type="password" v-model="formItem.password"></i-input>
         </form-item>
-        <form-item :label="ml.confirm" prop="passwordconfirm">
+        <form-item :label="ml.confirmpassword" prop="passwordconfirm">
             <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
         </form-item>
         <Checkbox v-model="formItem.agreeWithPrivacyPolicy"><span @click="openPrivacyPolicy">{{ml.privacypolicy}}</span></Checkbox>
@@ -176,10 +177,10 @@ export default {
       },
       ruleCustom: {
         password: [
-          { validator: validatePass, trigger: 'blur' }
+          { required: true, validator: validatePass, trigger: 'blur' }
         ],
         passwordconfirm: [
-          { validator: validatePassCheck, trigger: 'blur' }
+          { required: true, validator: validatePassCheck, trigger: 'blur' }
         ]
         // email: [
         //   { validator: validateEmail, trigger: 'blur' }
