@@ -15,13 +15,13 @@
                 <p slot="title">{{ml.login}}</p>
                 <i-form ref="formInline" :model="formInline" :rules="ruleInline" inline>
                     <form-item prop="user">
-                        <i-input type="text" v-model="formInline.user" :placeholder="ml.loginnameplaceholder">
+                        <i-input type="text" v-model="formInline.user" :placeholder="ml.loginnameplaceholder" style="width: 300px">
                             <icon type="ios-person-outline" slot="prepend"></icon>
                         </i-input>
                     </form-item>
                     <form-item prop="password">
                         <!-- <i-input type="password" v-model="formInline.password" :placeholder="loginpasswordlaceholder" > -->
-                        <i-input type="password" v-model="formInline.password" :placeholder="ml.loginpasswordlaceholder">
+                        <i-input type="password" v-model="formInline.password" :placeholder="ml.loginpasswordlaceholder" style="width: 300px">
                             <icon type="ios-lock-outline" slot="prepend"></icon>
                         </i-input>
                     </form-item>
