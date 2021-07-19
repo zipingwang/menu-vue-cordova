@@ -458,7 +458,13 @@ export default {
           return order.orderTime
         }
       } else {
-        return order.takeawayTime
+        if (order.takeawayTime && order.takeawayTime.length === 14) {
+          console.log(order.takeawayTime.substring(10, 12))
+          console.log(order.takeawayTime.substring(12, 14))
+          return order.takeawayTime.substring(10, 12) + ':' + order.takeawayTime.substring(12, 14)
+        } else {
+          return order.takeawayTime
+        }
       }
     },
     getRestaurant() {
