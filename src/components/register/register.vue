@@ -48,7 +48,12 @@
         <form-item :label="ml.confirmpassword" prop="passwordconfirm">
             <i-input type="password" v-model="formItem.passwordconfirm"></i-input>
         </form-item>
-        <Checkbox v-model="formItem.agreeWithPrivacyPolicy"><span @click="openPrivacyPolicy">{{ml.privacypolicy}}</span></Checkbox>
+        <!-- <Checkbox v-model="formItem.agreeWithPrivacyPolicy"><span @click="openPrivacyPolicy" v-html="ml.privacypolicy">{{ml.privacypolicy}}{{useTermAndPrivacyPolicy}}</span></Checkbox> -->
+        <Checkbox v-model="formItem.agreeWithPrivacyPolicy">
+
+        </Checkbox>
+        <useTermAndPrivacy :ml="ml" @openUseTerm="openUseTerm()" @openPrivacyPolicy="openPrivacyPolicy()"></useTermAndPrivacy>
+        <!-- <span v-html="useTermAndPrivacyPolicy">{{ml.privacypolicy}}{{useTermAndPrivacyPolicy}}</span> -->
         <form-item>
             <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregistrationcommunicationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
@@ -66,7 +71,7 @@
 
     </div>
   </transition>
-   <privacyPolicy ref="myPrivacyPolicy" :seller="seller" :data="data" :ml="ml"></privacyPolicy>
+   <fileViewer ref="myPrivacyPolicy" :seller="seller" :data="data" :ml="ml"></fileViewer>
   </div>
 </template>
 
@@ -75,15 +80,17 @@ import '../../filter/time.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import sendButton from 'components/common/sendButton/sendButton'
-import privacyPolicy from 'components/privacyPolicy/privacyPolicy'
+import fileViewer from 'components/fileViewer/fileViewer'
 import backButton from 'components/common/backButton/backButton'
+import useTermAndPrivacy from 'components/register/useTermAndPrivacy'
 
 
 export default {
   components: {
     sendButton,
-    privacyPolicy,
-    backButton
+    fileViewer,
+    backButton,
+    useTermAndPrivacy
   },
   props: {
     seller: {},
@@ -113,45 +120,6 @@ export default {
         callback();
       }
     };
-    // const validateEmail = (rule, value, callback) => {
-    //   // alert('befor validateemail')
-    //   var result = validateEmail(value)
-    //   alert(result);
-    //   if (value === '' && this.formItem.telephone === '') {
-    //     callback(new Error(this.ml.requiredfield));
-    //   } else if (value !== '') {
-    //     callback(new Error(this.ml.invalid));
-    //   } else {
-    //     callback();
-    //   }
-    // };
-    // const validateTelephone = (rule, value, callback) => {
-    //   if (value === '' && this.formItem.email === '') {
-    //     callback(new Error(this.ml.requiredfield));
-    //   } else if (value !== '' && value.length <= 8) {
-    //     callback(new Error(this.ml.minimumlength));
-    //   } else {
-    //     callback();
-    //   }
-    // };
-
-    // const validateAge = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error('Age cannot be empty'));
-    //   }
-    //   // 模拟异步验证效果
-    //   setTimeout(() => {
-    //     if (!Number.isInteger(value)) {
-    //       callback(new Error('Please enter a numeric value'));
-    //     } else {
-    //       if (value < 18) {
-    //         callback(new Error('Must be over 18 years of age'));
-    //       } else {
-    //         callback();
-    //       }
-    //     }
-    //   }, 1000);
-    // };
     return {
       show: false,
       userName: 'vue app',
@@ -304,7 +272,10 @@ export default {
       this.$emit('close')
     },
     openPrivacyPolicy() {
-      this.$refs.myPrivacyPolicy.showPrivacyPolicy()
+      this.$refs.myPrivacyPolicy.showPrivacyPolicy('privacypolicy')
+    },
+    openUseTerm() {
+      this.$refs.myPrivacyPolicy.showPrivacyPolicy('useterm')
     },
     handleReset(name) {
       console.log(this.$refs[name]);

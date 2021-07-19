@@ -45,12 +45,12 @@
       close() {
         this.show = false
       },
-      showPrivacyPolicy() {
+      showPrivacyPolicy(file) {
         this.show = true
-        this.downLoadPrivacyPolicy()
+        this.downLoadPrivacyPolicy(file)
       },
-      downLoadPrivacyPolicy() {
-        let url = this.data.options.uploadUrl + 'method=privacypolicy&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid
+      downLoadPrivacyPolicy(file) {
+        let url = this.data.options.uploadUrl + 'method=' + file + '&lnindex=' + this.data.currentlnindex + '&siterid=' + this.data.options.shopRid
         console.log(this.data)
         console.log(this.seller)
         console.log(this.ml)

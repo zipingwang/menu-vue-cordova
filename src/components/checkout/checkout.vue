@@ -105,7 +105,8 @@ export default {
       takeawayTimeSlots: [],
       busyWithSending: false,
       shopClosed: false,
-      openinghourComment: ''
+      openinghourComment: '',
+      takeawayTimeSlotsGot: false
     }
   },
   computed: {
@@ -131,6 +132,9 @@ export default {
       requestString = requestString + orderline + '@@@' + this.ordercomment + '@@@' + JSON.stringify(this.data.options)
       console.log(this.data.options)
       return requestString
+    },
+    shouldGetTakeawayTimeSlots () {
+      return this.data.options.takeaway === '1' && this.selectFoods.length > 0
     }
   },
   created() {
@@ -149,20 +153,15 @@ export default {
     show(newValue, oldValue) {
       console.log('checkout show')
       console.log(newValue)
-      if (newValue) {
-        if (this.selectFoods.length > 0) {
-          if (this.data.options.takeaway === '1') {
-            this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
-          }
-        } else {
-          console.log('this.$refs.mySendButton')
-          this.hidecheckout()
-        }
+      if (newValue && this.shouldGetTakeawayTimeSlots) {
+        this.takeawayTimeSlotsGot = false
+        this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+      } else {
+        this.hidecheckout()
       }
     }
   },
   methods: {
-
     _initScroll() {
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
@@ -189,11 +188,17 @@ export default {
       this.show = false;
     },
     showTakeawayTimeSlots() {
-      if (this.allowPlaceOrder) {
+      if (this.shouldGetTakeawayTimeSlots && !this.takeawayTimeSlotsGot) {
+        this.$Modal.info({
+          content: this.ml.cannotconnecttorestaurantfortimeslots,
+          okText: this.ml.ok
+        });
+      } else if (this.allowPlaceOrder) {
         this.$refs.takeawayTimeSlots.showTimeSlots()
       }
     },
     onGetTakeawayTimeSlots(slots) {
+      this.takeawayTimeSlotsGot = true
       // console.log(slots)
       let mySlots = slots // JSON.parse(slots)
       // console.log(mySlots)
