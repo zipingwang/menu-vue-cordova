@@ -44,7 +44,7 @@
             </div>
             <div class="openinghourcomment" v-if="openinghourComment !== ''">{{openinghourComment}}</div>
             <div class="ordercomment" v-if="seller.supportOnlineOrder">
-              <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment"></textarea>
+              <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment" maxlength="100"></textarea>
             </div>
             <div class="ordertext" v-if="!seller.supportOnlineOrder">
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
