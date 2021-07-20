@@ -16,9 +16,9 @@
                 <p>{{ml.receiveemailtochangepassword}}</p>
                 <br/>
 
-                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="100">
+                 <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" label-position="top">
                  <!-- <i-form ref="formItem1" :model="formItem" :label-width="80"> -->
-                    <FormItem :label="ml.email" prop="email">
+                    <FormItem :label="ml.email" prop="email" To>
                         <i-input v-model="formItem.email" :placeholder="ml.email"></i-input>
                     </FormItem>
                     <form-item>
@@ -168,8 +168,8 @@ export default {
             });
           } else {
             this.$Modal.warning({
-              title: 'ml.failed',
-              content: 'ml.resetpasswordemailsentfailed',
+              title: this.ml.failed,
+              content: this.ml.resetpasswordemailsentfailed,
               okText: this.ml.ok
             });
           }
@@ -177,8 +177,8 @@ export default {
         .catch((error) => {
           console.log(error);
           this.$Modal.warning({
-            title: 'ml.failed',
-            content: 'ml.resetpasswordemailsentfailed',
+            title: this.ml.failed,
+            content: this.ml.resetpasswordemailsentfailed,
             okText: this.ml.ok
           });
         });
@@ -187,8 +187,8 @@ export default {
       this.$refs.mySendButton.stop()
       if (userId === '-1') {
         this.$Modal.warning({
-          title: 'ml.failed',
-          content: 'ml.userregistrationfailed',
+          title: this.ml.failed,
+          content: this.ml.userregistrationfailed,
           okText: this.ml.ok
         });
       } else if (userId === '-2') { /* user already exsits */
