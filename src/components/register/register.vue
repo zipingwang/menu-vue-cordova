@@ -314,8 +314,8 @@ export default {
         .catch((error) => {
           console.log(error);
           this.$Modal.warning({
-            title: 'ml.failed',
-            content: 'ml.userregistrationemailsentfailed',
+            title: this.ml.failed,
+            content: this.ml.userregistrationemailsentfailed,
             okText: this.ml.ok
           });
         });
@@ -324,8 +324,8 @@ export default {
       this.$refs.mySendButton.stop()
       if (userId === '-1') {
         this.$Modal.success({
-          title: 'ml.failed',
-          content: 'ml.userregistrationfailed',
+          title: this.ml.failed,
+          content: this.ml.userregistrationfailed,
           okText: this.ml.ok
         });
       } else if (userId === '-2') { /* user already exsits */

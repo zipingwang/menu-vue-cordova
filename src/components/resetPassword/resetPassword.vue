@@ -45,7 +45,7 @@
           <div class="columnpadding"></div>
           <div class="billcontent">
             <card class="customer">
-                <p slot="title">{{ml.resetpassword}}reset password</p>
+                <p slot="title">{{ml.resetpassword}}</p>
                 <br/>
 
                  <i-form ref="formItem1" :model="formItem" :rules="ruleCustom" :label-width="100">
@@ -168,14 +168,14 @@ export default {
             });
           } else if (res.data === 'ChangePasswordLinkNoMoreValid') {
             this.$Modal.warning({
-              title: 'ml.failed',
-              content: 'ml.changepasswordlinknomorevalid',
+              title: this.ml.failed,
+              content: this.ml.changepasswordlinknomorevalid,
               okText: this.ml.ok
             });
           } else {
             this.$Modal.warning({
-              title: 'ml.failed',
-              content: 'ml.resetpasswordemailsentfailed',
+              title: this.ml.failed,
+              content: this.ml.resetpasswordemailsentfailed,
               okText: this.ml.ok
             });
           }
@@ -183,8 +183,8 @@ export default {
         .catch((error) => {
           console.log(error);
           this.$Modal.warning({
-            title: 'ml.failed',
-            content: 'ml.resetpasswordemailsentfailed',
+            title: this.ml.failed,
+            content: this.ml.resetpasswordemailsentfailed,
             okText: this.ml.ok
           });
         });

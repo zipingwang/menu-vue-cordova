@@ -9,8 +9,8 @@ export default {
   },
   computed: {
     txtElements() {
-      if (this.ml.usetermandprivacypolicy != null) {
-        return this.userTermpText.split('{|}')
+      if (this.ml.usetermandprivacypolicytext != null) {
+        return this.ml.usetermandprivacypolicytext.split('{|}')
       } else {
         return 'part1 {|} useterm {|} part2 {|} privacy polity {|} part3'.split('{|}')
       }
