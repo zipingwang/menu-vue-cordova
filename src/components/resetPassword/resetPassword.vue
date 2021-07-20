@@ -164,7 +164,8 @@ export default {
             this.$Modal.success({
               title: this.ml.success,
               content: this.ml.resetpasswordsuccess,
-              okText: this.ml.ok
+              okText: this.ml.ok,
+              onOk: () => { window.location.replace(this.data.options.baseUrl) }
             });
           } else if (res.data === 'ChangePasswordLinkNoMoreValid') {
             this.$Modal.warning({
