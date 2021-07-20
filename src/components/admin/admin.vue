@@ -450,18 +450,19 @@ export default {
       if (order.isTakeaway === '0') {
         console.log(order.orderTime)
         console.log(order.orderTime.length)
-        if (order.orderTime.length === 14) {
+        if (order.orderTime.length === 14 || order.orderTime.length === 12) {
+          console.log(order.orderTime.substring(8, 10))
           console.log(order.orderTime.substring(10, 12))
-          console.log(order.orderTime.substring(12, 14))
-          return order.orderTime.substring(10, 12) + ':' + order.orderTime.substring(12, 14)
+          return order.orderTime.substring(8, 10) + ':' + order.orderTime.substring(10, 12)
         } else {
           return order.orderTime
         }
       } else {
-        if (order.takeawayTime && order.takeawayTime.length === 14) {
+        console.log(order.takeawayTime)
+        if (order.takeawayTime && (order.takeawayTime.length === 14 || order.takeawayTime.length === 12)) {
+          console.log(order.takeawayTime.substring(8, 10))
           console.log(order.takeawayTime.substring(10, 12))
-          console.log(order.takeawayTime.substring(12, 14))
-          return order.takeawayTime.substring(10, 12) + ':' + order.takeawayTime.substring(12, 14)
+          return order.takeawayTime.substring(8, 10) + ':' + order.takeawayTime.substring(10, 12)
         } else {
           return order.takeawayTime
         }
