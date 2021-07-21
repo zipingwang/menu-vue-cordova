@@ -7,11 +7,11 @@
           <div class="badge" v-show="totalCount">
             {{totalCount}}
           </div>
-          <div class="logo" :class="{'active':totalPrice}">
+          <div class="logo" :class="{'active':totalPrice > 0}">
             <i class="icon-shopping_cart"></i>
           </div>
         </div>
-        <div class="price" :class="{'active':totalPrice}">
+        <div class="price" :class="{'active':totalPrice > 0}">
           €{{totalPrice}}
         </div>
         <!-- <div class="desc">
