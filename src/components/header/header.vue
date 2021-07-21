@@ -10,12 +10,13 @@
                 <!-- <span class="brand"></span> -->
                 <span class="name">{{seller.name}}</span>
             </div>
-            <div class="star-wrapper">
+            <!-- <div class="star-wrapper">
               <star :size="36" :score="seller.score"></star>
-            </div>
-            <!-- <div class="description">
-                {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}}
             </div> -->
+            <div class="description">
+              {{seller.description}}
+                <!-- {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}} -->
+            </div>
             <!-- <div class="supports" v-if="seller.supports">
                 <div class="supports_desc">
                     <span class="icon" :class="iconClassMap[seller.supports[0].type]"></span>
@@ -106,8 +107,12 @@
       <div class="detail-wrapper clearfix">
           <div class="detail-main">
             <h1 class="name">{{seller.name}}</h1>
-            <div class="star-wrapper">
+            <!-- <div class="star-wrapper">
               <star :size="48" :score="seller.score"></star>
+            </div> -->
+             <div class="description">
+              {{seller.description}}
+                <!-- {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}} -->
             </div>
             <div class="title">
               <div class="line"> </div>
@@ -267,7 +272,7 @@ export default {
     .content
       margin-left 16px
       .title
-        margin 2px 0 8px 0
+        margin 2px 0 2px 0
         font-size 16px
         .brand
           display inline-block
@@ -287,7 +292,7 @@ export default {
         text-align left
       .description
         font-size 12px
-        margin-bottom 10px
+        margin 0
       .supports
           .icon
             display inline-block
@@ -463,10 +468,12 @@ export default {
           line-height 60px
           text-align center
     .detail-close
-      position relative
+      position absolute
       width 32px
       height 32px
-      margin -64px auto 0 auto
+      top 20px
+      right 32px
+      // margin -64px auto 0 auto
       clear both
       font-size 32px
       color rgba(255,255,255,0.5)
