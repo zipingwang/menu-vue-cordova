@@ -120,7 +120,7 @@ export default {
       log('windowFocused')
       log(newValue)
       if (newValue) {
-        this.$refs.mysignalr.connectToSignalRServer()
+        this.$refs.mysignalr.checkConnect()
       }
     }
   },
