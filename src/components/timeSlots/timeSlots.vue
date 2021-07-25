@@ -205,15 +205,6 @@ export default {
     z-index 150
     background white
     overflow hidden
-    // position fixed
-    // top 0
-    // left 20%
-    // margin-right -20%
-    // bottom 48px
-    // width 50%
-    // max-width: 800px
-    // background white
-    // color rgb(77,85,93)
     transition all 0.4s ease
     &.move-enter-avtive,&.move-leave{
       transform translate3d(0,0,0)

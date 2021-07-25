@@ -357,12 +357,11 @@ export default {
   .detailWrapper
     position fixed
     top 0
-    left 20%
-    margin-right -20%
-    // bottom 48px
     bottom 0
     width 100%
     max-width: 800px
+    left: 50%;
+    transform: translateX(-50%);
     background white
     color rgb(77,85,93)
     transition all 0.4s ease

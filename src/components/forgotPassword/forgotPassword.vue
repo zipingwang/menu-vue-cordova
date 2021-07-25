@@ -338,10 +338,9 @@ export default {
   .detailWrapper
     position fixed
     top 0
-    left 20%
-    margin-right -20%
-    // bottom 48px
     bottom 0
+    left: 50%;
+    transform: translateX(-50%);
     width 100%
     max-width: 800px
     background white
