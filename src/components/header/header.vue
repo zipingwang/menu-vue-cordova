@@ -223,6 +223,9 @@ export default {
     logout() {
       this.sideDrawVisible = false
       this.$root.eventHub.$emit('login.loggedOut')
+      setTimeout(() => {
+        this.$router.push('goods') /* prevent possible stay on tab bestellingen, */
+      }, 300)
     },
     login() {
       this.$refs.myLogin.showlogin()

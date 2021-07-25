@@ -76,9 +76,6 @@ export default {
   data() {
     return {
       show: false,
-      userName: 'vue app',
-      simpleHubProxy: null,
-      connectionId: '',
       formInline: {
         user: '',
         password: ''
@@ -106,6 +103,7 @@ export default {
       this._initScroll(); // 初始化scroll
     })
     this.$root.eventHub.$on('signalr.onSigninConfirmedFromServerToWeb', this.onSigninConfirmedFromServerToWeb)
+    this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
   },
   methods: {
     _initScroll() {
@@ -157,6 +155,9 @@ export default {
     },
     onRegisterClose() {
       this.show = true
+    },
+    onLoggedOut() {
+      this.formInline = {}
     },
     onForgotPasswordClose() {
       this.show = true
