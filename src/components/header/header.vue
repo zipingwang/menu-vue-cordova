@@ -27,7 +27,7 @@
 
         <!-- <img src="static/img/world.png" class="language" v-if="lns.length>0" @click="showLanguages()"></img> -->
 
-        <i-button shape="circle" icon="md-contact" class="user" @click="showSideDraw"></i-button>
+        <i-button shape="circle" icon="md-contact" class="user" :class="{'active':data.options.loggedIn}" @click="showSideDraw"></i-button>
         <drawer ref="sideDrawer" :title="ml.user" placement="right" :closable="true" v-model="sideDrawVisible">
           <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
           <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
@@ -342,6 +342,9 @@ export default {
       height 24px
       width 24px
       background-color rgb(131, 136, 141)
+      &.active
+          background: rgb(0,160,220);
+          color: white;
     .language
       position absolute
       right 48px
