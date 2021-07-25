@@ -36,21 +36,22 @@
               </li>
             </ul>
             <div class="totalline">{{ml.ordertotal}}        €{{totalPrice}}</div>
-            <div class="timeSlotWrapper" @click="showTakeawayTimeSlots" v-if="this.data.options.takeaway === '1'">
+            <div class="timeSlotWrapper" @click="showTakeawayTimeSlots" v-if="this.data.options.takeaway === '1' && openinghourComment === ''">
               <div class = "timeSlotContainer">
               {{ml.takeawaytime}}: <span>{{takeawayTimeSlot}}</span>
               <Icon type="ios-time-outline" />
               </div>
             </div>
             <div class="openinghourcomment" v-if="openinghourComment !== ''">{{openinghourComment}}</div>
-            <div class="ordercomment" v-if="seller.supportOnlineOrder">
+            <div class="ordercomment" v-if="seller.supportOnlineOrder && openinghourComment === ''">
               <textarea class="ordercommenttext" v-model="ordercomment" rows="2" cols="100%" :placeholder="ml.ordercomment" maxlength="100"></textarea>
             </div>
             <div class="ordertext" v-if="!seller.supportOnlineOrder">
               {{ml.orderonlineordernotsupported}} {{seller.telefoon[0]}}
             </div>
             <div class="buttonarea">
-              <sendButton ref="mySendButton" :timeout="15" :text="ml.confirm" :ml="ml" :sendingText="ml.sending" :failedText="ml.ordersendfailed + ' ' + seller.telefoon" @click="sendOrder"></sendButton>
+              <sendButton ref="mySendButton" :timeout="15" :text="ml.confirm" :ml="ml" :sendingText="ml.sending" :failedText="ml.ordersendfailed + ' ' + seller.telefoon"
+                @click="sendOrder" :disabled="openinghourComment !== ''"></sendButton>
               <i-button type="primary" @click="hidecheckout">{{ml.cancel}}</i-button>
             </div>
           </div>
@@ -92,13 +93,8 @@ export default {
   data() {
     return {
       show: false,
-      // trans: ml.trans, /* ml without this. it search from global js. in this case from data.js */
-      userName: 'vue app',
-      simpleHubProxy: null,
-      connectionId: '',
       ordercomment: '',
       showWaiting: false,
-      mySendingTimer: {},
       startTime: {},
       // takeawayTimeSlot: '12:00', /* give some value, otherwise order string will not correct and crash server */
       takeawayTimeSlot: this.ml.selecttime, /* give some value, otherwise order string will not correct and crash server */
@@ -145,6 +141,7 @@ export default {
     this.$root.eventHub.$on('signalr.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     this.$root.eventHub.$on('signalr.onGetTakeawayTimeSlots', this.onGetTakeawayTimeSlots)
     this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
+    this.$root.eventHub.$on('login.loggedOut', this.onLogOut)
 
     console.log('checkout JSON.stringify(this.trans)')
     console.log(JSON.stringify(this.trans))
@@ -282,6 +279,20 @@ export default {
           this.hidecheckout()
         }
       });
+    },
+    onLogOut(cus) {
+      console.log('onLogOut in checkout')
+      this.initValue()
+    },
+    initValue() {
+      this.ordercomment = ''
+      this.startTime = {}
+      // takeawayTimeSlot: '12:00', /* give some value, otherwise order string will not correct and crash server */
+      this.takeawayTimeSlot = this.ml.selecttime /* give some value, otherwise order string will not correct and crash server */
+      this.takeawayTimeSlots = []
+      this.shopClosed = false
+      this.openinghourComment = ''
+      this.takeawayTimeSlotsGot = false
     }
   }
 }

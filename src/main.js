@@ -89,6 +89,7 @@ new Vue({
     ml.trans = ml[`${ml.ln}`] /* dynamic inject */
     // var urlVars = this.getUrlVars()
     var urlVars = this.getUrlVars()
+    data.selectFoods = []
     data.options = {}
     data.options.client = 'vue'
     data.options.table = ''

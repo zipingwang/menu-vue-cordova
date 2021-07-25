@@ -72,10 +72,6 @@ import login from 'components/login/login'
 
 export default {
   props: {
-    selectFoods: {
-      type: Array,
-      default: []
-    },
     deliveryPrice: {
       type: Number,
       default: 0
@@ -103,12 +99,15 @@ export default {
       }],
       dropBalls: [],
       listShow: false,
-      checkoutvisible: false
+      checkoutvisible: false,
+      selectFoods: this.data.selectFoods
     }
   },
   created() {
-    this.$root.eventHub.$on('cart.add', this.drop)
-    this.$root.eventHub.$on('login.loggedin', this.onlogin)
+    this.$root.eventHub.$on('cart.drop', this.drop)
+    // this.$root.eventHub.$on('cart.decrease', this.decrease)
+    this.$root.eventHub.$on('login.loggedin', this.onLogIn)
+    console.log('created in shopcart')
   },
   computed: {
     showBackdrop() {
@@ -175,9 +174,7 @@ export default {
       }
     },
     setEmpty() {
-      this.selectFoods.forEach((food) => {
-        food.count = 0
-      })
+      this.$root.eventHub.$emit('cart.clear')
       this.hideBackdrop()
     },
     hideBackdrop() {
@@ -270,7 +267,7 @@ export default {
         this.$refs.mycheckout.showcheckout()
       }
     },
-    onlogin(cus) {
+    onLogIn(cus) {
       console.log('onlogin in shopcart')
       if (this.selectFoods.length > 0) {
         this.$refs.mycheckout.showcheckout()

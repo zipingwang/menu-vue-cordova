@@ -82,7 +82,11 @@ export default {
     this.$root.eventHub.$on('signalr.downloaded', this.menudownloaded)
     this.$root.eventHub.$on('login.loggedin', this.onLoggedIn)
     this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
+    this.$root.eventHub.$on('checkout.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
+    this.$root.eventHub.$on('cart.add', this.addMenu)
+    this.$root.eventHub.$on('cart.decrease', this.decreaseMenu)
+    this.$root.eventHub.$on('cart.clear', this.clearShopCart)
 
     console.log('app created')
      // Active
@@ -144,6 +148,40 @@ export default {
       var obj = JSON.parse(data)
       console.log(data)
     },
+    addMenu(food) {
+      if (!food.count) {
+        this.$set(food, 'count', 0)
+      }
+      if (!this.data.selectFoods.includes(food)) {
+        this.data.selectFoods.push(food)
+      }
+      this.$set(food, 'count', food.count++)
+      food.count++
+      console.log(food.count)
+    },
+    decreaseMenu(food) {
+      if (food.count > 0) {
+        food.count--
+        // this.$set(food, 'count', food.count--)
+      }
+      if (food.count === 0) {
+        let index = this.data.selectFoods.indexOf(food);
+        if (index > -1) {
+          this.data.selectFoods.splice(index, 1);
+        }
+      }
+    },
+    clearShopCart() {
+      console.log('clearShopCart')
+      // this.data.selectFoods.length = 0
+      this.data.selectFoods.forEach((food) => {
+        food.count = 0
+      })
+      this.data.selectFoods.splice(0, this.data.selectFoods.length);
+    },
+    onOrderConfirmedFromServerToWeb() {
+      this.clearShopCart()
+    },
     onLoggedIn(user) {
       console.log('onLoggedIn in app')
       console.log(user)
@@ -164,6 +202,7 @@ export default {
       this.data.options.loggedIn = false
       this.data.options.cusId = ''
       this.data.options.isAdmin = false
+      this.clearShopCart()
     },
     onFocus() {
       console.log('onFocus')

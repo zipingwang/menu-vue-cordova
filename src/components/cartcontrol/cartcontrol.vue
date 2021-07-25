@@ -42,19 +42,22 @@ export default {
         return
       }
 
-      if (!this.food.count) {
-        Vue.set(this.food, 'count', 0)
-      }
-      console.log(this.food.count)
-      this.food.count++;
-      this.$root.eventHub.$emit('cart.add', event.target)
+      // if (!this.food.count) {
+      //  Vue.set(this.food, 'count', 0)
+      // }
+      console.log('addCart')
+      // this.food.count++;
+      this.$root.eventHub.$emit('cart.add', this.food)
+      this.$root.eventHub.$emit('cart.drop', event.target)
       this.prevClick = new Date()
     },
     decreaseCart() {
       if (!event._constructed || !this.food.count) {
         return
       }
-      this.food.count--;
+      console.log('decreaseCart')
+      this.$root.eventHub.$emit('cart.decrease', this.food)
+      // this.food.count--;
     }
   }
 }

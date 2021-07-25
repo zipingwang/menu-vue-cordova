@@ -250,8 +250,12 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.$set(this.getRiceTableMenu(), 'count', 1)
-      this.$root.eventHub.$emit('cart.add', event.target)
+      let menu = this.getRiceTableMenu()
+      // if (menu.minCount) {
+      //   this.$set(menu, 'count', menu.minCount - 1)
+      // }
+      this.$root.eventHub.$emit('cart.add', menu)
+      this.$root.eventHub.$emit('cart.drop', event.target)
     },
     getRiceTableMenu() {
       let menuInDataJs = {}
