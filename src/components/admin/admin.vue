@@ -12,7 +12,7 @@
 /* Create four equal columns */
 /* maximum 4 column, if screen width is not enough, it will display less column, e.g. 3 or 2 or 1, new row will made. */
 .column {
-  flex: 25%;
+  // flex: 25%;
   padding: 20px;
 }
 
@@ -56,56 +56,31 @@
         border-radius: 10px;
         height: 100%
         box-sizing border-box
+        max-width 500px
+        min-width 350px
         .orderheader
           font-size 24px
+          background-color red
           .orderNotViewed
             background-color green
           .orderViewed
             background-color  red
-        .title
-          font-size 24px
-          line-height 24px
-          margin-top 20px
-        .pricelineblock
-          .priceline
-            font-size 16px
-            line-height 16px
-            margin-top 20px
-        .foodblock
-          margin-top 50px
-          .foodlineblock
-            .foodline
-              font-size 16px
-              height 16px
-            .seperator
-              margin-top 5px
-              height 30px
-              font-size 16px
-              line-height 30px
-        .endlineblock
-          .endline
-            margin-top 50px
-            font-size 16px
-            height 30px
-            line-height 30px
-            margin-bottom 20px
-            padding-bottom 20px
-        .endfilling
-            height 20px
         .foodlineblock
-          margin 10px 50px
-          width 80%
+          margin 10px
+          width 90%
           padding 0px 50px 0px 0px
           border-radius 5px
-        .foodline
-          padding 5px 10px
-          background #f2f2f2
-          border-radius 10px
-        .foodlinecount
-          width 20px
-          text-align right
-        .foodlinename
-          margin 0px
+          .foodline
+            padding 5px 10px
+            background #f2f2f2
+            border-radius 10px
+            .foodlinecount
+              width 30px
+              text-align left
+              padding-left 10PX
+            .foodlinename
+              margin 0px
+              text-align left
   .map
     text-align center
     margin-top 20px
@@ -137,42 +112,31 @@
         <div class="column" v-for="order in visibleOrders">
            <div class="ricetableblock">
               <row :gutter="16" class="orderheader">
-                <i-col span="3">
-                    <div>{{order.tableNr}}</div>
+                <i-col span="5">
+                    <div>Nr.{{order.tableNr}}</div>
                 </i-col>
-                <i-col span="3">
+                <i-col span="3" v-if="isAdmin">
                     <Icon type="md-briefcase" v-if = "order.isTakeaway === '1'" />
                     <Icon type="ios-restaurant" v-if = "order.isTakeaway === '0'" />
                 </i-col>
-                <i-col span="5">
+                <i-col span="10">
                     <div>{{getOrderTimeString(order)}}</div>
                 </i-col>
-                <i-col span="4">
-                    <div>{{order.totalPrice}}€</div>
+                <i-col span="5">
+                    <div>€{{order.totalPrice}}</div>
                 </i-col>
-                <i-col span="6" v-if="isAdmin">
+                <i-col span="4" v-if="isAdmin">
                     <i-button size="small" @click= "changeOrder(order)" :type="order.orderViewed === false ? 'warning' : 'default'" icon="ios-menu" ></i-button>
-                    <!-- <dropdown style="margin-left: 10px" @on-click="changeOrder($event, order)">
-                    <i-button type="primary" icon="ios-menu"></i-button>
-                    <dropdown-menu slot="list">
-                        <dropdown-item name="closeOrder">{{ml.close}}</dropdown-item>
-                        <dropdown-item divided name="deleteOrder">{{ml.delete}}</dropdown-item>
-                    </dropdown-menu> -->
                 </dropdown>
-                     <!-- <i-button type="primary" size="small" shape="circle" icon="ios-menu" @click="closeOrder(order)"></i-button> -->
                 </i-col>
-            </row>
-                <!-- <div class="title">
-                    <p>{{order.tableNr}} {{getTakeawayString(order)}} {{order.orderTime}} {{order.totalPrice}} </p>
-                    {{order.customerInfo}}
-                    {{order.info}}
-                </div> -->
+              </row>
                 <table class="foodlineblock">
                   <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
                     <td class="foodlinename">{{getMenuName(orderline.nr)}}</td>
                   </tr>
                 </table>
+              <div>{{order.orderComment}}</div>
                 <!-- <span class="button" @click="closeOrder(order)">close</span> -->
                 <modal
                   ref="dialog"
