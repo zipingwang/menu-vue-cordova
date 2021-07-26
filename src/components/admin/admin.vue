@@ -60,7 +60,7 @@
         min-width 350px
         .orderheader
           font-size 24px
-          background-color red
+          // background-color red
           .orderNotViewed
             background-color green
           .orderViewed
@@ -208,7 +208,7 @@ export default {
       takeawayButtonType: 'default',
       allButtonType: 'primary',
       currentOrderType: 'all',
-      firstDownLoaded: true,
+      orderDownloaded: false,
       contextMenuVisible: false
     }
   },
@@ -220,11 +220,8 @@ export default {
     this.$root.eventHub.$on('signalr.onOrderDownloaded', this.onOrderDownloaded)
     this.$root.eventHub.$on('signalr.onBroadcastOrder', this.onBroadcastOrder)
     this.$root.eventHub.$on('checkout.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
+    this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
     console.log('admin vue created')
-
-
-    // this.downloadOrder()
-    // this.$root.eventHub.$on('login.loggedin', this.onloggedin)
   },
   computed: {
     loggedIn() {
@@ -281,23 +278,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      // react to route changes...
-      // alert('route')
-      // console.log('route')
-      // console.log(to.path)
-      // console.log(from)
-      // console.log(this.data.options)
       if (to.path === '/admin') {
-        if (this.data.options.isAdmin === '1' && this.firstDownLoaded) {
-          this.downloadOrder()
-          this.firstDownLoaded = false
-        } else {
-          // this.$refs.myLogin.showlogin()
-        }
+        this.downloadOrder()
       }
-      // this.$nextTick(() => {
-      //   this._initScroll(); // 初始化scroll
-      // })
     },
     contextMenuVisible(newValue, oldValue) {
       if (newValue === false) {
@@ -341,8 +324,8 @@ export default {
       this.modalCloseOrder = false
     },
     downloadOrder() {
-      // alert('this.$root.eventHub.$emit(signalr.downloadOrder)')
-      if (this.data.options.cusId !== '') {
+      console.log('downloadOrder in admin.vue')
+      if (this.data.options.cusId !== '' && !this.orderDownloaded) {
         this.$root.eventHub.$emit('signalr.downloadOrder')
       }
     },
@@ -350,6 +333,7 @@ export default {
       // alert('orderDownloaded in admin')
       // console.log(typeof orders);
       this.orders = orders.orders
+      this.orderDownloaded = true
       this.$nextTick(() => {
         this._initScroll(); // 初始化scroll
       })
@@ -357,6 +341,11 @@ export default {
     onloggedin(cus) {
       // console.log(cus)
       // this.downloadOrder()
+    },
+    onLoggedOut(cus) {
+      this.orderDownloaded = false
+      this.selectedOrder = {}
+      this.orders.splice(0, this.orders.length)
     },
     onBroadcastOrder(messageBody) {
       console.log('onBroadcastOrder in admin.vue')

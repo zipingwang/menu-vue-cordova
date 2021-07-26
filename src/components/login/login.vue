@@ -208,15 +208,7 @@ export default {
       /* -1: user not exist, -2 user exists, but connection not same as connet */
       if (user.rid !== '-1' && user.rid !== '-2') {
         this.show = false
-        // this.data.options.cusId = user.rid /* don't change parent data */
-        // this.data.options.isAdmin = user.isAdmin
-        // alert('user logged in')
         this.$root.eventHub.$emit('login.loggedin', user)
-        // this.$root.eventHub.$emit('signalr.downloadOrder')
-        // this.$Modal.success({
-        //   title: this.ml.success,
-        //   content: '<p>onSigninConfirmedFromServerToWeb is geplaast</p>'
-        // });
       } else {
         this.$Modal.success({
           title: this.ml.failed,
