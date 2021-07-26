@@ -234,9 +234,9 @@ export default {
         return
       }
       let menu = this.getRiceTableMenu(riceTable)
-      // if (menu.minCount) {
-      //   this.$set(menu, 'count', menu.minCount - 1)
-      // }
+      if (menu.minCount > 0) {
+        this.$set(menu, 'count', menu.minCount - 1)
+      }
       this.$root.eventHub.$emit('cart.add', menu)
       this.$root.eventHub.$emit('cart.drop', event.target)
     },
