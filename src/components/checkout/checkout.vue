@@ -152,6 +152,7 @@ export default {
       console.log(newValue)
       if (newValue && this.shouldGetTakeawayTimeSlots) {
         this.takeawayTimeSlotsGot = false
+        this.showScreenTime = new Date()
         this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
       } else {
         this.hidecheckout()
@@ -186,6 +187,15 @@ export default {
     },
     showTakeawayTimeSlots() {
       if (this.shouldGetTakeawayTimeSlots && !this.takeawayTimeSlotsGot) {
+        var firstTime = new Date(this.showScreenTime)
+        if (firstTime.setSeconds(firstTime.getSeconds() + 3) > new Date()) {
+          console.log('skip')
+          this.$Modal.info({
+            content: this.ml.busywithconnectingtorestaurant,
+            okText: this.ml.ok
+          });
+          return
+        }
         this.$Modal.info({
           content: this.ml.cannotconnecttorestaurantfortimeslots,
           okText: this.ml.ok
@@ -243,7 +253,7 @@ export default {
       }
       if (this.takeawayTimeSlot === this.ml.selecttime) {
         this.$Modal.success({
-          content: this.ml.selecttime,
+          content: this.ml.selecttakeawaytimeslot,
           okText: this.ml.ok
         });
         return
