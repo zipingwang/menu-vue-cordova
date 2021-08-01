@@ -426,7 +426,7 @@ export default {
     .shoppingCartEmptyMessage
       margin 18px
     .list-content
-      max-height 217px
+      max-height 417px
       overflow hidden
       .food
         position relative
