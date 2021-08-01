@@ -81,6 +81,8 @@
             .foodlinename
               margin 0px
               text-align left
+        &.selectedOrder
+          border-color #00b43c;
   .map
     text-align center
     margin-top 20px
@@ -98,34 +100,31 @@
           <i-button size="small" :type="takeawayButtonType" @click= "getTakeaway()" type="warning" shape="circle" v-if="takeawayNotViewedCount > 0">{{takeawayNotViewedCount}}</i-button>
           <i-button size="small" :type="allButtonType" @click= "getAll()">{{ml.all}} {{allCount}}</i-button>
       </div>
-  <div class="divider"></div>
-  <drawer ref="menuDrawer" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="contextMenuVisible">
-      <p class="drawbutton"><i-button @click="closeOrder" type="primary">{{ml.close}}</i-button></p>
-      <p class="drawbutton"><i-button @click="deleteOrder" type="primary">{{ml.delete}}</i-button></p>
-  </drawer>
-  <div class="ratingsWrapper" ref="ratingsWrapper">
-<!--
-    <login ref= "myLogin" :seller="seller" :data="data" :ml="ml">
-    </login> -->
+      <div class="divider"></div>
+      <drawer ref="menuDrawer" placement="right" :closable="true" v-if="data.options.isAdmin === '1'" v-model="contextMenuVisible">
+          <p class="drawbutton"><i-button @click="closeOrder" type="primary">{{ml.close}}</i-button></p>
+          <p class="drawbutton"><i-button @click="deleteOrder" type="primary">{{ml.delete}}</i-button></p>
+      </drawer>
+      <div class="ratingsWrapper" ref="ratingsWrapper">
 
       <div class="row">
         <div class="column" v-for="order in visibleOrders">
-           <div class="ricetableblock">
+           <div class="ricetableblock" :class="{'selectedOrder':order==selectedOrder}">
               <row :gutter="16" class="orderheader">
-                <i-col span="5">
-                    <div>Nr.{{order.tableNr}}</div>
+                <i-col span="3">
+                    <div>{{ml.ticketNumber}}{{order.tableNr}}</div>
                 </i-col>
-                <i-col span="3" v-if="isAdmin">
+                <i-col span="2" v-if="isAdmin">
                     <Icon type="md-briefcase" v-if = "order.isTakeaway === '1'" />
                     <Icon type="ios-restaurant" v-if = "order.isTakeaway === '0'" />
                 </i-col>
-                <i-col span="10">
+                <i-col span="8">
                     <div>{{getOrderTimeString(order)}}</div>
                 </i-col>
                 <i-col span="5">
                     <div>€{{order.totalPrice}}</div>
                 </i-col>
-                <i-col span="4" v-if="isAdmin">
+                <i-col span="3" v-if="isAdmin">
                     <i-button size="small" @click= "changeOrder(order)" :type="order.orderViewed === false ? 'warning' : 'default'" icon="ios-menu" ></i-button>
                 </dropdown>
                 </i-col>
@@ -133,7 +132,7 @@
                 <table class="foodlineblock">
                   <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
-                    <td class="foodlinename">{{getMenuName(orderline.nr)}}</td>
+                    <td class="foodlinename">{{orderline.name}}</td>
                   </tr>
                 </table>
               <div>{{order.orderComment}}</div>
@@ -279,7 +278,9 @@ export default {
   watch: {
     '$route' (to, from) {
       if (to.path === '/admin') {
-        this.downloadOrder()
+        if (this.data.options.cusId !== '' && !this.orderDownloaded) {
+          this.downloadOrder()
+        }
       }
     },
     contextMenuVisible(newValue, oldValue) {
@@ -314,7 +315,7 @@ export default {
     },
     ConfirmCloseOrder() {
       // this.$Message.info(JSON.stringify(this.selectedOrder));
-      this.$root.eventHub.$emit('signalr.closeOrder', this.selectedOrder.orderId)
+      this.$root.eventHub.$emit('signalr.closeOrder', this.selectedOrder.customerOrderId)
       // this.selectedOrder = {}
       this.modalCloseOrder = false
     },
@@ -325,15 +326,18 @@ export default {
     },
     downloadOrder() {
       console.log('downloadOrder in admin.vue')
-      if (this.data.options.cusId !== '' && !this.orderDownloaded) {
-        this.$root.eventHub.$emit('signalr.downloadOrder')
-      }
+      // if (this.data.options.cusId !== '' && !this.orderDownloaded) {
+      //   this.$root.eventHub.$emit('signalr.downloadOrder')
+      // }
+      this.$root.eventHub.$emit('signalr.downloadOrder')
     },
     onOrderDownloaded(orders) {
       // alert('orderDownloaded in admin')
       // console.log(typeof orders);
+      console.log(orders)
       this.orders = orders.orders
       this.orderDownloaded = true
+      this.getAll() /* reset filter */
       this.$nextTick(() => {
         this._initScroll(); // 初始化scroll
       })
@@ -357,6 +361,7 @@ export default {
     },
     doAddRemoveOrder(orderString, addremove) {
       console.log('doAddRemoveOrder')
+      console.log(orderString)
       // debugger
       if (addremove === '1') {
         let flag = false
@@ -378,10 +383,14 @@ export default {
       } else if (addremove === '-1' || addremove === '-2') { /* -1 close, -2 delete order */
         let flag = false
         let orderId = orderString
+        console.log('orderString')
+        console.log(orderString)
+        console.log(this.orders)
         for (let index = 0; index < this.orders.length; index++) {
-          if (this.orders[index].orderId === orderId) {
+          if (this.orders[index].customerOrderId === orderId) {
+            alert('found')
+            console.log('found')
             this.orders.splice(index, 1);
-            // alert('found')
             break
           }
         }
@@ -390,6 +399,7 @@ export default {
         this.foodsScroll.refresh()
         // this._initScroll(); // 初始化scroll
       })
+      this.contextMenuVisible = false
       this.playSound()
     },
     getTakeawayString(order) {
@@ -444,7 +454,7 @@ export default {
     },
     ConfirmDeleteOrder() {
       // this.$Message.info(JSON.stringify(this.selectedOrder));
-      this.$root.eventHub.$emit('signalr.deleteOrder', this.selectedOrder.orderId)
+      this.$root.eventHub.$emit('signalr.deleteOrder', this.selectedOrder.customerOrderId)
       this.modalDeleteOrder = false
       this.contextMenuVisible = false
     },
@@ -463,20 +473,20 @@ export default {
         var audio = new Audio('static/sound/sound.mp3');
         audio.play();
       }
-    },
-    getMenuName(menuNr) {
-      console.log(menuNr)
-      let menuInDataJs = {}
-      this.data.goods.forEach(menuGroup => {
-        menuGroup.foods.forEach(menuItem => {
-          if (menuItem.menunr === menuNr) {
-            menuInDataJs = menuItem
-          }
-        });
-      });
-      console.log(menuInDataJs)
-      return menuInDataJs.name[data.currentlnindex]
     }
+    // getMenuName(menuNr) {
+    //   console.log(menuNr)
+    //   let menuInDataJs = {}
+    //   this.data.goods.forEach(menuGroup => {
+    //     menuGroup.foods.forEach(menuItem => {
+    //       if (menuItem.menunr === menuNr) {
+    //         menuInDataJs = menuItem
+    //       }
+    //     });
+    //   });
+    //   console.log(menuInDataJs)
+    //   return menuInDataJs.name[data.currentlnindex]
+    // }
   }
 }
 
