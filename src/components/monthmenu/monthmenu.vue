@@ -189,6 +189,7 @@ export default {
     }
   },
   mounted() {
+    this._initScroll()
     this.downloadMonthMenu()
   },
   watch: {
