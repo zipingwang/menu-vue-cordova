@@ -108,6 +108,7 @@ export default {
     // this.$root.eventHub.$on('cart.decrease', this.decrease)
     this.$root.eventHub.$on('login.loggedin', this.onLogIn)
     console.log('created in shopcart')
+    this.prevClick = new Date()
   },
   computed: {
     showBackdrop() {
@@ -180,12 +181,39 @@ export default {
     hideBackdrop() {
       this.listShow = false
     },
+    // _initScroll() {
+    //   this.foodlistScroll = new BScroll(this.$refs.foodlist, {
+    //     click: true
+    //   });
+    // },
     _initScroll() {
-      this.foodlistScroll = new BScroll(this.$refs.foodlist, {
-        click: true
-      });
+      let smallScreen = screen.width <= 800;
+      console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
+      // this.menuGroupScroll = new BScroll(this.$refs.menuWrapper, {
+      //   click: true
+      // });
+      if (smallScreen) {
+        this.foodlistScroll = new BScroll(this.$refs.foodlist, {
+          click: true
+        });
+      } else {
+        this.foodsScroll = new BScroll(this.$refs.foodlist, {
+          click: true,
+          scrollbar: false,
+          mouseWheel: {
+            speed: 20,
+            invert: false
+          }
+        });
+      }
     },
     listToggle() {
+      console.log('listToggle')
+      if (this.prevClick.setMilliseconds(this.prevClick.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
+        this.prevClick = new Date()
+        return
+      }
       this.listShow = !this.listShow
       if (!this.shoppingCartIsEmpty) {
         if (this.listShow) {
@@ -195,9 +223,11 @@ export default {
             } else {
               this.foodlistScroll.refresh()
             }
+            // this.$refs.foodlist.focus()
           })
         }
       }
+      this.prevClick = new Date()
     },
     beforeEnter(el) {
       let count = this.balls.length
