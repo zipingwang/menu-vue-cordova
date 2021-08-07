@@ -31,11 +31,12 @@
         <drawer ref="sideDrawer" :title="ml.user" placement="right" :closable="true" v-model="sideDrawVisible">
           <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
           <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
-           <Divider />
+           <Divider v-if="lns.length > 1 || data.options.isAdmin === '1'" ></Divider>
+          <p class="drawbutton"><i-button @click="showMyOrder" type="primary" v-if="data.options.loggedIn">{{ml.myorder}}mijn bestellingen</i-button></p>
           <p class="drawbutton"><i-button @click="showConfig" type="primary" v-if="data.options.isAdmin === '1'">{{ml.config}}</i-button></p>
 
            <div class="language-wrapper">
-            <radio-group :vertical="true"  v-model="selectedLanguage" @on-change="changeLanguage">
+            <radio-group :vertical="true"  v-model="selectedLanguage" @on-change="changeLanguage" v-if="lns.length > 1">
                 <radio v-for="(ln, index) in lns" :label="ln['name']"  @click="choseLanguage(ln, index)">
 
                 </radio>
@@ -48,16 +49,8 @@
             </div>
         </drawer>
         <configDraw ref="myConfigDraw" :ml="ml" :data="data" :seller="seller"></configDraw>
-
+        <!-- <myOrder ref="myOrder" :ml="ml" :data="data" :seller="seller"></myOrder> -->
         <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
-
-        <!-- <div class="support-count" v-if="seller.supports && seller.supports.length > 0" @click="showDetails()">
-            <span class="count">{{sellerDetailButtonSamllText}}</span>
-            <i class="icon-keyboard_arrow_right"></i>
-        </div> -->
-        <!-- <drawer title="Shop" width = "100%" :closable="true" v-model="sellerVisible">
-            shop
-        </drawer> -->
   </div>
   <div class="bulletin-wrapper" >
     <div @click="showDetails()" v-if="seller.supports.length>0">
@@ -141,6 +134,7 @@
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
 import configDraw from 'components/config/configDraw/configDraw'
+import myOrder from 'components/myOrder/myOrder'
 import login from 'components/login/login'
 
 export default {
@@ -156,7 +150,8 @@ export default {
   components: {
     star,
     configDraw,
-    login
+    login,
+    myOrder
   },
   data() {
     return {
@@ -219,6 +214,11 @@ export default {
     showConfig() {
       // this.sideDrawVisible = false
       this.$refs.myConfigDraw.showDraw()
+    },
+    showMyOrder() {
+      console.log('showMyOrder in header.vue')
+      this.sideDrawVisible = false
+      this.$refs.myOrder.showMyOrder()
     },
     logout() {
       this.sideDrawVisible = false
