@@ -99,6 +99,7 @@ export default {
     '$route' (to, from) {
       if (to.path === '/goods') {
         this.foodsScroll.refresh()
+        this.menuGroupScroll.refresh()
         this.$refs.myShopCart.closeChild()
         if (this.$refs.myFood !== undefined) {
           this.$refs.myFood.hide()
@@ -133,9 +134,25 @@ export default {
     _initScroll() {
       let smallScreen = screen.width <= 800;
       console.log(`screen width ${screen.width}, smallScreen ${smallScreen}`)
-      this.menuGroupScroll = new BScroll(this.$refs.menuWrapper, {
-        click: true
-      });
+      if (smallScreen) {
+        this.menuGroupScroll = new BScroll(this.$refs.menuWrapper, {
+          click: true
+        });
+      } else {
+        this.menuGroupScroll = new BScroll(this.$refs.menuWrapper, {
+          click: true,
+          probeType: 3,
+          scrollbar: false,
+          // scrollbar: {
+          //   fade: smallScreen,
+          //   interactive: !smallScreen // new in 1.8.0
+          // },
+          mouseWheel: {
+            speed: 20,
+            invert: false
+          }
+        });
+      }
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
         click: true,
         probeType: 3,
