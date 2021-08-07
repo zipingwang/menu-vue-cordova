@@ -10,7 +10,7 @@
       <div class="billcontainer">
           <div class="columnpadding"></div>
           <div class="billcontent">
-            <backButton @click="cancel()"></backButton>
+            <backButton @click="goBack()"></backButton>
             <card class="customer">
                 <p slot="title">{{ml.register}}</p>
                  <i-form ref="formItem1" :model="formItem" :rules="ruleValidate" :label-width="120">
@@ -267,7 +267,7 @@ export default {
       //   }
       // })
     },
-    cancel() {
+    goBack() {
       this.show = false
       this.$emit('close')
     },
@@ -296,7 +296,8 @@ export default {
             this.$Modal.success({
               title: this.ml.userregistrationemailsenttitle,
               content: this.ml.userregistrationemailsent,
-              okText: this.ml.ok
+              okText: this.ml.ok,
+              onOk: () => { this.goBack() }
             });
           } else if (res.data === 'emailaddressalreadyused') {
             this.$Modal.warning({
@@ -337,7 +338,8 @@ export default {
         this.$Modal.success({
           title: this.ml.success,
           content: this.ml.userregistrationsuccess,
-          okText: this.ml.ok
+          okText: this.ml.ok,
+          onOk: () => { this.cancle() }
         });
         this.show = false
         this.$emit('close')

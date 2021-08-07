@@ -42,7 +42,7 @@
       <router-link to="/seller">商家</router-link>
     </div>
     <div class="tab-item" v-if="data.options.cusId != ''">
-      <router-link to="/admin">{{trans.mine}}</router-link>
+      <router-link to="/admin">{{trans.orders}}</router-link>
     </div>
     <!-- <div class="tab-item" v-if="data.options.changepasswordtoken !== ''">
       <router-link to="/resetPassword">change password</router-link>
