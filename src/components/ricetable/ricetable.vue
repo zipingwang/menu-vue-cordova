@@ -62,7 +62,7 @@
           .foodlineblock
             .foodline
               font-size 16px
-              height 16px
+              // height 16px
             .seperator
               margin-top 5px
               height 30px
@@ -132,7 +132,7 @@
                     <ul>
                         <li class="foodlineblock" v-for="(food, index) in ricetable.foodlines">
                             <div class="foodline">{{food}}</div>
-                            <div class="seperator" v-if="index != ricetable.foodlines.length - 1">***</div>
+                            <div class="seperator" v-if="index != ricetable.foodlines.length - 1">∞</div>
                         </li>
                     </ul>
                 </div>
