@@ -88,7 +88,7 @@ export default {
       return requestString
     },
     invalidEailFormatString() {
-      return '1234' // this.ml.incorrectemailformat
+      return this.ml.incorrectemailformat
     }
   },
   created() {
