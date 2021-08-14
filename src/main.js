@@ -39,7 +39,7 @@ const store = new Vuex.Store({
 })
 const router = new VueRouter({
   routes: [{
-    path: '/goods',
+    path: '/menus',
     component: goods
   }, {
     path: '/ratings',
