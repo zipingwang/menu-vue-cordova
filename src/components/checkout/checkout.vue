@@ -18,21 +18,21 @@
             <ul>
               <li class="rowheader">
                 <span class="columncount">{{ml.ordercount}}</span>
-                <span class="columnname">{{ml.orderdescription}}</span>
-                <span class="columnunitprice">{{ml.orderunitprice}}</span>
+                <span class="columnnameHeader">{{ml.orderdescription}}</span>
+                <!-- <span class="columnunitpriceHeader">{{ml.orderunitprice}}</span> -->
                 <span class="columnprice">{{ml.orderlinetotal}}</span>
               </li>
               <li class="row" v-for="food in selectFoods">
                 <span class="columncount">{{food.count}}</span>
                 <span class="columnname">{{food.name[data.currentlnindex]}}</span>
-                <span class="columnunitprice">{{food.price}} </span>
+                <!-- <span class="columnunitprice">{{(food.price).toFixed(2)}} </span> -->
                 <span class="columnprice">{{(food.price * food.count).toFixed(2)}} </span>
               </li>
               <li class="footline">
                 <span class="columncount">{{totalCount}}</span>
                 <span class="columnname"></span>
-                <span class="columnunitprice"></span>
-                <span class="columnprice">{{totalPrice}}</span>
+                <!-- <span class="columnunitprice"></span> -->
+                <span class="columnprice">€{{totalPrice}}</span>
               </li>
             </ul>
             <div class="totalline">{{ml.ordertotal}}        €{{totalPrice}}</div>
@@ -348,6 +348,7 @@ export default {
 /* Create four equal columns */
 .columncount {
   flex: 10%;
+  text-align: center;
   //text-align right;
   //padding-right 20px;
 }
@@ -355,11 +356,23 @@ export default {
 .columnname {
   flex: 70%;
 }
+
+.columnnameHeader {
+  flex: 70%;
+  text-align: center;
+}
+
 .columnunitprice {
   flex: 10%;
 }
+
+.columnunitpriceHeader {
+  flex: 15%;
+  text-align: left;
+}
 .columnprice {
   flex: 10%;
+  text-align:right
 }
 .columnpadding {
   flex : 10%
