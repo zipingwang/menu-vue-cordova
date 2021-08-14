@@ -32,7 +32,8 @@
           <p class="drawbutton"><i-button @click="login" type="primary" v-if="!data.options.loggedIn">{{ml.login}}</i-button></p>
           <p class="drawbutton"><i-button @click="logout" type="primary" v-if="data.options.loggedIn">{{ml.logout}}</i-button></p>
            <Divider v-if="lns.length > 1 || data.options.isAdmin === '1'" ></Divider>
-          <p class="drawbutton"><i-button @click="showMyOrder" type="primary" v-if="data.options.loggedIn">{{ml.myorder}}mijn bestellingen</i-button></p>
+          <p class="drawbutton"><i-button @click="showMyOrder" type="primary" v-if="data.options.loggedIn">{{ml.myorder}}</i-button></p>
+          <p class="drawbutton"><i-button @click="showMyAccountInfo" type="primary" v-if="data.options.loggedIn">{{ml.myaccountinfo}}</i-button></p>
           <p class="drawbutton"><i-button @click="showConfig" type="primary" v-if="data.options.isAdmin === '1'">{{ml.config}}</i-button></p>
 
            <div class="language-wrapper">
@@ -49,7 +50,7 @@
             </div>
         </drawer>
         <configDraw ref="myConfigDraw" :ml="ml" :data="data" :seller="seller"></configDraw>
-        <!-- <myOrder ref="myOrder" :ml="ml" :data="data" :seller="seller"></myOrder> -->
+        <myAccountInfo ref="myAccountInfo" :ml="ml" :data="data" :seller="seller"></myAccountInfo>
         <login ref="myLogin" :seller="seller" :data="data" :ml="ml" v-on:loginevent="onlogin"></login>
   </div>
   <div class="bulletin-wrapper" >
@@ -134,7 +135,7 @@
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
 import configDraw from 'components/config/configDraw/configDraw'
-import myOrder from 'components/myOrder/myOrder'
+import myAccountInfo from 'components/config/myAccountInfo/myAccountInfo'
 import login from 'components/login/login'
 
 export default {
@@ -151,7 +152,7 @@ export default {
     star,
     configDraw,
     login,
-    myOrder
+    myAccountInfo
   },
   data() {
     return {
@@ -218,13 +219,18 @@ export default {
     showMyOrder() {
       console.log('showMyOrder in header.vue')
       this.sideDrawVisible = false
-      this.$refs.myOrder.showMyOrder()
+      this.$router.push('admin')
+    },
+    showMyAccountInfo() {
+      console.log('showMyAccountInfo in header.vue')
+      this.sideDrawVisible = false
+      this.$refs.myAccountInfo.showDraw()
     },
     logout() {
       this.sideDrawVisible = false
       this.$root.eventHub.$emit('login.loggedOut')
       setTimeout(() => {
-        this.$router.push('goods') /* prevent possible stay on tab bestellingen, */
+        this.$router.push('menus') /* prevent possible stay on tab bestellingen, */
       }, 300)
     },
     login() {

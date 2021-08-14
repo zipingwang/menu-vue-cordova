@@ -1,6 +1,6 @@
 <template lang="html">
   <transition name="fade-backdrop">
-    <div ref="myBackDrop" class="backdrop" v-show="isShow"></div>
+    <div ref="myBackDrop" class="backdrop" v-show="isShow" @click="click()"></div>
   </transition>
 </template>
 
@@ -13,6 +13,13 @@ export default {
   mounted() {
     if (this.background !== '') {
       this.$refs.myBackDrop.style.backgroundColor = this.background
+      /* caller pass parameter like this */
+      /* background="rgba(7,17,27,0.1)" or :background="'rgba(7,17,27,0.1)'" */
+    }
+  },
+  methods: {
+    click() {
+      this.$emit('click')
     }
   }
 }

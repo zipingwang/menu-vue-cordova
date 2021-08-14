@@ -36,7 +36,7 @@
                         <i-input v-model="formMyAccountInfo.place"></i-input>
                     </FormItem>
                      <FormItem>
-                      <Button type="primary" @click="login">{{ml.changemypassword}}</Button>
+                      <Button type="primary" @click="showBackdrop()">{{ml.changemypassword}}</Button>
                     </FormItem>
         </i-form>
 
@@ -63,17 +63,27 @@
           </div>
         </Drawer>
          <login ref="myLogin" :seller="seller" :data="data" :ml="ml" ></login>
+        <div class="changePasswordComponent" v-show="changingPassword">
+          <backdrop :isShow="changingPassword" @click="closeChangePasswordBackDrop()"></backdrop>
+          <div class="changePasswordWrapper">
+            <changePassword ref="myResetPassword" :seller="seller" :data="data" :ml="ml" :isShow="changingPassword" @close="closeChangePasswordBackDrop()" ></changePassword>
+          </div>
+        </div>
     </div>
 </template>
 <script>
   import sendButton from 'components/common/sendButton/sendButton'
   import axios from 'axios'
   import login from 'components/login/login'
+  import backdrop from 'components/backdrop/backdrop'
+  import changePassword from 'components/resetPassword/changePassword'
 
   export default {
     components: {
       sendButton,
-      login
+      login,
+      backdrop,
+      changePassword
     },
     props: {
       ml: {},
@@ -91,6 +101,7 @@
         },
         show: this.visible,
         modalDeleteMyAccountInfo: false,
+        changingPassword: false,
         formMyAccountInfo: {
           title: '-',
           firstName: '',
@@ -107,11 +118,11 @@
           email: ''
         },
         ruleValidate: {
-          firstname: [
+          firstName: [
               { required: true, message: this.ml.requiredfield, trigger: 'blur' },
               { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
           ],
-          lastname: [
+          lastName: [
               { required: true, message: this.ml.requiredfield, trigger: 'blur' },
               { type: 'string', min: 2, message: this.ml.minimumlengthrequired, trigger: 'blur' }
           ],
@@ -144,6 +155,7 @@
       // this.$root.eventHub.$on('signalr.onSaveMyAccountInfo', this.onSaveMyAccountInfo)
       // this.$root.eventHub.$on('signalr.onDeleteMyAccountInfo', this.onDeleteMyAccountInfo)
       // this.$root.eventHub.$on('signalr.onDownLoadMyAccountInfo', this.onDownLoadMyAccountInfo)
+      this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
     },
     mounted() {
 
@@ -165,9 +177,19 @@
       close() {
         this.show = false
       },
+      showBackdrop() {
+        this.changingPassword = true
+      },
+      closeChangePasswordBackDrop() {
+        console.log('closeChangePasswordBackDrop')
+        this.changingPassword = false
+      },
       login() {
         this.$refs.myLogin.showlogin()
         this.sideDrawVisible = false
+      },
+      onLoggedOut() {
+        this.formMyAccountInfo = {}
       },
       downloadMyAccountInfo() {
         console.log('downloadMyAccountInfo')
@@ -178,6 +200,9 @@
           // alert(res)
           if (res.statusText === 'OK') {
             var myAccountInfoJson = res.data
+            if (myAccountInfoJson.title === '') {
+              myAccountInfoJson.title = '-'
+            }
             this.formMyAccountInfo = myAccountInfoJson
             // this.formMyAccountInfo.title = myAccountInfoJson.title
             // this.formMyAccountInfo.menuNr = myAccountInfoJson.menuNr
@@ -247,7 +272,7 @@
     }
   }
 </script>
-<style>
+<style lang="stylus" scoped>
   .root {
     z-index: 1001; /* important, draw index is 1000(default) */
   }
@@ -264,4 +289,14 @@
   .changeMyPasswordButton {
     margin: auto;
   }
+  .changePasswordComponent
+    position fixed
+    top 0
+    bottom 0
+    left 0
+    right 0
+  .changePasswordWrapper
+    position absolute
+    width 100%
+    height 100%
 </style>

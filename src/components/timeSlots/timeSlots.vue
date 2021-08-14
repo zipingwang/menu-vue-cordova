@@ -180,7 +180,7 @@ export default {
   background-color: #00FF00;
   top: 50%;
   left: 50%;
-  margin-top: -100px;
+  margin-top: -150px;
   margin-left: -100px;
   z-index 150
   background white
@@ -200,7 +200,7 @@ export default {
     background-color: #00FF00;
     top: 50%;
     left: 50%;
-    margin-top: -100px;
+    margin-top: -150px;
     margin-left: -100px;
     z-index 150
     background white
