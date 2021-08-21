@@ -33,29 +33,31 @@ export default {
   },
   methods: {
     addCart(event) {
-      if (this.prevClick.setMilliseconds(this.prevClick.getMilliseconds() + 300) > new Date()) {
-        console.log('skip')
-        this.prevClick = new Date()
-        return
-      }
+      console.log('addCart')
       if (!event._constructed) {
         return
       }
-
-      // if (!this.food.count) {
-      //  Vue.set(this.food, 'count', 0)
-      // }
-      console.log('addCart')
-      // this.food.count++;
+      var preClickTemp = this.prevClick
+      this.prevClick = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
+        return
+      }
       this.$root.eventHub.$emit('cart.add', this.food)
       this.$root.eventHub.$emit('cart.drop', event.target)
-      this.prevClick = new Date()
     },
     decreaseCart() {
-      if (!event._constructed || !this.food.count) {
+      if (!this.food.count) {
         return
       }
       console.log('decreaseCart')
+      var preClickTemp = this.prevClick
+      this.prevClick = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
+        return
+      }
+
       this.$root.eventHub.$emit('cart.decrease', this.food)
       // this.food.count--;
     }

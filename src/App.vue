@@ -160,9 +160,14 @@ export default {
       console.log(food.count)
     },
     decreaseMenu(food) {
+      console.log('decreaseMenu in app.vue')
+      console.log(food.count)
       if (food.count > 0) {
         food.count--
         // this.$set(food, 'count', food.count--)
+      }
+      if (food.count < food.minCount) {
+        food.count = 0
       }
       if (food.count === 0) {
         let index = this.data.selectFoods.indexOf(food);

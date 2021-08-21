@@ -152,9 +152,7 @@ export default {
       console.log('checkout show')
       console.log(newValue)
       if (newValue && this.shouldGetTakeawayTimeSlots) {
-        this.takeawayTimeSlotsGot = false
-        this.showScreenTime = new Date()
-        this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+        this.getTakeawayTimeSlots()
       } else {
         this.hidecheckout()
       }
@@ -186,6 +184,11 @@ export default {
     hidecheckout() {
       this.show = false;
     },
+    getTakeawayTimeSlots() {
+      this.takeawayTimeSlotsGot = false
+      this.showScreenTime = new Date()
+      this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
+    },
     showTakeawayTimeSlots() {
       if (this.shouldGetTakeawayTimeSlots && !this.takeawayTimeSlotsGot) {
         var firstTime = new Date(this.showScreenTime)
@@ -197,8 +200,11 @@ export default {
           });
           return
         }
+        console.log('this.ml.cannotconnecttorestaurantfortimeslots')
+        this.getTakeawayTimeSlots()
+        console.log(this.ml.cannotconnecttorestaurantfortimeslots)
         this.$Modal.info({
-          content: this.ml.cannotconnecttorestaurantfortimeslots,
+          content: this.ml.cannotconnecttorestaurantfortimeslots.replace('{0}', this.seller.telefoon),
           okText: this.ml.ok
         });
       } else if (this.allowPlaceOrder) {
@@ -294,6 +300,7 @@ export default {
     onLogOut(cus) {
       console.log('onLogOut in checkout')
       this.initValue()
+      this.hidecheckout()
     },
     initValue() {
       this.ordercomment = ''

@@ -175,12 +175,12 @@ export default {
   // background white
   // color rgb(77,85,93)
   width:200px;
-  height:300px;
+  height:400px;
   position: fixed;
   background-color: #00FF00;
   top: 50%;
   left: 50%;
-  margin-top: -150px;
+  margin-top: -200px;
   margin-left: -100px;
   z-index 150
   background white
@@ -195,12 +195,12 @@ export default {
 @media screen and (min-width: 800px)
   .detailWrapper
     width:200px;
-    height:300px;
+    height:400px;
     position: fixed;
     background-color: #00FF00;
     top: 50%;
     left: 50%;
-    margin-top: -150px;
+    margin-top: -200px;
     margin-left: -100px;
     z-index 150
     background white
