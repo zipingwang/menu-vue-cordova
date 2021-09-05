@@ -46,7 +46,7 @@
                 <span>€{{(food.price * food.count).toFixed(2)}}</span>
               </div>
               <div class="cartcontrol-wrapper">
-                <cartcontrol :food="food"></cartcontrol>
+                <cartcontrol :food="food" :ml="ml"></cartcontrol>
               </div>
             </li>
           </ul>
@@ -272,9 +272,11 @@ export default {
       }
 
       console.log(this.selectFoods)
+      var totalDishCount = 0
       this.selectFoods.forEach((food) => {
         console.log(food.count)
         console.log(food.minCount)
+        totalDishCount += food.count
         if (food.minCount > food.count) {
           isValid = false
           this.$Modal.success({
@@ -284,6 +286,16 @@ export default {
           });
         }
       })
+
+      if (totalDishCount > 30) {
+        isValid = false
+        this.$Modal.success({
+          title: this.ml.info,
+          content: this.ml.maximumordercountoverridemsg.replace('{0}', this.seller.telefoon[0]),
+          okText: this.ml.ok
+        });
+      }
+
       if (isValid === false) {
         return
       }
