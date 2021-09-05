@@ -149,7 +149,7 @@
                     <div class="text" @click="addCart($event, ricetable)" v-show="!(getRiceTableMenu(ricetable).count)"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
                   </transition>
                 </div>
-                <cartcontrol :food="getRiceTableMenu(ricetable)" v-show="getRiceTableMenu(ricetable).count"></cartcontrol>
+                <cartcontrol :food="getRiceTableMenu(ricetable)" :ml="ml" v-show="getRiceTableMenu(ricetable).count"></cartcontrol>
                 <!-- <div class="cartcontrol-wrapper">
                   <cartcontrol :food="getRiceTableMenu(ricetable)"></cartcontrol>
                 </div> -->

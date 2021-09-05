@@ -21,7 +21,8 @@ import Vue from 'vue'
 
 export default {
   props: {
-    food: Object
+    food: Object,
+    ml: Object
   },
   data() {
     return {
@@ -41,6 +42,15 @@ export default {
       this.prevClick = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
         console.log('skip')
+        return
+      }
+      var allowed = checkTime(this.food.menunr, menuAllowedTimeSlots)
+      if (!allowed) {
+        this.$Modal.success({
+          title: this.ml.info,
+          content: this.ml.lunchboxnotallowedmsg,
+          okText: this.ml.ok
+        });
         return
       }
       this.$root.eventHub.$emit('cart.add', this.food)

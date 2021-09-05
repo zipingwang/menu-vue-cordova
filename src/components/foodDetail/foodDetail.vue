@@ -30,7 +30,7 @@
               <div class="text" @click="addCart($event)" v-show="!food.count"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
             </transition>
           </div>
-          <cartcontrol :food="food" v-show="food.count"></cartcontrol>
+          <cartcontrol :food="food" :ml="ml" v-show="food.count"></cartcontrol>
         </div>
         <div class="divider"></div>
         <div class="desc">

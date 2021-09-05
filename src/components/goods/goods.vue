@@ -38,7 +38,7 @@
                   <!-- <span class="rating">好评率{{food.rating}}%</span> -->
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" :ml="ml"></cartcontrol>
                 </div>
               </div>
             </li>
