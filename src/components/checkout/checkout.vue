@@ -143,6 +143,7 @@ export default {
     this.$root.eventHub.$on('signalr.onGetTakeawayTimeSlots', this.onGetTakeawayTimeSlots)
     this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
     this.$root.eventHub.$on('login.loggedOut', this.onLogOut)
+    this.$root.eventHub.$on('checkout.closeCheckOut', this.hidecheckout)
 
     console.log('checkout JSON.stringify(this.trans)')
     console.log(JSON.stringify(this.trans))
@@ -238,12 +239,16 @@ export default {
       }
       this.showWaiting = false
       // this.hidecheckout() /* sometime click on menu tab, show checkout, hide checkout here */
+      this.$Modal.hidecheckouttemp = this.hidecheckout
+      let obj = this
       this.$Modal.success({
         title: this.ml.success,
         content: this.ml.ordersendsuccess,
         okText: this.ml.ok,
         onOk: () => {
-          this.hidecheckout()
+          // this.hidecheckout() /* put in body of onOk, not working, click on menus tab, checkout still there */
+          /* use event to communicate */
+          this.$root.eventHub.$emit('checkout.closeCheckOut')
           setTimeout(() => {
             this.$router.push('admin')
           }, 300)
