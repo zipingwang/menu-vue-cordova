@@ -65,6 +65,31 @@
             background-color green
           .orderViewed
             background-color  red
+        .orderheaderline
+          font-size 14px
+          text-align left
+          padding-left 10px
+          // background-color red
+          .orderNotViewed
+            background-color green
+          .orderViewed
+            background-color  red
+        .orderheaderblock
+          margin 10px
+          padding 0px 50px 0px 0px
+          border-radius 5px
+          .orderheaderline
+            padding 5px 10px
+            background #f2f2f2
+            border-radius 10px
+            .orderheaderlinename
+              font-size 14px
+              text-align left
+              padding-left 20px
+            .orderheaderlinevalue
+              font-size 14px
+              text-align left
+              padding-left 5px
         .foodlineblock
           margin 10px
           width 90%
@@ -81,6 +106,9 @@
             .foodlinename
               margin 0px
               text-align left
+            .foodlineprice
+              margin 0px
+              text-align right
         &.selectedOrder
           border-color #00b43c;
   .map
@@ -111,28 +139,58 @@
         <div class="column" v-for="order in visibleOrders">
            <div class="ricetableblock" :class="{'selectedOrder':order==selectedOrder}">
               <row :gutter="16" class="orderheader">
-                <i-col span="3">
-                    <div>{{ml.ticketNumber}}{{order.tableNr}}</div>
+                <i-col span="13">
+                    <div>{{ml.ordersequencenumber}} {{order.tableNr}}</div>
                 </i-col>
                 <i-col span="2" v-if="isAdmin">
                     <Icon type="md-briefcase" v-if = "order.isTakeaway === '1'" />
                     <Icon type="ios-restaurant" v-if = "order.isTakeaway === '0'" />
                 </i-col>
-                <i-col span="8">
+                <!-- <i-col span="8">
                     <div>{{getOrderTimeString(order)}}</div>
                 </i-col>
                 <i-col span="5">
                     <div>€{{order.totalPrice}}</div>
-                </i-col>
+                </i-col> -->
                 <i-col span="3" v-if="isAdmin">
                     <i-button size="small" @click= "changeOrder(order)" :type="order.orderViewed === false ? 'warning' : 'default'" icon="ios-menu" ></i-button>
                 </dropdown>
                 </i-col>
               </row>
+              <!-- <row :gutter="16" class="orderheaderline">
+                <i-col span="16">
+                    <div>{{ml.ordersequencenumber}}: {{order.tableNr}}</div>
+                </i-col>
+              </row>
+              <row :gutter="16" class="orderheaderline">
+                <i-col span="16">
+                    <div>{{ml.takeawaytime}}: {{getOrderTimeString(order)}}</div>
+                </i-col>
+              </row>
+              <row :gutter="16" class="orderheaderline">
+                <i-col span="16">
+                    <div>{{ml.ordertotalamount}}: €{{order.totalPrice}}</div>
+                </i-col>
+              </row> -->
+               <table class="orderheaderblock">
+                  <!-- <tr class="orderheaderline">
+                    <td class="orderheaderlinename">{{ml.ordersequencenumber}}:</td>
+                    <td class="orderheaderlinevalue"> {{order.tableNr}}</td>
+                  </tr> -->
+                  <tr class="orderheaderline">
+                    <td class="orderheaderlinename">{{ml.takeawaytime}}:</td>
+                    <td class="orderheaderlinevalue">{{getOrderTimeString(order)}}</td>
+                  </tr>
+                  <tr class="orderheaderline">
+                    <td class="orderheaderlinename">{{ml.ordertotalamount}}:</td>
+                    <td class="orderheaderlinevalue"> €{{order.totalPrice}}</td>
+                  </tr>
+                </table>
                 <table class="foodlineblock">
                   <tr class="foodline" v-for="(orderline, index) in order.orderLines">
                     <td class="foodlinecount">{{orderline.count}}</td>
                     <td class="foodlinename">{{orderline.name}}</td>
+                    <td class="foodlineprice">{{(orderline.price * orderline.count).toFixed(2)}}</td>
                   </tr>
                 </table>
               <div>{{order.orderComment}}</div>
