@@ -6,14 +6,14 @@
           <img :src="seller.avatar" width="64" height="64" />
         </div>
         <div class="content">
-            <div class="title">
+            <div class="title noselect">
                 <!-- <span class="brand"></span> -->
                 <span class="name">{{seller.name}}</span>
             </div>
             <!-- <div class="star-wrapper">
               <star :size="36" :score="seller.score"></star>
             </div> -->
-            <div class="description">
+            <div class="description noselect">
               {{seller.description}}
                 <!-- {{seller.description + ' / ' + seller.deliveryTime + '分钟送达'}} -->
             </div>
@@ -263,6 +263,17 @@ export default {
 
 .drawbutton
   margin-bottom 10px
+
+/* monthmenu, info don't have this, don't know why they are also not selectable */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
 
 .header
   position relative

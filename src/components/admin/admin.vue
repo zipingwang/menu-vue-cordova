@@ -183,7 +183,7 @@
                   </tr>
                   <tr class="orderheaderline">
                     <td class="orderheaderlinename">{{ml.ordertotalamount}}:</td>
-                    <td class="orderheaderlinevalue"> €{{order.totalPrice}}</td>
+                    <td class="orderheaderlinevalue"> € {{order.totalPrice.toFixed(2)}}</td>
                   </tr>
                 </table>
                 <table class="foodlineblock">
@@ -446,8 +446,6 @@ export default {
         console.log(this.orders)
         for (let index = 0; index < this.orders.length; index++) {
           if (this.orders[index].customerOrderId === orderId) {
-            alert('found')
-            console.log('found')
             this.orders.splice(index, 1);
             break
           }

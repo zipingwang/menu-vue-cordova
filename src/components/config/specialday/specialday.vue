@@ -24,7 +24,17 @@
                 type="date">
             </date-picker>
         </form-item>
-        <form-item :label="ml.open">
+        <form-item :label="ml.iswholedayornot">
+            <i-switch v-model="formSpecialDay.isWholeDay" size="large">
+                  <span slot="open">{{ml.wholeday}}</span>
+                  <span slot="close">{{ml.notwholeday}}</span>
+              </i-switch>
+        </form-item>
+        <form-item :label="ml.selecttime" v-if="formSpecialDay.isWholeDay">
+            <time-picker format="HH:mm" :value="formSpecialDay.part1"  @on-change="handleChangePart1" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
+            <time-picker format="HH:mm" :value="formSpecialDay.part2"  @on-change="handleChangePart2" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
+        </form-item>
+        <form-item :label="ml.openorclose">
             <i-switch v-model="formSpecialDay.isOpen" size="large">
                   <span slot="open">{{ml.open}}</span>
                   <span slot="close">{{ml.close}}</span>
@@ -36,16 +46,7 @@
                   <span slot="close">{{ml.openingspecialday}}</span>
               </i-switch>
         </form-item>
-        <form-item :label="ml.iswholeday">
-            <i-switch v-model="formSpecialDay.isWholeDay" size="large">
-                  <span slot="open">{{ml.iswholeday}}</span>
-                  <span slot="close">{{ml.iswholeday}}</span>
-              </i-switch>
-        </form-item>
-        <form-item :label="ml.selecttime" v-if="formSpecialDay.isWholeDay">
-            <time-picker format="HH:mm" :value="formSpecialDay.part1"  @on-change="handleChangePart1" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
-            <time-picker format="HH:mm" :value="formSpecialDay.part2"  @on-change="handleChangePart2" :steps="[1, 15, 15]" type="timerange" placement="bottom-end" :placeholder="ml.selecttime" style="width: 168px"></time-picker>
-        </form-item>
+
         <form-item >
           <textarea class="ordercommenttext" v-model="formSpecialDay.comment" rows="2" cols="50%" :placeholder="ml.specialdaycomment"></textarea>
         </form-item>

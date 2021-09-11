@@ -238,22 +238,19 @@ export default {
         this.$refs.mySendButton.stop()
       }
       this.showWaiting = false
-      // this.hidecheckout() /* sometime click on menu tab, show checkout, hide checkout here */
       this.$Modal.hidecheckouttemp = this.hidecheckout
-      let obj = this
       this.$Modal.success({
         title: this.ml.success,
         content: this.ml.ordersendsuccess,
         okText: this.ml.ok,
         onOk: () => {
-          // this.hidecheckout() /* put in body of onOk, not working, click on menus tab, checkout still there */
+          // this.hidecheckout() /* put in body of onOk, not working*/
           /* use event to communicate */
           this.$root.eventHub.$emit('checkout.closeCheckOut')
           setTimeout(() => {
             this.$router.push('admin')
           }, 300)
           setTimeout(() => {
-            console.log('onOrderConfirmedFromServerToWeb')
             this.$root.eventHub.$emit('checkout.onOrderConfirmedFromServerToWeb', order, addremove)
           }, 1000)
         }
