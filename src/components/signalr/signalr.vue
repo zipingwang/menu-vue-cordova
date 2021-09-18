@@ -23,6 +23,7 @@ export default {
   computed: {
   },
   created() {
+    console.log('singalr created');
     this.$root.eventHub.$on('signalr.sendOrder', this.sendOrder)
     this.$root.eventHub.$on('signalr.registerUser', this.registerUser)
     this.$root.eventHub.$on('signalr.signin', this.signin)
@@ -136,6 +137,7 @@ export default {
     },
     sendOrder(order) {
       try {
+        console.log('send order in signr')
         this.simpleHubProxy.server.orderFromWebToServer(this.connectionId, this.getDataOptionsString(), order);
       } catch (ex) {
         console.log(ex)

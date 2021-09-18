@@ -103,7 +103,10 @@ export default {
       shopClosed: false,
       openinghourComment: '',
       takeawayTimeSlotsGot: false,
-      sendingCost: 0
+      sendingCost: 0,
+      prevClickSend: new Date(),
+      prevGetTakeawayTime: new Date(),
+      prevShowTakeawayTime: new Date()
     }
   },
   computed: {
@@ -186,11 +189,26 @@ export default {
       this.show = false;
     },
     getTakeawayTimeSlots() {
+      var preClickTemp = this.prevGetTakeawayTime
+      this.prevGetTakeawayTime = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 1300) > new Date()) {
+        console.log('skip')
+        return
+      }
+      console.log('getTakeawayTimeSlots');
       this.takeawayTimeSlotsGot = false
       this.showScreenTime = new Date()
+      console.log(this.showScreenTime)
       this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
     },
     showTakeawayTimeSlots() {
+      var preClickTemp = this.prevShowTakeawayTime
+      this.prevShowTakeawayTime = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 1300) > new Date()) {
+        console.log('skip')
+        return
+      }
+
       if (this.shouldGetTakeawayTimeSlots && !this.takeawayTimeSlotsGot) {
         var firstTime = new Date(this.showScreenTime)
         if (firstTime.setSeconds(firstTime.getSeconds() + 3) > new Date()) {
@@ -265,6 +283,12 @@ export default {
           content: this.ml.selecttakeawaytimeslot,
           okText: this.ml.ok
         });
+        return
+      }
+      var preClickTemp = this.prevClickSend
+      this.prevClickSend = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
         return
       }
       // this.showWaiting = true
