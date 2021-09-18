@@ -198,7 +198,11 @@
           console.log('get downloadMyAccountInfo ok')
           console.log(res)
           // alert(res)
-          if (res.statusText === 'OK') {
+          // statusText is empty in HTTP/2  https://stackoverflow.com/questions/41632077/why-is-the-statustext-of-my-xhr-empty
+          // if (res.statusText === 'OK') {
+          console.log(typeof (res.status))
+          console.log(res.status)
+          if (res.status === 200) {
             var myAccountInfoJson = res.data
             if (myAccountInfoJson.title === '') {
               myAccountInfoJson.title = '-'
