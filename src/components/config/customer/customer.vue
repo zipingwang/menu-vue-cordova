@@ -153,7 +153,7 @@
       onDownLoadCustomer(messageBody) {
         console.log('onDownLoadCustomer in customer')
         // alert('onDownloadBusinessInfo')
-        console.log(messageBody)
+        // console.log(messageBody)
         console.log(typeof messageBody)
         // this.formCustomer.lastName = messageBody.lastName
 

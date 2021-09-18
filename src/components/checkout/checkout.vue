@@ -130,7 +130,7 @@ export default {
       requestString = requestString + 'LastName@@FirstName@@Address@@Postcode@@Place@@Telephone@@GSM@@Password@@Title@@Email'
       requestString = requestString + '@@@Option1@@Today@@' + this.takeawayTimeSlot + '@@@'
       requestString = requestString + orderline + '@@@' + this.sendingCost + '@@@' + this.totalPrice + '@@@' + this.ordercomment + '@@@' + JSON.stringify(this.data.options)
-      console.log(this.data.options)
+      // console.log(this.data.options)
       return requestString
     },
     shouldGetTakeawayTimeSlots () {
@@ -149,7 +149,7 @@ export default {
     this.$root.eventHub.$on('checkout.closeCheckOut', this.hidecheckout)
 
     console.log('checkout JSON.stringify(this.trans)')
-    console.log(JSON.stringify(this.trans))
+    // console.log(JSON.stringify(this.trans))
   },
   watch: {
     show(newValue, oldValue) {
@@ -221,7 +221,7 @@ export default {
         }
         console.log('this.ml.cannotconnecttorestaurantfortimeslots')
         this.getTakeawayTimeSlots()
-        console.log(this.ml.cannotconnecttorestaurantfortimeslots)
+        // console.log(this.ml.cannotconnecttorestaurantfortimeslots)
         this.$Modal.info({
           content: this.ml.cannotconnecttorestaurantfortimeslots.replace('{0}', this.seller.telefoon),
           okText: this.ml.ok
@@ -306,7 +306,7 @@ export default {
       }
     },
     timeSlotSelected(timeSlot) {
-      console.log(timeSlot)
+      // console.log(timeSlot)
       this.takeawayTimeSlot = timeSlot
     },
     onSessionExpired(obj) {

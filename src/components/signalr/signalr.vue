@@ -40,7 +40,7 @@ export default {
       let url = '' // 'http://localhost:44337/signalr';
       url = this.data.options.signalrUrl
       console.log('connectToSignalRServer')
-      console.log(url)
+      // console.log(url)
       // console.log(url)
       var Handler = {}
       // Handler.tempWriteLog = this.writeToLog
@@ -223,14 +223,14 @@ export default {
     },
     onSigninConfirmedFromServerToWeb(webClientConnectionId, responsedata) {
       // alert('onSigninConfirmedFromServerToWeb')
-      console.log(typeof responsedata);
-      var s = '{"rid":"2020","isAdmin":"0"}'
-      console.log(typeof s);
-      var sobject = JSON.parse(s)
-      console.log(sobject)
-      console.log(responsedata)
+      // console.log(typeof responsedata);
+      // var s = '{"rid":"2020","isAdmin":"0"}'
+      // console.log(typeof s);
+      // var sobject = JSON.parse(s)
+      // console.log(sobject)
+      // console.log(responsedata)
       var responseobject = JSON.parse(responsedata)
-      console.log(responseobject)
+      // console.log(responseobject)
       if (this.connectionId === webClientConnectionId) {
         console.log('onSigninConfirmedFromServerToWeb2 userid:');
         this.$root.eventHub.$emit('signalr.onSigninConfirmedFromServerToWeb', responseobject)
@@ -252,7 +252,7 @@ export default {
       this.$root.eventHub.$emit('signalr.downloaded', data)
     },
     onMessageReceived(webClientConnectionId, messageString) {
-      console.log(messageString)
+      // console.log(messageString)
       var message = JSON.parse(messageString)
       // console.log(message)
       // alert(message.status)
@@ -387,7 +387,7 @@ export default {
     publishMenu() {
       try {
         console.log('publishMenu')
-        console.log(this.getDataOptionsString())
+        // console.log(this.getDataOptionsString())
         this.simpleHubProxy.server.publishMenu(this.getDataOptionsString())
       } catch (ex) {
         console.log(ex)

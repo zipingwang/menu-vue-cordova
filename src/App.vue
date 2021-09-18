@@ -137,7 +137,7 @@ export default {
       // alert('changeLanguage')
       // console.log(ml[lan])
       console.log(lan)
-      console.log(this.data)
+      // console.log(this.data)
       this.trans = ml[lan]
       this.data.currentlnindex = index
       this.data.options.ln = lan
@@ -189,7 +189,7 @@ export default {
     },
     onLoggedIn(user) {
       console.log('onLoggedIn in app')
-      console.log(user)
+      // console.log(user)
       this.data.options.loggedIn = true
       this.data.options.cusId = user.rid
       this.data.options.isAdmin = user.isAdmin
@@ -219,11 +219,11 @@ export default {
     downloadData() {
       axios.get(this.shopDataUrl).then((res) => {
         console.log('get from customerdaga.json')
-        console.log(res)
+        // console.log(res)
 
         // res.data.options = {}
         // this.seller = res.data.seller
-        console.log(this.data.options)
+        // console.log(this.data.options)
         // set it again to refresh data
         this.lns = res.data.seller.lns
         this.seller = res.data.seller

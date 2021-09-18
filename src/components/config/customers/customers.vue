@@ -75,7 +75,7 @@ export default {
     onDownLoadCustomers(messageBody) {
       console.log('onDownLoadCustomers in customers')
       // alert('onDownloadBusinessInfo')
-      console.log(messageBody)
+      // console.log(messageBody)
       console.log(typeof messageBody)
       this.customers = messageBody
       this.$Message.success(this.ml.success);
