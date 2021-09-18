@@ -183,7 +183,7 @@
                   </tr>
                   <tr class="orderheaderline">
                     <td class="orderheaderlinename">{{ml.ordertotalamount}}:</td>
-                    <td class="orderheaderlinevalue"> € {{order.totalPrice.toFixed(2)}}</td>
+                    <td class="orderheaderlinevalue"> € {{(order.totalPrice * 1).toFixed(2)}}</td>
                   </tr>
                 </table>
                 <table class="foodlineblock">
