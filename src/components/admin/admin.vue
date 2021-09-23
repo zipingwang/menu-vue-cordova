@@ -279,6 +279,7 @@ export default {
     this.$root.eventHub.$on('checkout.onOrderConfirmedFromServerToWeb', this.onOrderConfirmedFromServerToWeb)
     this.$root.eventHub.$on('login.loggedOut', this.onLoggedOut)
     console.log('admin vue created')
+    this.downloadOrder()
   },
   computed: {
     loggedIn() {
@@ -391,8 +392,8 @@ export default {
     },
     onOrderDownloaded(orders) {
       // alert('orderDownloaded in admin')
-      // console.log(typeof orders);
-      console.log(orders)
+      console.log('onOrderDownloaded in admin');
+      // console.log(orders)
       this.orders = orders.orders
       this.orderDownloaded = true
       this.getAll() /* reset filter */
