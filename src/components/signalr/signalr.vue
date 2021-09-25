@@ -356,6 +356,9 @@ export default {
           case 'deleteCustomer':
             this.$root.eventHub.$emit('signalr.onDeleteCustomer', message.messageBody)
             break;
+          case 'checkOutValidationError':
+            this.$root.eventHub.$emit('signalr.onCheckOutValidationError', message.messageBody)
+            break;
           default:
             // code block
         }

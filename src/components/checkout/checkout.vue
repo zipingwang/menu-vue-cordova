@@ -105,8 +105,9 @@ export default {
       takeawayTimeSlotsGot: false,
       sendingCost: 0,
       prevClickSend: new Date(),
-      prevGetTakeawayTime: new Date(),
-      prevShowTakeawayTime: new Date()
+      prevTryToGetTakeawayTime: new Date(),
+      prevShowTakeawayTime: new Date(),
+      lastGotTakeawayTime: new Date()
     }
   },
   computed: {
@@ -147,6 +148,7 @@ export default {
     this.$root.eventHub.$on('signalr.onSessionExpired', this.onSessionExpired)
     this.$root.eventHub.$on('login.loggedOut', this.onLogOut)
     this.$root.eventHub.$on('checkout.closeCheckOut', this.hidecheckout)
+    this.$root.eventHub.$on('signalr.onCheckOutValidationError', this.onCheckOutValidationError)
 
     console.log('checkout JSON.stringify(this.trans)')
     // console.log(JSON.stringify(this.trans))
@@ -189,8 +191,8 @@ export default {
       this.show = false;
     },
     getTakeawayTimeSlots() {
-      var preClickTemp = new Date(this.prevGetTakeawayTime)
-      this.prevGetTakeawayTime = new Date()
+      var preClickTemp = new Date(this.prevTryToGetTakeawayTime)
+      this.prevTryToGetTakeawayTime = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 1300) > new Date()) {
         console.log('skip')
         return
@@ -211,7 +213,7 @@ export default {
 
       if (this.shouldGetTakeawayTimeSlots && !this.takeawayTimeSlotsGot) {
         var firstTime = new Date(this.showScreenTime)
-        if (firstTime.setSeconds(firstTime.getSeconds() + 3) > new Date()) {
+        if (firstTime.setSeconds(firstTime.getSeconds() + 5) > new Date()) {
           console.log('skip')
           this.$Modal.info({
             content: this.ml.busywithconnectingtorestaurant,
@@ -232,9 +234,10 @@ export default {
     },
     onGetTakeawayTimeSlots(slots) {
       this.takeawayTimeSlotsGot = true
+      this.lastGotTakeawayTime = new Date()
       // console.log(slots)
       let mySlots = slots // JSON.parse(slots)
-      // console.log(mySlots)
+      console.log(mySlots)
       // console.log(typeof mySlots.timeSlots)
       this.takeawayTimeSlots = mySlots.timeSlots
       this.openinghourComment = mySlots.message
@@ -278,7 +281,7 @@ export default {
       if (this.selectFoods.length === 0) {
         return
       }
-      if (this.takeawayTimeSlot === this.ml.selecttime) {
+      if (this.takeawayTimeSlot === this.ml.selecttime || !this.takeawayTimeSlotsGot) {
         this.$Modal.success({
           content: this.ml.selecttakeawaytimeslot,
           okText: this.ml.ok
@@ -301,8 +304,19 @@ export default {
           okText: this.ml.ok
         });
       } else {
-        this.$refs.mySendButton.start()
-        this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
+        var timeTemp = new Date(this.lastGotTakeawayTime)
+        console.log(timeTemp)
+        if (timeTemp.setMinutes(timeTemp.getMinutes() + 10) < new Date()) {
+          this.getTakeawayTimeSlots()
+          this.$Modal.success({
+            content: this.ml.takeawayTimeSlotsExpired,
+            okText: this.ml.ok
+          });
+          return
+        } else {
+          this.$refs.mySendButton.start()
+          this.$root.eventHub.$emit('signalr.sendOrder', this.orderRequestString)
+        }
       }
     },
     timeSlotSelected(timeSlot) {
@@ -321,6 +335,18 @@ export default {
         onOk: () => {
           this.hidecheckout()
         }
+      });
+    },
+    onCheckOutValidationError(obj) {
+      console.log('onCheckOutValidationError in checkout')
+      if (this.$refs.mySendButton !== undefined) {
+        this.$refs.mySendButton.stop()
+      }
+      this.getTakeawayTimeSlots()
+      this.showWaiting = false
+      this.$Modal.warning({
+        content: obj, /* obj is a message */
+        okText: this.ml.ok
       });
     },
     onLogOut(cus) {
