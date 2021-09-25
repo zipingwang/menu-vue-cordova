@@ -30,11 +30,19 @@ export default {
     return {
       busyWithSending: false,
       startTime: {},
-      mySendingTimer: 0
+      mySendingTimer: 0,
+      prevClick: new Date()
     }
   },
   methods: {
     click() {
+      var preClickTemp = new Date(this.prevClick)
+      this.prevClick = new Date()
+      if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
+        console.log('skip')
+        return
+      }
+      console.log('click button')
       this.$emit('click')
     },
     start() {

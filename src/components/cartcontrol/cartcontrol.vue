@@ -38,7 +38,7 @@ export default {
       if (!event._constructed) {
         return
       }
-      var preClickTemp = this.prevClick
+      var preClickTemp = new Date(this.prevClick)
       this.prevClick = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
         console.log('skip')
@@ -61,7 +61,7 @@ export default {
         return
       }
       console.log('decreaseCart')
-      var preClickTemp = this.prevClick
+      var preClickTemp = new Date(this.prevClick)
       this.prevClick = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
         console.log('skip')

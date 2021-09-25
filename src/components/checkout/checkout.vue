@@ -189,7 +189,7 @@ export default {
       this.show = false;
     },
     getTakeawayTimeSlots() {
-      var preClickTemp = this.prevGetTakeawayTime
+      var preClickTemp = new Date(this.prevGetTakeawayTime)
       this.prevGetTakeawayTime = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 1300) > new Date()) {
         console.log('skip')
@@ -202,7 +202,7 @@ export default {
       this.$root.eventHub.$emit('signalr.getTakeawayTimeSlots', this.orderRequestString)
     },
     showTakeawayTimeSlots() {
-      var preClickTemp = this.prevShowTakeawayTime
+      var preClickTemp = new Date(this.prevShowTakeawayTime)
       this.prevShowTakeawayTime = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 1300) > new Date()) {
         console.log('skip')
@@ -285,7 +285,7 @@ export default {
         });
         return
       }
-      var preClickTemp = this.prevClickSend
+      var preClickTemp = new Date(this.prevClickSend)
       this.prevClickSend = new Date()
       if (preClickTemp.setMilliseconds(preClickTemp.getMilliseconds() + 300) > new Date()) {
         console.log('skip')
