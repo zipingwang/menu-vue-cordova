@@ -75,7 +75,7 @@
                         <i-input type="password" v-model="formItem.newPasswordConfirm"></i-input>
                     </form-item>
                     <form-item>
-                        <sendButton ref="mySendButton" :ml="ml" :text="ml.changepassword" :sendingText="ml.sending" :failedText="ml.communicationfailed"
+                        <sendButton ref="mySendButton" :ml="ml" :text="ml.changepassword" :timeout="30" :sendingText="ml.sending" :failedText="ml.communicationfailed"
                           @click="handleSubmit('formItem1')" :timeout="15"></sendButton>
                     </form-item>
                 </i-form>

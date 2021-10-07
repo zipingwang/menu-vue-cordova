@@ -18,7 +18,7 @@ export default {
     failedTitle: '',
     failedText: '',
     timeout: { /* if want to set default value, need to assign object */
-      default: 9, /* in seconds */
+      default: 15, /* in seconds */
       type: Number
     },
     disabled: {

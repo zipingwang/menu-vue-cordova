@@ -260,9 +260,11 @@ export default {
       }
       this.showWaiting = false
       this.$Modal.hidecheckouttemp = this.hidecheckout
+      let orderObj = JSON.parse(order)
+      let orderConfirmString = this.ml.ordersendsuccess.replace('{0}', this.seller.name).replace('{1}', orderObj.tableNr)
       this.$Modal.success({
         title: this.ml.success,
-        content: this.ml.ordersendsuccess,
+        content: orderConfirmString,
         okText: this.ml.ok,
         onOk: () => {
           // this.hidecheckout() /* put in body of onOk, not working*/

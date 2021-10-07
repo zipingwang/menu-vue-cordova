@@ -395,9 +395,14 @@ export default {
       console.log('onOrderDownloaded in admin');
       // console.log(orders)
       this.orders = orders.orders
-      this.orderDownloaded = true
       this.getAll() /* reset filter */
+      this.orderDownloaded = true
       this.$nextTick(() => {
+        /* if (this.foodsScroll != null) {
+          this.foodsScroll.refresh()
+        } else {
+          this._initScroll(); // 初始化scroll
+        } */
         this._initScroll(); // 初始化scroll
       })
     },

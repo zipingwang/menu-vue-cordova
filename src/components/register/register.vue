@@ -55,7 +55,7 @@
         <useTermAndPrivacy :ml="ml" @openUseTerm="openUseTerm()" @openPrivacyPolicy="openPrivacyPolicy()"></useTermAndPrivacy>
         <!-- <span v-html="useTermAndPrivacyPolicy">{{ml.privacypolicy}}{{useTermAndPrivacyPolicy}}</span> -->
         <form-item>
-            <sendButton ref="mySendButton" :text="ml.register" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregistrationcommunicationfailed" @click="handleSubmit('formItem2')"></sendButton>
+            <sendButton ref="mySendButton" :text="ml.register" :timeout="30" :disabled="!formItem.agreeWithPrivacyPolicy" :sendingText="ml.sending" :failedText="ml.userregistrationcommunicationfailed" @click="handleSubmit('formItem2')"></sendButton>
             <!-- <i-button type="primary" @click="handleSubmit('formItem2')">Submit</i-button> -->
             <!-- <i-button @click="handleReset('formItem')" style="margin-left: 8px">{{ml.reset}}</i-button> -->
             <!-- <i-button type="primary" @click="cancel" style="margin-left: 8px">{{ml.cancel}}</i-button> -->
