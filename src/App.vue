@@ -73,6 +73,7 @@ export default {
       visibletabs: ml.visibletabs,
       // activetab: ml.activetab,
       dataReday: false
+      // notice: notice
     }
   },
   created() {
@@ -98,6 +99,23 @@ export default {
     }
   },
   mounted() {
+    if (typeof notice !== 'undefined') {
+      console.log(notice)
+      if (typeof notice.ModalMsg !== 'undefined') {
+        this.$Modal.warning({
+          content: notice.ModalMsg,
+          okText: this.trans.ok
+        });
+      }
+      this.$Notice.config({
+        top: 50,
+        duration: 5
+      });
+      this.$Notice.info({
+        title: 'Info',
+        desc: notice.Notice
+      });
+    }
   },
   computed: {
     urlVars() {

@@ -53,6 +53,18 @@ export default {
         });
         return
       }
+      allowed = checkDate(this.food.menunr, menuAllowedDateSlots)
+      console.log('allowed')
+      console.log(this.food.menunr)
+      console.log(allowed)
+      if (!allowed) {
+        this.$Modal.success({
+          title: this.ml.info,
+          content: menuAllowedDateSlots.msg,
+          okText: this.ml.ok
+        });
+        return
+      }
       this.$root.eventHub.$emit('cart.add', this.food)
       this.$root.eventHub.$emit('cart.drop', event.target)
     },

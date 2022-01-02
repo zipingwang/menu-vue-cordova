@@ -234,6 +234,20 @@ export default {
         return
       }
       let menu = this.getRiceTableMenu(riceTable)
+
+      let allowed = checkDate(menu.menunr, menuAllowedDateSlots)
+      console.log('allowed')
+      console.log(this.food.menunr)
+      console.log(allowed)
+      if (!allowed) {
+        this.$Modal.success({
+          title: this.ml.info,
+          content: menuAllowedDateSlots.msg,
+          okText: this.ml.ok
+        });
+        return
+      }
+
       if (menu.minCount > 0) {
         this.$set(menu, 'count', menu.minCount - 1)
       }

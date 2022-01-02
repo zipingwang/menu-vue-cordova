@@ -76,7 +76,7 @@
                     </form-item>
                     <form-item>
                         <sendButton ref="mySendButton" :ml="ml" :text="ml.changepassword" :timeout="30" :sendingText="ml.sending" :failedText="ml.communicationfailed"
-                          @click="handleSubmit('formItem1')" :timeout="15"></sendButton>
+                          @click="handleSubmit('formItem1')"></sendButton>
                     </form-item>
                 </i-form>
             </card>
