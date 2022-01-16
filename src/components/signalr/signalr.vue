@@ -296,6 +296,20 @@ export default {
           case 'addMenuGroup':
             this.$root.eventHub.$emit('signalr.onAddMenuGroup', message.messageBody)
             break;
+          case 'downLoadRiceTables':
+            console.log('call back downLoadRiceTables in signalr')
+            // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)
+            this.$root.eventHub.$emit('signalr.onDownLoadRiceTables', message.messageBody)
+            break;
+          case 'saveRiceTable':
+            this.$root.eventHub.$emit('signalr.onSaveRiceTable', message.messageBody)
+            break;
+          case 'deleteRiceTable':
+            this.$root.eventHub.$emit('signalr.onDeleteRiceTable', message.messageBody)
+            break;
+          case 'addRiceTable':
+            this.$root.eventHub.$emit('signalr.onAddRiceTable', message.messageBody)
+            break;
           case 'downLoadSpecialDays':
             console.log('call back downLoadSpecialDays in signalr')
             // this.$root.eventHub.$emit('signalr.onDownLoadBusinessInfo', message.messageBody)

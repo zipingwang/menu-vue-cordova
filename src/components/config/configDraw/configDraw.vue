@@ -12,6 +12,7 @@
           <p class="drawbutton"><i-button @click="configSpecialDays" type="primary">{{ml.openingspecialday}}</i-button></p>
           <p class="drawbutton"><i-button @click="configMonthMenu" type="primary">{{ml.monthmenu}}</i-button></p>
           <p class="drawbutton"><i-button @click="configCustomers" type="primary">{{ml.customers}}</i-button></p>
+          <p class="drawbutton"><i-button @click="configRiceTables" type="primary">{{ml.ricetable}}</i-button></p>
           <i-button type="primary" @click="publishNewMenu">{{ml.publish}}</i-button>
         </drawer>
 
@@ -36,11 +37,13 @@
         <specialdays ref="mySpecialDays" :ml="ml" :data="data" @closed="childDrawClosed"></specialdays>
         <monthMenu ref="myMonthMenu" :ml="ml" :data="data" @closed="childDrawClosed"></monthMenu>
         <customers ref="myCustomers" :ml="ml" :data="data" @closed="childDrawClosed"></customers>
+        <riceTables ref="riceTables" :ml="ml" :data="data" @closed="childDrawClosed"></riceTables>
     </div>
 </template>
 <script>
 import businessInfo from 'components/config/businessInfo/businessInfo'
 import menuGroups from 'components/config/menuGroups/menuGroups'
+import riceTables from 'components/config/riceTables/riceTables'
 import menus from 'components/config/menus/menus'
 import openinghour from 'components/config/openinghour/openinghour'
 import specialdays from 'components/config/specialdays/specialdays'
@@ -51,6 +54,7 @@ export default {
   components: {
     businessInfo,
     menuGroups,
+    riceTables,
     menus,
     openinghour,
     specialdays,
@@ -97,6 +101,10 @@ export default {
     configMenuGroups() {
       this.configVisible = false
       this.$refs.menuGroups.showDraw()
+    },
+    configRiceTables() {
+      this.configVisible = false
+      this.$refs.riceTables.showDraw()
     },
     configMenus() {
       this.configVisible = false
