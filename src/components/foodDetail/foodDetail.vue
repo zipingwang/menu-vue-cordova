@@ -162,8 +162,11 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.$set(this.food, 'count', 1)
-      this.$root.eventHub.$emit('cart.add', event.target)
+      if (this.food.minCount > 0) {
+        this.$set(this.food, 'count', this.food.minCount - 1) // count will be added in AddMenu in App.Vue
+      }
+      this.$root.eventHub.$emit('cart.add', this.food)
+      this.$root.eventHub.$emit('cart.drop', event.target)
     },
     filterEvel(item) {
       this.currentCommmentCatetory = item.commmentCatetory
