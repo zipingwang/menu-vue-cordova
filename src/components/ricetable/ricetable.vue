@@ -78,32 +78,13 @@
             padding-bottom 20px
         .endfilling
             height 50px
-        .shopCart
+        .addMenuControl
           position absolute
           right 18px
-          top 8px
+          top 5px
           height 24px
           text-align center
-          z-index 2
-          .text
-            box-sizing border-box
-            height 100%
-            line-height 24px
-            color white
-            font-size 10px
-            padding 0 12px
-            border-radius 12px
-            background rgb(0,160,220)
-            &.fade-enter-active,&.fade-leave-active{
-              transition opacity .2s
-            }
-            &.fade-enter,&.fade-leave-active{
-              opacity 0
-            }
-        .cartcontrol
-          position absolute
-          right 12px
-          top 2px
+          width 100px
   .map
     text-align center
     margin-top 20px
@@ -144,15 +125,17 @@
                     </ul>
                 </div>
                 <div class="endfilling"></div>
-                <div class="shopCart">
+                <!-- <div class="shopCart">
                   <transition name="fade">
                     <div class="text" @click="addCart($event, ricetable)" v-show="!(getRiceTableMenu(ricetable).count)"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
                   </transition>
                 </div>
-                <cartcontrol :food="getRiceTableMenu(ricetable)" :ml="ml" v-show="getRiceTableMenu(ricetable).count"></cartcontrol>
+                <cartcontrol :food="getRiceTableMenu(ricetable)" :ml="ml" v-show="getRiceTableMenu(ricetable).count"></cartcontrol> -->
+
                 <!-- <div class="cartcontrol-wrapper">
                   <cartcontrol :food="getRiceTableMenu(ricetable)"></cartcontrol>
                 </div> -->
+                 <addMenuControl class="addMenuControl" :ml="ml" :food="getRiceTableMenu(ricetable)"></addMenuControl>
                 </div>
         </div>
       </div>
@@ -165,13 +148,13 @@
 import axios from 'axios'
 import star from 'components/star/star'
 import BScroll from 'better-scroll'
-import cartcontrol from 'components/cartcontrol/cartcontrol'
-import shopCart from 'components/shopCart/shopCart'
+import addMenuControl from 'components/common/addMenuControl/addMenuControl'
+import shopCart from 'components/common/shopCart/shopCart'
 
 export default {
   components: {
     star: star,
-    cartcontrol,
+    addMenuControl,
     shopCart
   },
   props: {

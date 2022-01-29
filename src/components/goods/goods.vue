@@ -55,8 +55,8 @@
 <script>
 import iconMap from 'components/iconMap/iconMap'
 import BScroll from 'better-scroll'
-import shopCart from 'components/shopCart/shopCart'
-import cartcontrol from 'components/cartcontrol/cartcontrol'
+import shopCart from 'components/common/shopCart/shopCart'
+import cartcontrol from 'components/common/cartcontrol/cartcontrol'
 import foodDetail from 'components/foodDetail/foodDetail'
 import axios from 'axios'
 import Vue from 'vue'

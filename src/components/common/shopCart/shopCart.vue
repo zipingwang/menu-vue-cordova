@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import cartcontrol from 'components/cartcontrol/cartcontrol'
+import cartcontrol from 'components/common/cartcontrol/cartcontrol'
 import backdrop from 'components/backdrop/backdrop'
 import BScroll from 'better-scroll'
 import checkout from 'components/checkout/checkout'

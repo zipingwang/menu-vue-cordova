@@ -167,15 +167,37 @@ export default {
       console.log(data)
     },
     addMenu(food) {
+      let allowed = checkDate(food.menunr, menuAllowedDateSlots)
+      if (!allowed) {
+        this.$Modal.success({
+          title: this.trans.info,
+          content: menuAllowedDateSlots.msg,
+          okText: this.trans.ok
+        });
+        return
+      }
+      allowed = checkTime(food.menunr, menuAllowedTimeSlots)
+      if (!allowed) {
+        this.$Modal.success({
+          title: this.trans.info,
+          content: this.trans.lunchboxnotallowedmsg,
+          okText: this.trans.ok
+        });
+        return
+      }
+
       if (!food.count) {
         this.$set(food, 'count', 0)
       }
       if (!this.data.selectFoods.includes(food)) {
         this.data.selectFoods.push(food)
       }
-      this.$set(food, 'count', food.count++)
-      food.count++
-      console.log(food.count)
+      if (food.count < food.minCount) {
+        this.$set(food, 'count', food.minCount)
+      } else {
+        food.count++
+        this.$set(food, 'count', food.count)
+      }
     },
     decreaseMenu(food) {
       console.log('decreaseMenu in app.vue')

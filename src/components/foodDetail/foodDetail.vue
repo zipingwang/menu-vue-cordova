@@ -25,12 +25,7 @@
             <span class="unit">€</span>{{food.price}}
             <span class="oldPrice" v-show="food.oldPrice">€{{food.oldPrice}}</span>
           </div>
-          <div class="shopCart">
-            <transition name="fade">
-              <div class="text" @click="addCart($event)" v-show="!food.count"><Icon type="md-cart" /> {{ml.addtoshoppingcart}}</div>
-            </transition>
-          </div>
-          <cartcontrol :food="food" :ml="ml" v-show="food.count"></cartcontrol>
+          <addMenuControl class="addMenuControl" :ml="ml" :food="food"></addMenuControl>
         </div>
         <div class="divider"></div>
         <div class="desc">
@@ -78,12 +73,12 @@
 <script>
 import '../../filter/time.js'
 import BScroll from 'better-scroll'
-import cartcontrol from 'components/cartcontrol/cartcontrol'
+import addMenuControl from 'components/common/addMenuControl/addMenuControl'
 import star from 'components/star/star'
 
 export default {
   components: {
-    cartcontrol,
+    addMenuControl,
     star
   },
   props: {
@@ -271,32 +266,12 @@ export default {
         font-weight normal
         color rgb(147,153,159)
         line-height 24px
-    .shopCart
+    .addMenuControl
       position absolute
       right 18px
       bottom 18px
       height 24px
-      text-align center
-      z-index 2
-      .text
-        box-sizing border-box
-        height 100%
-        line-height 24px
-        color white
-        font-size 10px
-        padding 0 12px
-        border-radius 12px
-        background rgb(0,160,220)
-        &.fade-enter-active,&.fade-leave-active{
-          transition opacity .2s
-        }
-        &.fade-enter,&.fade-leave-active{
-          opacity 0
-        }
-    .cartcontrol
-      position absolute
-      right 12px
-      bottom 12px
+      width 100px
   .desc
     padding 18px
     .title
