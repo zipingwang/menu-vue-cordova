@@ -30,7 +30,7 @@
         <div class="divider"></div>
         <div class="desc">
           <div class="title">{{ml.description}}</div>
-          <div class="content">{{food.info}}</div>
+          <div class="content">{{food.description}}</div>
         </div>
         <!-- <div class="divider"></div>
         <div class="evaluation">
