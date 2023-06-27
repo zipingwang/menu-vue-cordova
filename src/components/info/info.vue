@@ -89,6 +89,18 @@
             </ul>
           </div>
         </div>
+        <div class="column">
+          <div class="block">
+            <h1>{{ml.taxnumber}}</h1>
+            <p>{{seller.taxnumber}}</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="block">
+            <h1>{{ml.email}}</h1>
+            <p>{{seller.email}}</p>
+          </div>
+        </div>
       </div>
       <div class="divider"></div>
       <div class="map" :height="mapheight + 10">

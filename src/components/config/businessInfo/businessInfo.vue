@@ -41,6 +41,9 @@
           <form-item :label="ml.email">
               <i-input v-model="formSeller.email"></i-input>
           </form-item>
+           <form-item :label="ml.taxnumber">
+              <i-input v-model="formSeller.taxnumber"></i-input>
+          </form-item>
           <form-item :label="ml.supportonlineorder">
             <i-switch v-model="formSeller.supportOnlineOrder" size="large">
                   <span slot="open">On</span>
